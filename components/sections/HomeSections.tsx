@@ -322,57 +322,123 @@ export function WhyChooseUs() {
       
       <div className="container-custom relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          <div>
-            <motion.span 
-              initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-              className="text-amber-cta font-body text-[11px] uppercase tracking-[0.4em] font-bold block mb-4"
-            >
-              WHY THRIVENI
-            </motion.span>
-            <motion.h2 
-              initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-              className="font-display text-4xl md:text-5xl text-white mb-8"
-            >
-              More Than Just a Dealership. <br className="hidden md:block" />An Experience.
-            </motion.h2>
-            <motion.p 
-              initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-              className="text-metal-400 text-lg leading-relaxed mb-12"
-            >
-              We are committed to providing transparency, exclusive offers, and end-to-end support for a seamless ownership journey.
-            </motion.p>
+          <div className="relative">
+            {/* 90-Degree Vertical Edge Watermark */}
+            <div className="absolute -left-20 top-1/2 -translate-y-1/2 -rotate-90 origin-center whitespace-nowrap hidden xl:block">
+              <span className="text-white/[0.03] font-display text-4xl tracking-[1em] uppercase select-none">
+                ESTD. 2009 — THRIVENI CORE
+              </span>
+            </div>
 
-            <div className="grid grid-cols-2 gap-10">
-              {stats.map((stat, i) => (
-                <div key={i} className="stat-card">
-                  <div className="font-display text-5xl text-amber-cta flex items-baseline">
-                    <Counter value={stat.value} />
-                    <span className="text-2xl ml-1">{stat.suffix}</span>
-                  </div>
-                  <div className="text-metal-500 uppercase tracking-widest text-[10px] mt-2 font-bold">{stat.label}</div>
-                </div>
-              ))}
+            <div className="pl-0 lg:pl-12 border-l border-white/5">
+              <motion.div 
+                initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+                className="inline-block border border-white/10 px-4 py-1 mb-8"
+              >
+                <span className="text-amber-cta font-mono text-[9px] uppercase tracking-[0.5em] font-bold">
+                  [WHY.THRIVENI]
+                </span>
+              </motion.div>
+
+              <motion.h2 
+                initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+                className="font-display text-4xl md:text-5xl lg:text-6xl text-white mb-10 leading-[1.1]"
+              >
+                Engineering <br />
+                <span className="text-amber-cta italic">Trust</span> Since 2009.
+              </motion.h2>
+
+              <motion.p 
+                initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+                className="text-metal-400 text-lg leading-relaxed mb-16 max-w-lg font-light"
+              >
+                We dismantle the traditional dealership experience, replacing generic sales with technical precision and radical transparency.
+              </motion.p>
+
+              <div className="flex flex-col gap-12">
+                {stats.map((stat, i) => (
+                  <motion.div 
+                    key={i} 
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: i * 0.1 }}
+                    className="flex items-center gap-8 group"
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-metal-600 font-mono text-[9px] uppercase tracking-widest mb-1 group-hover:text-amber-cta transition-colors">
+                        [{stat.label.toUpperCase().replace(/ /g, '.')}]
+                      </span>
+                      <div className="font-display text-5xl md:text-6xl text-white flex items-baseline leading-none">
+                        <Counter value={stat.value} />
+                        <span className="text-amber-cta text-2xl ml-2 font-light">{stat.suffix}</span>
+                      </div>
+                    </div>
+                    {/* Industrial Connector Line */}
+                    <div className="h-px flex-grow bg-white/5 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000" />
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
             {[
-              { title: "Exclusive Leads", desc: "Enquiries reach only us, ensuring no spam." },
-              { title: "Quick Response", desc: "Our team calls back within 15 minutes." },
-              { title: "1-Stop Solution", desc: "Finance, insurance, and RTO managed in-house." },
-              { title: "Driving Academy", desc: "Learn to drive in the model you buy." }
+              { 
+                title: "Exclusive Leads", 
+                desc: "Verified enquiries reach only our team, ensuring absolute privacy and zero spam.",
+                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>,
+                num: "01"
+              },
+              { 
+                title: "Velocity Response", 
+                desc: "Engineered for speed. Our dedicated concierge team responds within 15 minutes.",
+                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M16.24 7.76l1.41-1.41"/><path d="M7.76 16.24l-1.41 1.41"/></svg>,
+                num: "02"
+              },
+              { 
+                title: "Integrated Hub", 
+                desc: "A singular destination for finance, insurance, and RTO—managed with surgical precision.",
+                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>,
+                num: "03"
+              },
+              { 
+                title: "Precision Academy", 
+                desc: "Master your specific vehicle model with elite training from Thriveni-certified instructors.",
+                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 3h5v5"/><path d="M8 21H3v-5"/><path d="M3 3l18 18"/><path d="M21 3L3 21"/></svg>,
+                num: "04"
+              }
             ].map((feature, i) => (
               <motion.div 
                 key={i} 
                 initial="hidden" whileInView="visible" viewport={{ once: true }}
                 variants={i % 2 === 0 ? fadeLeft : fadeRight}
-                className="bg-metal-800/40 p-8 border border-white/5 hover:border-olive-600/30 transition-all rounded-sm"
+                className={`relative bg-metal-800/40 p-10 md:p-14 border border-white/5 group transition-all duration-500 hover:bg-metal-800/60 ${i % 2 !== 0 ? 'md:mt-12' : ''}`}
               >
-                <div className="w-10 h-10 border border-olive-600/30 flex items-center justify-center text-olive-400 mb-6">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                {/* Numeral Watermark */}
+                <div className="absolute top-8 right-10 font-display text-8xl text-white/[0.03] select-none pointer-events-none group-hover:text-amber-cta/5 transition-colors duration-700">
+                  {feature.num}
                 </div>
-                <h3 className="text-lg text-white font-display mb-3">{feature.title}</h3>
-                <p className="text-sm text-metal-400 leading-relaxed">{feature.desc}</p>
+
+                {/* Industrial Corner Locks */}
+                <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-amber-cta opacity-0 group-hover:opacity-100 transition-all duration-500 scale-90 group-hover:scale-100" />
+                <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-amber-cta opacity-0 group-hover:opacity-100 transition-all duration-500 scale-90 group-hover:scale-100" />
+                
+                <div className="relative z-10">
+                  <div className="w-14 h-14 bg-bg-section border border-white/5 flex items-center justify-center text-olive-400 mb-10 group-hover:text-amber-cta group-hover:border-amber-cta/30 transition-all duration-500">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-2xl text-white font-display mb-6 group-hover:translate-x-2 transition-transform duration-500 leading-tight">
+                    {feature.title}
+                  </h3>
+                  <div className="h-px w-12 bg-amber-cta/30 mb-6 group-hover:w-24 transition-all duration-700" />
+                  <p className="text-metal-400 leading-relaxed font-body font-light">
+                    {feature.desc}
+                  </p>
+                </div>
+
+                {/* Mechanical Accent Strip */}
+                <div className="absolute left-0 bottom-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent group-hover:via-amber-cta/20 transition-all" />
               </motion.div>
             ))}
           </div>

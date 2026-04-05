@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Jost, JetBrains_Mono } from 'next/font/google';
+import { Outfit, Jost, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -7,9 +7,9 @@ import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import PageTransitionProvider from '@/components/providers/PageTransitionProvider';
 import CustomCursor from '@/components/ui/CustomCursor';
 
-const displayFont = Cormorant_Garamond({ 
+const displayFont = Outfit({ 
   subsets: ['latin'], 
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-display',
   display: 'swap'
 });
