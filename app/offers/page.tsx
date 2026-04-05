@@ -1,22 +1,55 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  fadeUp, 
+  staggerContainer, 
+  EASING 
+} from '@/lib/animations';
 
 export default function OffersPage() {
+  const [activeTab, setActiveTab] = useState('All Offers');
+
   return (
-    <div className="min-h-screen bg-bg-primary pt-20">
+    <div className="min-h-screen bg-bg-primary pt-32 pb-32">
       
-      {/* HERO */}
-      <section className="bg-metal-900 py-20 relative">
-        <div className="absolute top-0 w-full bg-amber-cta text-metal-900 text-sm font-semibold text-center py-2 z-10">
-          Monsoon Offers end in: 12 : 04 : 45 : 30
-        </div>
-        <div className="container-custom mt-8 text-center">
-          <h1 className="font-display text-5xl text-metal-50 max-w-3xl mx-auto leading-tight">Exclusive Deals You Won&apos;t Find Anywhere Else</h1>
-          <p className="text-metal-400 mt-4 max-w-2xl mx-auto">Enquire directly with us and unlock special prices not available on official brand portals.</p>
-          
-          <div className="flex flex-wrap justify-center gap-2 mt-10">
-            {['All Offers', 'Maruti Arena', 'NEXA', 'Honda', 'Royal Enfield', 'Events'].map((tab, i) => (
-              <button key={tab} className={`px-6 py-2.5 rounded-full text-sm font-medium transition-colors ${i === 0 ? 'bg-amber-cta text-metal-900' : 'bg-metal-800 text-metal-300 hover:bg-metal-700'}`}>
+      {/* SECTION 1 — HEADER & COUNTDOWN */}
+      <section className="mb-20">
+        <div className="container-custom">
+           <div className="flex flex-col lg:flex-row justify-between items-end gap-12">
+              <motion.div initial="hidden" animate="visible" variants={fadeUp} className="max-w-2xl">
+                 <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">OPPORTUNITY</span>
+                 <h1 className="font-display text-display-xl text-metal-900 leading-tight">
+                   The Monsoon <br/> <span className="text-olive-700">Privilege Suite.</span>
+                 </h1>
+              </motion.div>
+              
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: EASING.expoOut }}
+                className="bg-metal-900 p-8 sm:p-10 border-l-4 border-amber-cta shadow-2xl shrink-0"
+              >
+                 <div className="text-metal-400 text-[10px] uppercase tracking-[0.4em] font-bold mb-6">OFFER EXPIRY TRACKER</div>
+                 <div className="flex gap-6 sm:gap-10">
+                    <CountdownUnit value={12} label="DAYS" />
+                    <CountdownUnit value={4} label="HRS" />
+                    <CountdownUnit value={45} label="MIN" />
+                    <CountdownUnit value={30} label="SEC" />
+                 </div>
+              </motion.div>
+           </div>
+
+           <div className="flex flex-wrap gap-4 mt-16 border-b border-metal-100 pb-8">
+            {['All Offers', 'Maruti Arena', 'NEXA', 'Honda', 'Royal Enfield'].map((tab) => (
+              <button 
+                key={tab} 
+                onClick={() => setActiveTab(tab)}
+                className={`text-[11px] uppercase tracking-[0.2em] font-bold transition-all px-6 py-2 ${activeTab === tab ? 'text-amber-cta border-b border-amber-cta' : 'text-metal-400 hover:text-metal-900'}`}
+              >
                 {tab}
               </button>
             ))}
@@ -24,76 +57,80 @@ export default function OffersPage() {
         </div>
       </section>
 
-      {/* FEATURED OFFER */}
-      <section className="py-12 bg-bg-section">
+      {/* SECTION 2 — MAIN OFFERS GRID */}
+      <section>
         <div className="container-custom">
-          <div className="bg-olive-800 rounded-2xl overflow-hidden flex flex-col md:flex-row relative">
-            <div className="md:w-1/2 aspect-[16/9] md:aspect-auto relative bg-olive-900">
-              <Image src="/images/placeholder-car.jpg" alt="Featured Offer" fill className="object-cover opacity-80" />
-            </div>
-            <div className="md:w-1/2 p-10 flex flex-col justify-center items-start">
-              <div className="bg-amber-cta text-metal-900 text-xs font-bold px-3 py-1 rounded mb-4">FEATURED OFFER</div>
-              <h2 className="font-display text-4xl text-white mb-4">Mega Exchange Bonus</h2>
-              <ul className="text-olive-200 space-y-2 mb-6">
-                <li>• ₹50,000 extra on exchange value</li>
-                <li>• Free accessories worth ₹15,000</li>
-                <li>• Assured buyback guarantee</li>
-              </ul>
-              <div className="flex items-center gap-2 text-sm text-olive-300 mb-6">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                Valid till 30 June 2025
-              </div>
-              <button className="bg-amber-cta text-metal-900 font-bold px-8 py-4 rounded hover:bg-amber-light transition-colors">
-                Claim This Offer
-              </button>
-              <div className="text-xs text-olive-400 mt-4">*T&C apply. Valid on select models only.</div>
-            </div>
-          </div>
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+             {[
+               { brand: 'NEXA', title: 'Grand Vitara Hybrid', disc: 'Up to ₹75,000 Off on top variants', img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800' },
+               { brand: 'Maruti Arena', title: 'The New Swift', disc: 'Zero down payment + Accessory kit worth ₹10k', img: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&q=80&w=800' },
+               { brand: 'Honda', title: 'City 5th Gen', disc: 'Exclusive exchange bonus of ₹50,000', img: 'https://images.unsplash.com/photo-1527247043589-98e6ac08f56c?auto=format&fit=crop&q=80&w=800' },
+             ].map((offer, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: i * 0.15 }}
+                  className="bg-white border border-metal-100 group cursor-pointer relative overflow-hidden"
+                >
+                   {/* Ribbon Unfurl Effect */}
+                   <div className="absolute top-0 right-0 z-10 w-32 h-32 overflow-hidden">
+                      <div className="absolute top-0 right-0 bg-olive-700 text-white text-[9px] font-bold uppercase tracking-widest px-10 py-1 rotate-45 translate-x-8 translate-y-2 shadow-xl">Exclusive</div>
+                   </div>
+
+                   <div className="aspect-[4/3] relative overflow-hidden bg-bg-section">
+                      <Image src={offer.img} alt={offer.title} fill className="object-cover group-hover:scale-105 transition-transform duration-1000 grayscale group-hover:grayscale-0" />
+                   </div>
+                   
+                   <div className="p-10">
+                      <div className="text-olive-700 font-bold text-[9px] uppercase tracking-widest mb-3">{offer.brand}</div>
+                      <h3 className="font-display text-2xl text-metal-900 mb-4">{offer.title}</h3>
+                      <p className="text-metal-500 text-sm mb-10 leading-relaxed font-body font-light">{offer.disc}</p>
+                      
+                      <Link href="/contact" className="flex items-center justify-between group/link">
+                         <span className="text-amber-cta text-[10px] font-bold uppercase tracking-[0.3em]">Claim Offer</span>
+                         <div className="w-8 h-8 flex items-center justify-center border border-metal-200 group-hover/link:bg-metal-900 group-hover/link:text-white transition-all">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                         </div>
+                      </Link>
+                   </div>
+                </motion.div>
+             ))}
+           </div>
         </div>
       </section>
 
-      {/* OFFERS GRID */}
-      <section className="py-20">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="relative overflow-hidden rounded-xl border border-metal-100 bg-white hover:shadow-automotive hover:-translate-y-1 transition-all group">
-                <div className="absolute top-4 -right-8 rotate-45 bg-amber-cta text-metal-900 text-xs font-bold px-8 py-1 z-10 shadow-sm">
-                  LIMITED
-                </div>
-                <div className="aspect-[16/9] relative bg-metal-100 overflow-hidden">
-                  <Image src="/images/placeholder-car.jpg" alt="Offer" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="p-6">
-                  <div className="inline-block bg-olive-50 text-olive-700 text-xs px-2.5 py-1 rounded font-semibold uppercase tracking-wider mb-3">Maruti Arena</div>
-                  <h3 className="font-display text-2xl text-metal-800 mb-2">Low EMI Festival</h3>
-                  <p className="text-sm text-metal-500 line-clamp-2 mb-4">Drive home a new car with EMIs starting as low as ₹4,999/month. Zero processing fee.</p>
-                  
-                  <div className="pt-4 border-t border-metal-100 flex justify-between items-center mt-auto">
-                    <span className="text-xs text-metal-400 flex items-center gap-1.5">
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                      Ends in 12 days
-                    </span>
-                    <Link href="/contact" className="text-amber-cta font-medium text-sm hover:underline">Enquire Now →</Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* SECTION 3 — URGENCY CTA */}
+      <section className="mt-32">
+         <div className="container-custom">
+            <div className="bg-amber-cta p-20 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
+               {/* Asymmetric Decor */}
+               <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+               
+               <div className="relative z-10">
+                  <h2 className="font-display text-4xl text-metal-900 mb-4">Stock Clearing Initiative</h2>
+                  <p className="text-metal-800 text-lg max-w-xl font-body font-medium">Enquire today for additional dealer-level discounts on 2024 models not available on brand portals.</p>
+               </div>
+               
+               <div className="relative z-10 flex flex-col sm:flex-row gap-6">
+                  <Link href="/contact" className="bg-metal-900 text-white px-10 py-5 font-bold text-[10px] uppercase tracking-widest hover:bg-olive-800 transition-all">Book Consultation</Link>
+                  <Link href="/inventory" className="bg-white text-metal-900 px-10 py-5 font-bold text-[10px] uppercase tracking-widest hover:bg-bg-section transition-all">Browse Inventory</Link>
+               </div>
+            </div>
+         </div>
       </section>
+    </div>
+  );
+}
 
-      {/* URGENCY CTA */}
-      <section className="bg-amber-cta py-16 text-center">
-        <div className="container-custom">
-          <h2 className="font-display text-4xl text-metal-900 mb-3">Don&apos;t Miss Out on These Deals</h2>
-          <p className="text-metal-800 mb-8 max-w-xl mx-auto">These prices are exclusive to Thriveni Cars — not available on official portals.</p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/inventory" className="bg-metal-900 text-white px-10 py-4 rounded font-medium hover:bg-metal-800">View Inventory</Link>
-            <Link href="/contact" className="bg-white text-metal-900 border border-transparent px-10 py-4 rounded font-medium hover:bg-metal-50">Book Test Drive</Link>
-          </div>
-        </div>
-      </section>
+function CountdownUnit({ value, label }: { value: number, label: string }) {
+  return (
+    <div className="text-center group">
+       <div className="font-display text-4xl sm:text-5xl text-white mb-2 group-hover:text-amber-cta transition-colors">
+          {value.toString().padStart(2, '0')}
+       </div>
+       <div className="text-metal-500 text-[9px] uppercase tracking-widest font-bold">{label}</div>
     </div>
   );
 }

@@ -3,92 +3,157 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  fadeUp, 
+  staggerContainer, 
+  EASING 
+} from '@/lib/animations';
+import { useGSAPOnMount } from '@/hooks/useScrollAnimation';
+import gsap from 'gsap';
 
 export default function InventoryPage() {
   const [activeBrand, setActiveBrand] = useState('All');
-
+  
   const cars = [
-    { id: '1', brand: 'Maruti Arena', model: 'Swift', variant: 'ZXI Plus', price: '₹8.99 Lakh', fuel: 'Petrol', trans: 'Manual', year: 2024, img: '/images/placeholder-car.jpg' },
-    { id: '2', brand: 'NEXA', model: 'Baleno', variant: 'Alpha', price: '₹9.88 Lakh', fuel: 'Petrol', trans: 'Automatic', year: 2024, img: '/images/placeholder-car.jpg' },
-    { id: '3', brand: 'Honda', model: 'City', variant: 'ZX CVT', price: '₹16.05 Lakh', fuel: 'Petrol', trans: 'Automatic', year: 2023, img: '/images/placeholder-car.jpg' },
-    { id: '4', brand: 'Royal Enfield', model: 'Classic 350', variant: 'Dark Stealth', price: '₹2.20 Lakh', fuel: 'Petrol', trans: 'Manual', year: 2024, img: '/images/placeholder-car.jpg' },
+    { id: '1', brand: 'Maruti Arena', model: 'Swift', variant: 'ZXI Plus', price: '8.99', fuel: 'Petrol', trans: 'Manual', year: 2024, img: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&q=80&w=600' },
+    { id: '2', brand: 'NEXA', model: 'Baleno', variant: 'Alpha', price: '9.88', fuel: 'Petrol', trans: 'Automatic', year: 2024, img: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&q=80&w=600' },
+    { id: '3', brand: 'Honda', model: 'City', variant: 'ZX CVT', price: '16.05', fuel: 'Petrol', trans: 'Automatic', year: 2023, img: 'https://images.unsplash.com/photo-1527247043589-98e6ac08f56c?auto=format&fit=crop&q=80&w=600' },
+    { id: '4', brand: 'Royal Enfield', model: 'Classic 350', variant: 'Dark Stealth', price: '2.20', fuel: 'Petrol', trans: 'Manual', year: 2024, img: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?auto=format&fit=crop&q=80&w=600' },
   ];
 
-  return (
-    <div className="min-h-screen bg-bg-primary pt-20">
-      <div className="bg-metal-900 py-16 text-center">
-        <div className="container-custom">
-          <div className="text-metal-400 text-sm mb-4">Home / Inventory</div>
-          <h1 className="font-display text-4xl text-metal-50">Explore Our Collection</h1>
-          <p className="text-metal-400 mt-3">200+ vehicles across 5 brands. Filter to find yours.</p>
-          <div className="max-w-2xl mx-auto mt-8 relative">
-            <input type="text" placeholder="Search cars..." className="w-full bg-metal-800 border border-metal-700 text-metal-50 placeholder-metal-500 rounded-lg py-4 px-6 text-base outline-none focus:border-amber-cta" />
-            <button className="absolute right-2 top-2 bottom-2 bg-amber-cta text-metal-900 rounded-md px-6 font-semibold">Search</button>
-          </div>
-        </div>
-      </div>
+  const filteredCars = activeBrand === 'All' ? cars : cars.filter(c => c.brand === activeBrand);
 
-      <div className="container-custom py-12 flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-64 shrink-0">
-          <div className="bg-white rounded-xl border border-metal-100 p-6 sticky top-24">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="font-semibold text-metal-800">Filters</h2>
-              <button className="text-amber-cta text-sm">Clear All</button>
-            </div>
+  useGSAPOnMount((ctx) => {
+    if (!ctx.selector) return;
+    gsap.from(ctx.selector('.inventory-card'), {
+      opacity: 0,
+      y: 40,
+      stagger: 0.1,
+      duration: 0.8,
+      ease: 'expo.out',
+      scrollTrigger: {
+        trigger: ctx.selector('.inventory-grid'),
+        start: 'top 85%'
+      }
+    });
+  });
+
+  return (
+    <div className="min-h-screen bg-bg-primary">
+      {/* Header — Solid Background Rule */}
+      <section className="bg-metal-900 pt-32 pb-16">
+        <div className="container-custom">
+           <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+             <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">THRIVENI STOCK</span>
+             <h1 className="font-display text-5xl md:text-6xl text-white mb-6">Discovery Suite.</h1>
+             <p className="text-metal-400 text-lg max-w-xl">Explore our current inventory across 8 premium branches in Chennai.</p>
+           </motion.div>
+        </div>
+      </section>
+
+      <div className="container-custom py-16 flex flex-col lg:flex-row gap-12">
+        {/* Sidebar — Animated Entry */}
+        <motion.aside 
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: EASING.expoOut }}
+          className="w-full lg:w-72 shrink-0"
+        >
+          <div className="bg-white border border-metal-100 p-10 sticky top-32">
+            <h2 className="font-display text-2xl text-metal-900 mb-8">Refine Search</h2>
             
-            <div className="flex flex-col gap-4">
+            <div className="space-y-10">
               <div>
-                <h3 className="text-sm font-medium text-metal-700 mb-3">Brand</h3>
-                <div className="flex flex-col gap-2">
+                <h3 className="text-[10px] uppercase tracking-[0.2em] font-bold text-metal-400 mb-6">Filter by Brand</h3>
+                <div className="flex flex-col gap-4">
                   {['All', 'Maruti Arena', 'NEXA', 'Honda', 'Royal Enfield', 'Commercial'].map(brand => (
-                    <label key={brand} className="flex items-center gap-2 cursor-pointer text-sm text-metal-600">
-                      <input type="radio" name="brand" checked={activeBrand === brand} onChange={() => setActiveBrand(brand)} className="text-olive-600 focus:ring-olive-600" />
+                    <button 
+                      key={brand} 
+                      onClick={() => setActiveBrand(brand)}
+                      className={`text-left text-sm transition-all flex items-center gap-3 group ${activeBrand === brand ? 'text-amber-cta font-bold' : 'text-metal-600 hover:text-metal-900'}`}
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full transition-all ${activeBrand === brand ? 'bg-amber-cta scale-125' : 'bg-metal-200 group-hover:bg-metal-400'}`} />
                       {brand}
-                    </label>
+                    </button>
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
 
-        <div className="flex-1">
-          <div className="flex justify-between items-center mb-6">
-            <div className="text-metal-600 text-sm">Showing {cars.length} vehicles</div>
+              <div>
+                 <h3 className="text-[10px] uppercase tracking-[0.2em] font-bold text-metal-400 mb-6">Price Range</h3>
+                 <input type="range" className="w-full h-1 bg-bg-section appearance-none accent-olive-700" />
+                 <div className="flex justify-between mt-4 text-[11px] uppercase font-bold text-metal-500">
+                    <span>₹2L</span>
+                    <span>₹25L+</span>
+                 </div>
+              </div>
+            </div>
+            
+            <button className="w-full btn-primary mt-12 py-3 !text-[10px]">Update Results</button>
+          </div>
+        </motion.aside>
+
+        {/* Results — Layout Shuffle */}
+        <main className="flex-1">
+          <div className="flex justify-between items-center mb-10 pb-6 border-b border-metal-100">
+            <span className="text-metal-500 text-xs uppercase tracking-widest font-bold">
+               {filteredCars.length} Handpicked Results
+            </span>
+            <select className="bg-transparent border-none text-metal-900 text-xs font-bold uppercase tracking-widest outline-none cursor-pointer">
+               <option>Sort by: Newest</option>
+               <option>Price: Low to High</option>
+               <option>Price: High to Low</option>
+            </select>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {cars.map(car => (
-              <div key={car.id} className="bg-white rounded-xl border border-metal-100 overflow-hidden hover:shadow-automotive transition-all group">
-                <div className="aspect-[4/3] relative bg-metal-100 overflow-hidden">
-                  <Image src={car.img} alt={car.model} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-3 left-3 bg-olive-600 text-white text-xs font-semibold px-2 py-1 rounded">NEW</div>
-                </div>
-                <div className="p-5">
-                  <div className="text-xs text-olive-600 bg-olive-50 px-2 py-0.5 rounded inline-block">{car.brand}</div>
-                  <h3 className="font-display text-xl font-semibold text-metal-800 mt-2">{car.model}</h3>
-                  <p className="text-sm text-metal-500">{car.variant}</p>
-                  
-                  <div className="flex gap-4 mt-4 text-xs text-metal-500">
-                    <span>{car.fuel}</span>
-                    <span>{car.trans}</span>
-                    <span>{car.year}</span>
-                  </div>
-                  
-                  <div className="mt-4 pt-4 border-t border-metal-100 flex justify-between items-end">
-                    <div>
-                      <div className="font-mono text-lg font-semibold text-metal-800">{car.price}</div>
-                      <div className="text-xs text-olive-600">~₹8,500/mo</div>
+          <motion.div 
+            layout 
+            className="inventory-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
+          >
+            <AnimatePresence mode='popLayout'>
+              {filteredCars.map(car => (
+                <motion.div 
+                  key={car.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.5, ease: EASING.expoOut }}
+                  className="inventory-card bg-white border border-metal-100 overflow-hidden group cursor-pointer"
+                >
+                  <Link href={`/inventory/${car.id}`}>
+                    <div className="aspect-[4/3] relative overflow-hidden bg-bg-section">
+                      <Image src={car.img} alt={car.model} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                      <div className="absolute top-4 left-4 bg-olive-700 text-white text-[9px] uppercase tracking-widest font-bold px-3 py-1">Featured Stock</div>
                     </div>
-                    <Link href={`/inventory/${car.id}`} className="bg-metal-900 text-white px-4 py-2 rounded text-xs font-semibold hover:bg-olive-800 transition-colors">
-                      View Details
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+                    <div className="p-8">
+                      <div className="text-[10px] font-bold text-olive-600 uppercase tracking-widest mb-3">{car.brand}</div>
+                      <h3 className="font-display text-2xl text-metal-900 mb-2">{car.model}</h3>
+                      <div className="flex gap-4 text-[10px] uppercase font-bold text-metal-400 mb-8">
+                        <span>{car.fuel}</span>
+                        <span className="w-1 h-1 bg-metal-200 rounded-full my-auto" />
+                        <span>{car.trans}</span>
+                        <span className="w-1 h-1 bg-metal-200 rounded-full my-auto" />
+                        <span>{car.year}</span>
+                      </div>
+                      
+                      <div className="flex items-end justify-between">
+                        <div>
+                           <div className="text-metal-400 text-[10px] uppercase tracking-widest font-bold mb-1">Starting from</div>
+                           <div className="font-display text-3xl text-metal-900">₹{car.price} <span className="text-sm font-body font-normal text-metal-400">Lakh</span></div>
+                        </div>
+                        <div className="w-10 h-10 border border-metal-200 flex items-center justify-center group-hover:bg-metal-900 group-hover:text-white transition-all">
+                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        </main>
       </div>
     </div>
   );

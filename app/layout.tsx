@@ -3,6 +3,9 @@ import { Cormorant_Garamond, Jost, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
+import PageTransitionProvider from '@/components/providers/PageTransitionProvider';
+import CustomCursor from '@/components/ui/CustomCursor';
 
 const displayFont = Cormorant_Garamond({ 
   subsets: ['latin'], 
@@ -26,7 +29,10 @@ const monoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Thriveni Cars | Multi-Brand Dealership',
+  title: {
+    default: 'Thriveni Cars | Chennai\'s No.1 Multi-Brand Dealership',
+    template: '%s | Thriveni Cars'
+  },
   description: "Chennai's Premier Multi-Brand Dealership. Explore 200+ new and pre-owned vehicles across Maruti Arena, NEXA, Honda, Royal Enfield, and Commercial segments.",
   openGraph: {
     title: 'Thriveni Cars | Multi-Brand Dealership',
@@ -43,12 +49,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`}>
-      <body className="font-body antialiased flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+      <body className="font-body antialiased selection:bg-amber-cta selection:text-white">
+        <SmoothScrollProvider>
+          <PageTransitionProvider>
+            <CustomCursor />
+            <Navbar />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </PageTransitionProvider>
+        </SmoothScrollProvider>
       </body>
     </html>
   );

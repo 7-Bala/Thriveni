@@ -4,68 +4,97 @@
 
 :root {
   --olive-primary: #4A5C35;
+  --olive-light: #7A8F62;
   --amber-cta: #D4920A;
-  --metal-dark: #0F0E0C;
+  --amber-light: #F2B228;
+  --metal-900: #0F0E0C;
+  --metal-800: #1A1917;
+  --metal-400: #71717A;
   --bg-primary: #FAFAF8;
+  --bg-section: #F4F3EF;
 }
 
-html {
-  scroll-behavior: smooth;
+@layer base {
+  html {
+    scroll-behavior: auto; /* Disabled for Lenis */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--metal-900);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-metal-900;
+  }
+
+  p {
+    @apply font-body leading-relaxed text-metal-400;
+  }
 }
 
-body {
-  background-color: var(--bg-primary);
-  color: #0F0E0C;
+@layer components {
+  /* Premium Sectioning */
+  .section-padding {
+    @apply py-20 md:py-24 lg:py-32;
+  }
+
+  /* Anti-AI Button Style: Sharp Corners */
+  .btn-primary {
+    @apply bg-amber-cta text-white font-semibold px-8 py-4 rounded-sm transition-all duration-300 hover:bg-amber-light inline-block text-center uppercase tracking-widest text-xs;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-metal-900 text-metal-900 font-semibold px-8 py-4 rounded-sm transition-all duration-300 hover:bg-metal-900 hover:text-white inline-block text-center uppercase tracking-widest text-xs;
+  }
+
+  .container-custom {
+    @apply max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16;
+  }
+}
+
+/* Typography Scale with Clamp (Fluid Sizing) */
+.text-display-2xl { font-size: clamp(2.5rem, 8vw, 4.5rem); }
+.text-display-xl { font-size: clamp(2rem, 6vw, 3.5rem); }
+.text-display-lg { font-size: clamp(1.75rem, 5vw, 2.75rem); }
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Hide Scrollbar for Lenis */
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F5F4F2;
+  background: var(--bg-section);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #7A8F62;
-  border-radius: 3px;
+  background: var(--olive-primary);
+  border-radius: 0px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #4A5C35;
-}
-
-/* Selection Highlight */
+/* Selection */
 ::selection {
-  background: #F2B228;
-  color: #0F0E0C;
-}
-
-/* Focus Visible */
-*:focus-visible {
-  outline: 2px solid #4A5C35;
-  outline-offset: 2px;
-}
-
-/* Container constraint for sections */
-.container-custom {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
-@media (min-width: 640px) {
-  .container-custom {
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container-custom {
-    padding-left: 4rem;
-    padding-right: 4rem;
-  }
+  @apply bg-amber-cta text-white;
 }

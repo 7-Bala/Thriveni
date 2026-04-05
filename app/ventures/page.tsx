@@ -1,132 +1,93 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { 
+  fadeUp, 
+  staggerContainer, 
+  EASING 
+} from '@/lib/animations';
 
 export default function VenturesPage() {
+  const ventures = [
+    { title: 'New Car Sales', brand: 'Multi-Brand Excellence', desc: 'Authorized retail for NEXA, Maruti Arena, and Honda with radical transparency.', img: 'https://images.unsplash.com/photo-1562519819-016930ada31c?auto=format&fit=crop&q=80&w=800', size: 'large' },
+    { title: 'Bespoke Service', brand: 'Factory Standards', desc: 'State-of-the-art diagnostic bays with genuine spare parts and certified technicians.', img: 'https://images.unsplash.com/photo-1530046339160-ce3e5b097a2f?auto=format&fit=crop&q=80&w=800', size: 'small' },
+    { title: 'Driving Suite', brand: 'Safety First', desc: 'Certified instructors and simulator-based training for the next generation of drivers.', img: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=800', size: 'small' },
+    { title: 'Finance Hub', brand: 'Instant Approval', desc: '10+ banking partners providing the most competitive interest rates in Chennai.', img: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=800', size: 'small' },
+    { title: 'Insurance Edge', brand: 'Cashless Claims', desc: 'Comprehensive motor insurance with zero-depreciation covers and instant renewals.', img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800', size: 'small' }
+  ];
+
   return (
-    <div className="min-h-screen">
-      {/* SECTION 1 — HERO */}
-      <section className="relative h-[50vh] flex items-center bg-metal-900 pt-20">
-        <div className="absolute inset-0 bg-gradient-to-r from-metal-900 to-transparent z-10"></div>
-        <Image src="/images/placeholder-car.jpg" alt="Services" fill priority className="object-cover object-center z-0 opacity-40" />
-        <div className="container-custom relative z-20">
-          <div className="text-metal-400 text-sm mb-6">Home / Our Ventures</div>
-          <div className="uppercase tracking-widest text-amber-cta text-xs mb-4 font-semibold">OUR SERVICES</div>
-          <h1 className="font-display text-display-xl text-metal-50 leading-tight">Everything You Need.<br />Right Here.</h1>
-          <p className="text-metal-300 text-lg max-w-2xl mt-4 leading-relaxed">
-            From your first test drive to insurance, service, and beyond — Thriveni is your lifelong automotive partner.
-          </p>
-        </div>
-      </section>
-
-      {/* SECTION 2 — SERVICES GRID */}
-      <section className="bg-bg-primary py-24">
+    <div className="min-h-screen bg-bg-primary pt-32 pb-32">
+      
+      {/* SECTION 1 — HEADER */}
+      <section className="mb-24">
         <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            {/* Sales - Large */}
-            <div className="lg:col-span-2 bg-olive-800 rounded-2xl p-8 text-white group hover:-translate-y-2 transition-transform shadow-sm hover:shadow-automotive">
-              <h2 className="font-display text-3xl mb-2">New Car Sales</h2>
-              <p className="text-olive-200 mb-6 max-w-md">Zero compromise on quality. Best price guarantee across all our authorized brands.</p>
-              <ul className="space-y-3 mb-8">
-                {['Exclusive lead ownership', 'Personalised sales manager', 'Test drive at home'].map(item => (
-                  <li key={item} className="flex items-center gap-3">
-                    <span className="w-5 h-5 rounded-full bg-olive-700 flex items-center justify-center text-amber-cta text-xs">✓</span>
-                    <span className="text-sm">{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/inventory" className="text-amber-cta font-medium hover:underline">Explore Inventory →</Link>
-            </div>
-
-            {/* Service Centre */}
-            <div className="bg-metal-800 rounded-2xl p-8 text-white group hover:-translate-y-2 transition-transform shadow-sm hover:shadow-automotive">
-              <h2 className="font-display text-2xl mb-2">Service Centre</h2>
-              <p className="text-metal-300 text-sm mb-6">Authorized service for Maruti Suzuki & Honda with genuine spare parts.</p>
-              <ul className="space-y-2 mb-8 text-sm text-metal-400">
-                <li>General service & maintenance</li>
-                <li>Denting & painting</li>
-                <li>AC service & electrical</li>
-              </ul>
-              <button className="text-amber-cta font-medium hover:underline">Book Service →</button>
-            </div>
-
-            {/* Driving School */}
-            <div className="bg-white border border-metal-100 rounded-2xl p-8 group hover:-translate-y-2 transition-transform shadow-sm hover:shadow-automotive">
-              <h2 className="font-display text-2xl text-metal-900 mb-2">Driving School</h2>
-              <p className="text-metal-600 text-sm mb-6">Learn in the same car you plan to buy. Certified instructors and flexible timings.</p>
-              <ul className="space-y-2 mb-8 text-sm text-metal-500">
-                <li>Basic & Advanced courses</li>
-                <li>Simulator training</li>
-                <li>License assistance</li>
-              </ul>
-              <button className="text-olive-700 font-medium hover:underline">Enquire Now →</button>
-            </div>
-
-            {/* Finance & Exchange */}
-            <div className="bg-bg-section border border-metal-100 rounded-2xl p-8 group hover:-translate-y-2 transition-transform shadow-sm hover:shadow-automotive">
-              <h2 className="font-display text-2xl text-metal-900 mb-2">Finance & Exchange</h2>
-              <p className="text-metal-600 text-sm mb-6">10+ partner banks for pre-approved loans and best exchange bonuses.</p>
-              <ul className="space-y-2 mb-8 text-sm text-metal-500">
-                <li>Up to 100% on-road funding</li>
-                <li>Instant evaluation</li>
-                <li>Hassle-free paperwork</li>
-              </ul>
-              <button className="text-olive-700 font-medium hover:underline">Calculate EMI →</button>
-            </div>
-
-            {/* Insurance */}
-            <div className="bg-white border border-metal-100 rounded-2xl p-8 group hover:-translate-y-2 transition-transform shadow-sm hover:shadow-automotive">
-              <h2 className="font-display text-2xl text-metal-900 mb-2">Insurance</h2>
-              <p className="text-metal-600 text-sm mb-6">Motor insurance simplified. Cashless claims across our network.</p>
-              <ul className="space-y-2 mb-8 text-sm text-metal-500">
-                <li>New car insurance</li>
-                <li>Easy renewals</li>
-                <li>Zero-depreciation covers</li>
-              </ul>
-              <button className="text-olive-700 font-medium hover:underline">Get a Quote →</button>
-            </div>
-
-          </div>
+           <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+             <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">ECOSYSTEM</span>
+             <h1 className="font-display text-display-xl text-metal-900 leading-tight mb-8">
+               Beyond the <span className="text-olive-700">Showroom.</span>
+             </h1>
+             <p className="text-metal-500 text-lg max-w-xl font-body font-light">
+               Thriveni is a complete automotive lifecycle partner. We manage everything from your first lesson to your 100,000km service.
+             </p>
+           </motion.div>
         </div>
       </section>
 
-      {/* SECTION 4 — ENQUIRY FORM */}
-      <section className="bg-olive-800 py-24">
-        <div className="container-custom flex flex-col md:flex-row gap-12 items-center">
-          <div className="md:w-1/2 text-white">
-            <h2 className="font-display text-4xl mb-4">Book a Service or Get a Quote</h2>
-            <p className="text-olive-200 mb-8">Whatever your automotive needs, our team is ready to assist you. We guarantee a response within 2 business hours.</p>
-            <ul className="space-y-4 text-olive-100">
-              <li className="flex items-center gap-3">
-                <span className="bg-olive-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">✓</span>
-                Priority booking for existing customers
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="bg-olive-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">✓</span>
-                Transparent estimates with no hidden costs
-              </li>
-            </ul>
-          </div>
-          <div className="md:w-1/2 w-full">
-            <div className="bg-white rounded-xl p-8 shadow-lg">
-              <form className="flex flex-col gap-4">
-                <input type="text" placeholder="Your Name" className="border border-metal-200 rounded-lg px-4 py-3" required />
-                <input type="tel" placeholder="Phone Number" className="border border-metal-200 rounded-lg px-4 py-3" required />
-                <select className="border border-metal-200 rounded-lg px-4 py-3 bg-white text-metal-600" required>
-                  <option value="">Select Service Type</option>
-                  <option value="sales">Sales Enquiry</option>
-                  <option value="service">Service Booking</option>
-                  <option value="finance">Finance Query</option>
-                  <option value="insurance">Insurance</option>
-                  <option value="driving">Driving School</option>
-                </select>
-                <textarea rows={3} placeholder="Additional Details (Optional)" className="border border-metal-200 rounded-lg px-4 py-3 resize-none"></textarea>
-                <button type="submit" className="bg-amber-cta text-metal-900 font-bold py-4 rounded-lg mt-2 hover:bg-amber-light">Submit Request</button>
-              </form>
-            </div>
-          </div>
+      {/* SECTION 2 — ASYMMETRIC GRID */}
+      <section>
+        <div className="container-custom">
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {ventures.map((v, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: i * 0.1, ease: EASING.expoOut }}
+                  className={`${v.size === 'large' ? 'md:col-span-2' : 'md:col-span-1'} group bg-white border border-metal-100 overflow-hidden relative`}
+                >
+                   <div className="aspect-[16/10] relative overflow-hidden bg-bg-section">
+                      <Image src={v.img} alt={v.title} fill className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000" />
+                   </div>
+                   <div className="p-12">
+                      <div className="text-olive-600 font-bold text-[9px] uppercase tracking-widest mb-3">{v.brand}</div>
+                      <h3 className="font-display text-3xl text-metal-900 mb-4">{v.title}</h3>
+                      <p className="text-metal-500 text-sm mb-10 leading-relaxed max-w-sm">{v.desc}</p>
+                      <button className="text-amber-cta font-bold text-[10px] uppercase tracking-[0.3em] border-b-2 border-transparent hover:border-amber-cta transition-all">Explore Service →</button>
+                   </div>
+                </motion.div>
+              ))}
+           </div>
         </div>
       </section>
+
+      {/* SECTION 3 — INTEGRATED CALL TO ACTION */}
+      <section className="mt-32">
+        <div className="container-custom">
+           <div className="bg-metal-900 p-16 sm:p-24 flex flex-col items-center text-center relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-olive-700/10 blur-3xl -translate-y-1/2 translate-x-1/2" />
+              
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="relative z-10">
+                 <h2 className="font-display text-4xl sm:text-5xl text-white mb-8">Unified Service Request</h2>
+                 <p className="text-metal-400 text-lg max-w-2xl mx-auto mb-16 font-body font-light">Whether it&apos;s a periodic service or a finance query, our central concierge handles all requests with a 15-minute callback guarantee.</p>
+                 
+                 <form className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                    <div className="relative group/field">
+                       <input type="text" placeholder="Full Name" className="w-full bg-white/5 border border-white/10 px-6 py-5 outline-none text-white text-sm focus:ring-1 focus:ring-amber-cta transition-all" />
+                    </div>
+                    <div className="relative group/field">
+                       <input type="tel" placeholder="Phone Number" className="w-full bg-white/5 border border-white/10 px-6 py-5 outline-none text-white text-sm focus:ring-1 focus:ring-amber-cta transition-all" />
+                    </div>
+                    <button className="btn-primary py-5">Send Request</button>
+                 </form>
+              </motion.div>
+           </div>
+        </div>
+      </section>
+
     </div>
   );
 }
