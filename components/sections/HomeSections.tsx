@@ -51,16 +51,16 @@ export function Hero() {
   const headline = ["Drive", "Your", "Dream", "Car"];
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex items-center bg-metal-900 overflow-hidden">
+    <section ref={containerRef} className="relative overflow-hidden">
       <HeroImage 
         src={HERO_IMAGES.homepage} 
         alt="Thriveni Premium Dealership Showroom" 
         overlay="dark-left"
         priority={true}
         objectPosition="center 45%"
+        isAbsolute={false}
       >
-
-      <div className="container-custom relative z-20 w-full pt-20">
+        <div className="container-custom relative z-20 w-full min-h-screen flex flex-col justify-center pt-20">
         <div className="max-w-3xl">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -120,8 +120,8 @@ export function Hero() {
         />
         <span className="text-metal-500 text-[10px] uppercase tracking-[0.4em] font-bold">Scroll</span>
       </div>
-      </HeroImage>
-    </section>
+    </HeroImage>
+  </section>
   );
 }
 

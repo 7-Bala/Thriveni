@@ -49,12 +49,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`}>
-      <body className="font-body antialiased selection:bg-amber-cta selection:text-white">
+      <body className="font-body antialiased selection:bg-amber-cta selection:text-white bg-metal-900 min-h-screen flex flex-col">
         <SmoothScrollProvider>
           <PageTransitionProvider>
             <CustomCursor />
             <Navbar />
-            <main className="min-h-screen">
+            <main className="flex-grow">
               {children}
             </main>
             <Footer />

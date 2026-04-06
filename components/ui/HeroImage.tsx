@@ -11,6 +11,7 @@ interface HeroImageProps {
   priority?: boolean;
   children?: ReactNode;
   objectPosition?: string;
+  isAbsolute?: boolean;
 }
 
 export default function HeroImage({
@@ -19,7 +20,8 @@ export default function HeroImage({
   overlay = 'dark-full',
   priority = false,
   children,
-  objectPosition = 'center 40%'
+  objectPosition = 'center 40%',
+  isAbsolute = false
 }: HeroImageProps) {
   
   const getOverlayStyle = () => {
@@ -38,7 +40,7 @@ export default function HeroImage({
   };
 
   return (
-    <div className="relative w-full h-full min-h-[60vh] overflow-hidden">
+    <div className={`${isAbsolute ? 'absolute inset-0' : 'relative w-full h-full min-h-[60vh]'} overflow-hidden`}>
       {/* Background Image */}
       <Image
         src={src}

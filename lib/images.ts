@@ -22,9 +22,9 @@ export const HERO_IMAGES = {
 // ─── CAR MODEL IMAGES ──────────────────────────────────────────────────────
 export const CAR_IMAGES = {
   swift: {
-    front: 'https://images.unsplash.com/photo-1541443131876-96b539f0d186?w=800&q=85&auto=format&fit=crop',
-    side: 'https://images.unsplash.com/photo-1541443131876-96b539f0d186?w=800&q=85&auto=format&fit=crop',
-    rear: 'https://images.unsplash.com/photo-1541443131876-96b539f0d186?w=800&q=85&auto=format&fit=crop',
+    front: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=85&auto=format&fit=crop',
+    side: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=85&auto=format&fit=crop',
+    rear: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=85&auto=format&fit=crop',
     interior: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?w=800&q=85&auto=format&fit=crop',
     seat: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?w=800&q=85&auto=format&fit=crop',
   },
