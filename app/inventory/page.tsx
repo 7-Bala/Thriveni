@@ -10,17 +10,17 @@ import gsap from 'gsap';
 import HeroImage from '@/components/ui/HeroImage';
 import BrandLogo from '@/components/ui/BrandLogo';
 import CarImagePlaceholder from '@/components/ui/CarImagePlaceholder';
-import { HERO_IMAGES } from '@/lib/images';
+import { HERO_IMAGES, CAR_IMAGES } from '@/lib/images';
 import { MEDIUM_BLUR } from '@/lib/blurPlaceholders';
 
 export default function InventoryPage() {
   const [activeBrand, setActiveBrand] = useState('All');
   
   const cars = [
-    { id: '1', brand: 'Maruti Arena', model: 'Swift', variant: 'ZXI Plus', price: '8.99', fuel: 'Petrol', trans: 'Manual', year: 2024, img: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&q=80&w=600' },
-    { id: '2', brand: 'NEXA', model: 'Baleno', variant: 'Alpha', price: '9.88', fuel: 'Petrol', trans: 'Automatic', year: 2024, img: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&q=80&w=600' },
-    { id: '3', brand: 'Honda', model: 'City', variant: 'ZX CVT', price: '16.05', fuel: 'Petrol', trans: 'Automatic', year: 2023, img: 'https://images.unsplash.com/photo-1527247043589-98e6ac08f56c?auto=format&fit=crop&q=80&w=600' },
-    { id: '4', brand: 'Royal Enfield', model: 'Classic 350', variant: 'Dark Stealth', price: '2.20', fuel: 'Petrol', trans: 'Manual', year: 2024, img: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?auto=format&fit=crop&q=80&w=600' },
+    { id: '1', brand: 'Maruti Arena', model: 'Swift', variant: 'ZXI Plus', price: '8.99', fuel: 'Petrol', trans: 'Manual', year: 2024, img: CAR_IMAGES.swift.side },
+    { id: '2', brand: 'NEXA', model: 'Baleno', variant: 'Alpha', price: '9.88', fuel: 'Petrol', trans: 'Automatic', year: 2024, img: CAR_IMAGES.baleno.side },
+    { id: '3', brand: 'Honda', model: 'City', variant: 'ZX CVT', price: '16.05', fuel: 'Petrol', trans: 'Automatic', year: 2023, img: CAR_IMAGES.city.side },
+    { id: '4', brand: 'Royal Enfield', model: 'Classic 350', variant: 'Dark Stealth', price: '2.20', fuel: 'Petrol', trans: 'Manual', year: 2024, img: CAR_IMAGES.classic350.side },
   ];
 
   const filteredCars = activeBrand === 'All' ? cars : cars.filter(c => c.brand === activeBrand);

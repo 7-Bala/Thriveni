@@ -5,31 +5,37 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { fadeUp, EASING } from '@/lib/animations';
-import { CAR_IMAGES } from '@/lib/images';
+import { CAR_IMAGES, HERO_IMAGES } from '@/lib/images';
 import { MEDIUM_BLUR } from '@/lib/blurPlaceholders';
+import HeroImage from '@/components/ui/HeroImage';
 
 export default function OffersPage() {
   const [activeTab, setActiveTab] = useState('All Offers');
 
   return (
-    <div className="min-h-screen bg-bg-primary pt-32 pb-32">
+    <div className="min-h-screen bg-bg-primary pb-32">
       
       {/* SECTION 1 — HEADER & COUNTDOWN */}
-      <section className="mb-20">
-        <div className="container-custom">
-           <div className="flex flex-col lg:flex-row justify-between items-end gap-12">
+      <section className="bg-metal-900 overflow-hidden mb-20">
+        <HeroImage 
+          src={HERO_IMAGES.offersPage} 
+          alt="Thriveni Cars Exclusive Offers" 
+          overlay="dark-left"
+          priority
+        >
+          <div className="container-custom py-32 flex flex-col lg:flex-row justify-between items-end gap-12">
               <motion.div initial="hidden" animate="visible" variants={fadeUp} className="max-w-2xl">
-                 <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">OPPORTUNITY</span>
-                 <h1 className="font-display text-display-xl text-metal-900 leading-tight">
-                   The Monsoon <br/> <span className="text-olive-700">Privilege Suite.</span>
-                 </h1>
+                  <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">OPPORTUNITY</span>
+                  <h1 className="font-display text-display-xl text-white leading-tight">
+                    The Monsoon <br/> <span className="text-amber-cta underline decoration-1 underline-offset-8">Privilege Suite.</span>
+                  </h1>
               </motion.div>
               
               <motion.div 
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: EASING.expoOut }}
-                className="bg-metal-900 p-8 sm:p-10 border-l-4 border-amber-cta shadow-2xl shrink-0"
+                className="bg-white/5 backdrop-blur-xl p-8 sm:p-10 border border-white/10 border-l-4 border-amber-cta shadow-2xl shrink-0"
               >
                  <div className="text-metal-400 text-[10px] uppercase tracking-[0.4em] font-bold mb-6">OFFER EXPIRY TRACKER</div>
                  <div className="flex gap-6 sm:gap-10">
@@ -39,95 +45,93 @@ export default function OffersPage() {
                     <CountdownUnit value={30} label="SEC" />
                  </div>
               </motion.div>
-           </div>
+          </div>
+        </HeroImage>
+      </section>
 
-           <div className="flex flex-wrap gap-4 mt-16 border-b border-metal-100 pb-8">
-            {['All Offers', 'Maruti Arena', 'NEXA', 'Honda', 'Royal Enfield'].map((tab) => (
-              <button 
-                key={tab} 
-                onClick={() => setActiveTab(tab)}
-                className={`text-[11px] uppercase tracking-[0.2em] font-bold transition-all px-6 py-2 ${activeTab === tab ? 'text-amber-cta border-b border-amber-cta' : 'text-metal-400 hover:text-metal-900'}`}
+      <div className="container-custom">
+        <div className="flex flex-wrap gap-4 mb-16 border-b border-metal-100 pb-8">
+          {['All Offers', 'Maruti Arena', 'NEXA', 'Honda', 'Royal Enfield'].map((tab) => (
+            <button 
+              key={tab} 
+              onClick={() => setActiveTab(tab)}
+              className={`text-[11px] uppercase tracking-[0.2em] font-bold transition-all px-6 py-2 ${activeTab === tab ? 'text-amber-cta border-b border-amber-cta' : 'text-metal-400 hover:text-metal-900'}`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* SECTION 2 — MAIN OFFERS GRID */}
+        <section>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {[
+              { brand: 'NEXA', title: 'Grand Vitara Hybrid', disc: 'Up to ₹75,000 Off on top variants', img: CAR_IMAGES.grandVitara.side },
+              { brand: 'Maruti Arena', title: 'The New Swift', disc: 'Zero down payment + Accessory kit worth ₹10k', img: CAR_IMAGES.swift.side },
+              { brand: 'Honda', title: 'City 5th Gen', disc: 'Exclusive exchange bonus of ₹50,000', img: CAR_IMAGES.city.side },
+            ].map((offer, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: i * 0.15 }}
+                className="bg-white border border-metal-100 group cursor-pointer relative overflow-hidden"
               >
-                {tab}
-              </button>
+                  {/* Ribbon Unfurl Effect */}
+                  <div className="absolute top-0 right-0 z-20 w-32 h-32 overflow-hidden pointer-events-none">
+                     <div className="absolute top-0 right-0 bg-amber-cta text-white text-[9px] font-bold uppercase tracking-widest px-10 py-1 rotate-45 translate-x-8 translate-y-3 shadow-xl border-l border-white/20">Exclusive</div>
+                  </div>
+
+                  <div className="aspect-[16/9] relative overflow-hidden bg-[#1A1E14]">
+                     <Image 
+                       src={offer.img} 
+                       alt={offer.title} 
+                       fill 
+                       sizes="(max-width: 768px) 100vw, 33vw"
+                       placeholder="blur"
+                       blurDataURL={MEDIUM_BLUR}
+                       className="object-cover group-hover:scale-105 transition-transform duration-1000" 
+                       style={{ filter: 'brightness(0.94) contrast(1.06) saturate(0.92)' }}
+                     />
+                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
+                  </div>
+                 
+                 <div className="p-10">
+                    <div className="text-olive-700 font-bold text-[9px] uppercase tracking-widest mb-3">{offer.brand}</div>
+                    <h3 className="font-display text-2xl text-metal-900 mb-4">{offer.title}</h3>
+                    <p className="text-metal-500 text-sm mb-10 leading-relaxed font-body font-light">{offer.disc}</p>
+                    
+                    <Link href="/contact" className="flex items-center justify-between group/link">
+                       <span className="text-amber-cta text-[10px] font-bold uppercase tracking-[0.3em]">Claim Offer</span>
+                       <div className="w-8 h-8 flex items-center justify-center border border-metal-200 group-hover/link:bg-metal-900 group-hover/link:text-white transition-all">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                       </div>
+                    </Link>
+                 </div>
+              </motion.div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* SECTION 2 — MAIN OFFERS GRID */}
-      <section>
-        <div className="container-custom">
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {[
-               { brand: 'NEXA', title: 'Grand Vitara Hybrid', disc: 'Up to ₹75,000 Off on top variants', img: CAR_IMAGES.grandVitara.side },
-               { brand: 'Maruti Arena', title: 'The New Swift', disc: 'Zero down payment + Accessory kit worth ₹10k', img: CAR_IMAGES.swift.side },
-               { brand: 'Honda', title: 'City 5th Gen', disc: 'Exclusive exchange bonus of ₹50,000', img: CAR_IMAGES.city.side },
-             ].map((offer, i) => (
-                <motion.div 
-                  key={i}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: i * 0.15 }}
-                  className="bg-white border border-metal-100 group cursor-pointer relative overflow-hidden"
-                >
-                    {/* Ribbon Unfurl Effect */}
-                    <div className="absolute top-0 right-0 z-20 w-32 h-32 overflow-hidden pointer-events-none">
-                       <div className="absolute top-0 right-0 bg-amber-cta text-white text-[9px] font-bold uppercase tracking-widest px-10 py-1 rotate-45 translate-x-8 translate-y-3 shadow-xl border-l border-white/20">Exclusive</div>
-                    </div>
-
-                    <div className="aspect-[16/9] relative overflow-hidden bg-[#1A1E14]">
-                       <Image 
-                         src={offer.img} 
-                         alt={offer.title} 
-                         fill 
-                         sizes="(max-width: 768px) 100vw, 33vw"
-                         placeholder="blur"
-                         blurDataURL={MEDIUM_BLUR}
-                         className="object-cover group-hover:scale-105 transition-transform duration-1000" 
-                         style={{ filter: 'brightness(0.94) contrast(1.06) saturate(0.92)' }}
-                       />
-                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
-                    </div>
-                   
-                   <div className="p-10">
-                      <div className="text-olive-700 font-bold text-[9px] uppercase tracking-widest mb-3">{offer.brand}</div>
-                      <h3 className="font-display text-2xl text-metal-900 mb-4">{offer.title}</h3>
-                      <p className="text-metal-500 text-sm mb-10 leading-relaxed font-body font-light">{offer.disc}</p>
-                      
-                      <Link href="/contact" className="flex items-center justify-between group/link">
-                         <span className="text-amber-cta text-[10px] font-bold uppercase tracking-[0.3em]">Claim Offer</span>
-                         <div className="w-8 h-8 flex items-center justify-center border border-metal-200 group-hover/link:bg-metal-900 group-hover/link:text-white transition-all">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-                         </div>
-                      </Link>
-                   </div>
-                </motion.div>
-             ))}
-           </div>
-        </div>
-      </section>
-
-      {/* SECTION 3 — URGENCY CTA */}
-      <section className="mt-32">
-         <div className="container-custom">
-            <div className="bg-amber-cta p-20 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
-               {/* Asymmetric Decor */}
-               <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-               
-               <div className="relative z-10">
-                  <h2 className="font-display text-4xl text-metal-900 mb-4">Stock Clearing Initiative</h2>
-                  <p className="text-metal-800 text-lg max-w-xl font-body font-medium">Enquire today for additional dealer-level discounts on 2024 models not available on brand portals.</p>
-               </div>
-               
-               <div className="relative z-10 flex flex-col sm:flex-row gap-6">
-                  <Link href="/contact" className="bg-metal-900 text-white px-10 py-5 font-bold text-[10px] uppercase tracking-widest hover:bg-olive-800 transition-all">Book Consultation</Link>
-                  <Link href="/inventory" className="bg-white text-metal-900 px-10 py-5 font-bold text-[10px] uppercase tracking-widest hover:bg-bg-section transition-all">Browse Inventory</Link>
-               </div>
-            </div>
-         </div>
-      </section>
+        {/* SECTION 3 — URGENCY CTA */}
+        <section className="mt-32">
+          <div className="bg-amber-cta p-20 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
+             {/* Asymmetric Decor */}
+             <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+             
+             <div className="relative z-10">
+                <h2 className="font-display text-4xl text-metal-900 mb-4">Stock Clearing Initiative</h2>
+                <p className="text-metal-800 text-lg max-w-xl font-body font-medium">Enquire today for additional dealer-level discounts on 2024 models not available on brand portals.</p>
+             </div>
+             
+             <div className="relative z-10 flex flex-col sm:flex-row gap-6">
+                <Link href="/contact" className="bg-metal-900 text-white px-10 py-5 font-bold text-[10px] uppercase tracking-widest hover:bg-olive-800 transition-all">Book Consultation</Link>
+                <Link href="/inventory" className="bg-white text-metal-900 px-10 py-5 font-bold text-[10px] uppercase tracking-widest hover:bg-bg-section transition-all">Browse Inventory</Link>
+             </div>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

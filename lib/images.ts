@@ -1,7 +1,7 @@
 // ─── HERO IMAGES ───────────────────────────────────────────────────────────
 export const HERO_IMAGES = {
-  homepage: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=90&auto=format&fit=crop',
-  // Dark dramatic shot of a car interior/exterior at night — fits metal-900 bg perfectly
+  homepage: '/images/hero-showroom.png',
+  // Cinematic, brand-aligned bespoke showroom interior
   
   aboutPage: 'https://images.unsplash.com/photo-1542362567-b07e54358753?w=1920&q=85&auto=format&fit=crop',
   // Wide showroom interior, warm lighting, premium feel
@@ -22,11 +22,11 @@ export const HERO_IMAGES = {
 // ─── CAR MODEL IMAGES ──────────────────────────────────────────────────────
 export const CAR_IMAGES = {
   swift: {
-    front: 'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800&q=85&auto=format&fit=crop',
+    front: 'https://images.unsplash.com/photo-1541443131876-96b539f0d186?w=800&q=85&auto=format&fit=crop',
     side: 'https://images.unsplash.com/photo-1541443131876-96b539f0d186?w=800&q=85&auto=format&fit=crop',
-    rear: 'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=800&q=85&auto=format&fit=crop',
-    interior: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=85&auto=format&fit=crop',
-    seat: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85&auto=format&fit=crop',
+    rear: 'https://images.unsplash.com/photo-1541443131876-96b539f0d186?w=800&q=85&auto=format&fit=crop',
+    interior: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?w=800&q=85&auto=format&fit=crop',
+    seat: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?w=800&q=85&auto=format&fit=crop',
   },
   wagonr: {
     front: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&q=85&auto=format&fit=crop',
@@ -44,24 +44,24 @@ export const CAR_IMAGES = {
   },
   baleno: {
     front: 'https://images.unsplash.com/photo-1616788494672-ec7ca05f72da?w=800&q=85&auto=format&fit=crop',
-    side: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&q=85&auto=format&fit=crop',
-    rear: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&q=85&auto=format&fit=crop',
-    interior: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=85&auto=format&fit=crop',
-    seat: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85&auto=format&fit=crop',
+    side: 'https://images.unsplash.com/photo-1616788494672-ec7ca05f72da?w=800&q=85&auto=format&fit=crop',
+    rear: 'https://images.unsplash.com/photo-1616788494672-ec7ca05f72da?w=800&q=85&auto=format&fit=crop',
+    interior: 'https://images.unsplash.com/photo-1593123748293-890250640f0c?w=800&q=85&auto=format&fit=crop',
+    seat: 'https://images.unsplash.com/photo-1593123748293-890250640f0c?w=800&q=85&auto=format&fit=crop',
   },
   grandVitara: {
     front: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=85&auto=format&fit=crop',
-    side: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&q=85&auto=format&fit=crop',
-    rear: 'https://images.unsplash.com/photo-1542362567-b07e54358753?w=800&q=85&auto=format&fit=crop',
-    interior: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=85&auto=format&fit=crop',
-    seat: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85&auto=format&fit=crop',
+    side: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=85&auto=format&fit=crop',
+    rear: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&q=85&auto=format&fit=crop',
+    interior: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?w=800&q=85&auto=format&fit=crop',
+    seat: 'https://images.unsplash.com/photo-1593123748293-890250640f0c?w=800&q=85&auto=format&fit=crop',
   },
   city: {
     front: 'https://images.unsplash.com/photo-1527247043589-98e6ac08f56c?w=800&q=85&auto=format&fit=crop',
-    side: 'https://images.unsplash.com/photo-1532581133568-3cdfe3ae6476?w=800&q=85&auto=format&fit=crop',
-    rear: 'https://images.unsplash.com/photo-1527247043589-98e6ac08f56c?w=800&q=85&auto=format&fit=crop',
-    interior: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=85&auto=format&fit=crop',
-    seat: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85&auto=format&fit=crop',
+    side: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&q=85&auto=format&fit=crop',
+    rear: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&q=85&auto=format&fit=crop',
+    interior: 'https://images.unsplash.com/photo-1593123748293-890250640f0c?w=800&q=85&auto=format&fit=crop',
+    seat: 'https://images.unsplash.com/photo-1593123748293-890250640f0c?w=800&q=85&auto=format&fit=crop',
   },
   amaze: {
     front: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&q=85&auto=format&fit=crop',
@@ -71,18 +71,25 @@ export const CAR_IMAGES = {
     seat: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85&auto=format&fit=crop',
   },
   classic350: {
-    front: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?w=800&q=85&auto=format&fit=crop',
-    side: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?w=800&q=85&auto=format&fit=crop',
-    rear: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?w=800&q=85&auto=format&fit=crop',
-    interior: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?w=800&q=85&auto=format&fit=crop',
-    seat: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?w=800&q=85&auto=format&fit=crop',
+    front: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=800&q=85&auto=format&fit=crop',
+    side: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=800&q=85&auto=format&fit=crop',
+    rear: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=800&q=85&auto=format&fit=crop',
+    interior: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=800&q=85&auto=format&fit=crop',
+    seat: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=800&q=85&auto=format&fit=crop',
   },
   meteor350: {
-    front: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?w=800&q=85&auto=format&fit=crop',
-    side: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?w=800&q=85&auto=format&fit=crop',
-    rear: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?w=800&q=85&auto=format&fit=crop',
-    interior: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?w=800&q=85&auto=format&fit=crop',
-    seat: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?w=800&q=85&auto=format&fit=crop',
+    front: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=800&q=85&auto=format&fit=crop',
+    side: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=800&q=85&auto=format&fit=crop',
+    rear: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=800&q=85&auto=format&fit=crop',
+    interior: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=800&q=85&auto=format&fit=crop',
+    seat: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=800&q=85&auto=format&fit=crop',
+  },
+  himalayan: {
+    front: 'https://images.unsplash.com/photo-1615172282427-9a57ef2d142e?w=800&q=85&auto=format&fit=crop',
+    side: 'https://images.unsplash.com/photo-1615172282427-9a57ef2d142e?w=800&q=85&auto=format&fit=crop',
+    rear: 'https://images.unsplash.com/photo-1615172282427-9a57ef2d142e?w=800&q=85&auto=format&fit=crop',
+    interior: 'https://images.unsplash.com/photo-1615172282427-9a57ef2d142e?w=800&q=85&auto=format&fit=crop',
+    seat: 'https://images.unsplash.com/photo-1615172282427-9a57ef2d142e?w=800&q=85&auto=format&fit=crop',
   },
 }
 
@@ -101,12 +108,12 @@ export const SECTION_BG_IMAGES = {
 
 // ─── TEAM / PEOPLE IMAGES ─────────────────────────────────────────────────
 export const PEOPLE_IMAGES = {
-  md: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=85&auto=format&fit=crop',
+  md: '/images/md-portrait.png',
   // Professional Indian businessman, formal, confident
-  salesManager: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=85&auto=format&fit=crop',
-  serviceAdvisor: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=85&auto=format&fit=crop',
-  financeManager: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&q=85&auto=format&fit=crop',
-  receptionist: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=85&auto=format&fit=crop',
+  salesManager: 'https://images.unsplash.com/photo-1595152772835-219674b2a8a6?w=400&q=85&auto=format&fit=crop',
+  serviceAdvisor: 'https://images.unsplash.com/photo-1548142813-c348350df52b?w=400&q=85&auto=format&fit=crop',
+  financeManager: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&q=85&auto=format&fit=crop',
+  receptionist: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=85&auto=format&fit=crop',
 }
 
 // ─── TESTIMONIAL CUSTOMER IMAGES ──────────────────────────────────────────
@@ -124,8 +131,16 @@ export const TESTIMONIAL_IMAGES = {
 // ─── CSR / EVENTS ─────────────────────────────────────────────────────────
 export const EVENT_IMAGES = {
   roadSafety: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80&auto=format&fit=crop',
-  scholarship: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80&auto=format&fit=crop',
+  scholarship: 'https://images.unsplash.com/photo-1523240795612-9a054b096818?w=800&q=80&auto=format&fit=crop',
   greenPledge: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80&auto=format&fit=crop',
   launchEvent: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80&auto=format&fit=crop',
   monsoonService: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&q=80&auto=format&fit=crop',
+}
+
+// ─── HISTORICAL MILESTONES ────────────────────────────────────────────────
+export const MILESTONE_IMAGES = {
+  m2009: '/images/milestone-2009.png',
+  m2015: '/images/milestone-2015.png',
+  m2019: '/images/milestone-2019.png',
+  m2025: '/images/milestone-2019.png', // Future-oriented marquee showroom
 }

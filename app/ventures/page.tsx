@@ -11,7 +11,7 @@ export default function VenturesPage() {
     { title: 'New Car Sales', brand: 'Multi-Brand Excellence', desc: 'Authorized retail for NEXA, Maruti Arena, and Honda with radical transparency.', img: CAR_IMAGES.grandVitara.front, overlay: 'rgba(15, 14, 12, 0.75)', size: 'large' },
     { title: 'Bespoke Service', brand: 'Factory Standards', desc: 'State-of-the-art diagnostic bays with genuine spare parts and certified technicians.', img: SECTION_BG_IMAGES.serviceCenter, overlay: 'rgba(15, 14, 12, 0.80)', size: 'small' },
     { title: 'Driving Suite', brand: 'Safety First', desc: 'Certified instructors and simulator-based training for the next generation of drivers.', img: SECTION_BG_IMAGES.drivingSchool, overlay: 'rgba(15, 14, 12, 0.78)', size: 'small' },
-    { title: 'Finance & Insurance', brand: 'Instant Approval', desc: '10+ banking partners providing the most competitive interest rates in Chennai.', img: null, color: 'bg-olive-800', size: 'small' },
+    { title: 'Finance & Insurance', brand: 'Instant Approval', desc: '10+ banking partners providing the most competitive interest rates in Chennai.', img: SECTION_BG_IMAGES.showroomInterior, overlay: 'rgba(15, 14, 12, 0.76)', size: 'small' },
     { title: 'Used Car Exchange', brand: 'Best Value', desc: 'Transparent evaluation and best-in-market price for your existing vehicle exchange.', img: CAR_IMAGES.city.side, overlay: 'rgba(15, 14, 12, 0.76)', size: 'small' }
   ];
 
@@ -52,7 +52,7 @@ export default function VenturesPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: i * 0.1, ease: EASING.expoOut }}
-                  className={`${v.size === 'large' ? 'md:col-span-2' : 'md:col-span-1'} group overflow-hidden relative min-h-[420px] flex flex-col justify-end border border-metal-100 ${v.color || ''}`}
+                  className={`${v.size === 'large' ? 'md:col-span-2' : 'md:col-span-1'} group overflow-hidden relative min-h-[420px] flex flex-col justify-end border border-metal-100`}
                 >
                     {v.img && (
                       <>
@@ -69,8 +69,8 @@ export default function VenturesPage() {
                     
                     <div className="p-12 relative z-20">
                        <div className={`${v.img ? 'text-olive-200' : 'text-olive-300'} font-bold text-[9px] uppercase tracking-widest mb-3`}>{v.brand}</div>
-                       <h3 className={`font-display text-3xl ${v.img || v.color ? 'text-white' : 'text-metal-900'} mb-4`}>{v.title}</h3>
-                       <p className={`${v.img || v.color ? 'text-metal-300' : 'text-metal-500'} text-sm mb-10 leading-relaxed max-w-sm`}>{v.desc}</p>
+                       <h3 className={`font-display text-3xl ${v.img ? 'text-white' : 'text-metal-900'} mb-4`}>{v.title}</h3>
+                       <p className={`${v.img ? 'text-metal-300' : 'text-metal-500'} text-sm mb-10 leading-relaxed max-w-sm`}>{v.desc}</p>
                        <button className="text-amber-cta font-bold text-[10px] uppercase tracking-[0.3em] border-b-2 border-transparent hover:border-amber-cta transition-all">Explore Service →</button>
                     </div>
                 </motion.div>

@@ -211,10 +211,10 @@ export function BrandShowcase() {
 // --- FEATURED INVENTORY (NEW) ---
 export function FeaturedInventory() {
   const cars = [
-    { name: 'Swift', brand: 'Maruti Arena', price: '₹6.5L', image: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&q=80&w=800' },
-    { name: 'Grand Vitara', brand: 'NEXA', price: '₹14.2L', image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800' },
-    { name: 'City', brand: 'Honda', price: '₹12.8L', image: 'https://images.unsplash.com/photo-1527247043589-98e6ac08f56c?auto=format&fit=crop&q=80&w=800' },
-    { name: 'Himalayan', brand: 'Royal Enfield', price: '₹2.3L', image: 'https://images.unsplash.com/photo-1558981403-c5f91adaca60?auto=format&fit=crop&q=80&w=800' },
+    { name: 'Swift', brand: 'Maruti Arena', price: '₹6.5L', image: CAR_IMAGES.swift.side },
+    { name: 'Grand Vitara', brand: 'NEXA', price: '₹14.2L', image: CAR_IMAGES.grandVitara.side },
+    { name: 'City', brand: 'Honda', price: '₹12.8L', image: CAR_IMAGES.city.side },
+    { name: 'Himalayan', brand: 'Royal Enfield', price: '₹2.3L', image: CAR_IMAGES.himalayan.side },
   ];
 
   useGSAPOnMount((ctx) => {
@@ -341,10 +341,9 @@ export function TestimonialCarousel() {
 
 export function WhyChooseUs() {
   const stats = [
-    { label: 'Happy Families', value: 10000, suffix: '+' },
-    { label: 'Brands', value: 5, suffix: '' },
-    { label: 'Years Trust', value: 15, suffix: '+' },
-    { label: 'Branches', value: 8, suffix: '' },
+    { label: 'Strategic Branches', value: 28, suffix: '+' },
+    { label: 'Technical Team', value: 1450, suffix: '+' },
+    { label: 'Satisfied Families', value: 85000, suffix: '+' },
   ];
 
   return (

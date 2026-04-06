@@ -6,7 +6,7 @@ import { motion, useScroll, useSpring } from 'framer-motion';
 import gsap from 'gsap';
 import { fadeUp, EASING } from '@/lib/animations';
 import HeroImage from '@/components/ui/HeroImage';
-import { HERO_IMAGES, PEOPLE_IMAGES, EVENT_IMAGES } from '@/lib/images';
+import { HERO_IMAGES, PEOPLE_IMAGES, EVENT_IMAGES, MILESTONE_IMAGES } from '@/lib/images';
 import { LIGHT_BLUR } from '@/lib/blurPlaceholders';
 
 export default function AboutPage() {
@@ -83,10 +83,10 @@ export default function AboutPage() {
 
           <div className="flex flex-col gap-32">
             {[
-              { year: '2009', title: 'The T.Nagar Genesis', text: 'Started with a single focus: Radical transparency in Maruti retail.' },
-              { year: '2015', title: 'Premium Expansion', text: 'Introduction of NEXA & Honda Cars. Redefined the showroom experience.' },
-              { year: '2019', title: 'Diversification', text: 'Launched Royal Enfield division and Commercial segment.' },
-              { year: '2025', title: '8 Branches & Growing', text: 'Serving 10,000+ families with a stock of 200+ vehicles.' }
+              { year: '2009', title: 'The T.Nagar Genesis', text: 'Started with a single focus: Radical transparency in Maruti retail.', img: MILESTONE_IMAGES.m2009 },
+              { year: '2015', title: 'Premium Expansion', text: 'Introduction of NEXA & Honda Cars. Redefined the showroom experience.', img: MILESTONE_IMAGES.m2015 },
+              { year: '2019', title: 'Diversification', text: 'Launched Royal Enfield division and Commercial segment.', img: MILESTONE_IMAGES.m2019 },
+              { year: '2025', title: '8 Branches & Growing', text: 'Serving 10,000+ families with a stock of 200+ vehicles.', img: MILESTONE_IMAGES.m2025 }
             ].map((item, i) => (
               <div key={i} className={`flex flex-col ${i % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-20`}>
                 <motion.div 
@@ -106,7 +106,7 @@ export default function AboutPage() {
                 <div className="lg:w-1/2">
                    <div className="aspect-video bg-bg-section overflow-hidden rounded-sm relative group">
                       <Image 
-                        src={`https://images.unsplash.com/photo-15${50 + i}519819-016930ada31c?auto=format&fit=crop&q=80&w=800`} 
+                        src={item.img} 
                         alt={item.title} 
                         fill 
                         className="object-cover group-hover:scale-105 transition-transform duration-1000 grayscale group-hover:grayscale-0" 
