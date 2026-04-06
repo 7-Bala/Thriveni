@@ -61,12 +61,9 @@ export default function Footer() {
             
             {/* Column 1 — Brand Heritage */}
             <motion.div variants={fadeUp} className="flex flex-col gap-8">
-              <Link href="/" className="inline-block group relative">
-                <div className="absolute inset-0 bg-white/5 blur-xl group-hover:bg-amber-cta/5 transition-all" />
-                <div className="relative bg-white/5 border border-white/5 px-6 py-4 backdrop-blur-sm group-hover:border-white/10 transition-all">
-                  <Image src="/images/thriveni-logo.svg" alt="Thriveni Cars Logo" width={160} height={46} className="w-auto h-10" />
-                </div>
-              </Link>
+            <Link href="/" className="inline-block group relative">
+              <Image src="/images/thriveni-logo.svg" alt="Thriveni Cars Logo" width={160} height={46} className="w-auto h-10 group-hover:scale-105 transition-transform duration-500" />
+            </Link>
               <p className="text-metal-400 text-sm leading-relaxed max-w-[280px] font-body font-light">
                 Chennai&apos;s No.1 Multi-Brand Dealership. Your trusted partner for Maruti Arena, NEXA, Honda, Royal Enfield and Commercial vehicles since 2009.
               </p>
