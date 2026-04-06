@@ -3,18 +3,15 @@
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { 
-  fadeUp, 
-  fadeLeft,
-  fadeRight,
-  staggerContainer, 
-  clipReveal, 
-  EASING 
-} from '@/lib/animations';
+import { fadeUp, fadeLeft, fadeRight, staggerContainer, clipReveal, EASING } from '@/lib/animations';
 import { useGSAPOnMount, useParallax } from '@/hooks/useScrollAnimation';
+import HeroImage from '@/components/ui/HeroImage';
+import BrandLogo from '@/components/ui/BrandLogo';
+import CarImagePlaceholder from '@/components/ui/CarImagePlaceholder';
+import { HERO_IMAGES, CAR_IMAGES, SECTION_BG_IMAGES } from '@/lib/images';
+import { MEDIUM_BLUR } from '@/lib/blurPlaceholders';
 
 // --- HERO SECTION ---
 export function Hero() {
@@ -55,19 +52,13 @@ export function Hero() {
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex items-center bg-metal-900 overflow-hidden">
-      {/* Parallax Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-metal-900/95 via-metal-900/70 to-transparent z-10" />
-        <div ref={bgRef} className="absolute inset-0 scale-110">
-          <Image
-            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920"
-            alt="Thriveni Premium Hero"
-            fill
-            className="object-cover object-center"
-            priority
-          />
-        </div>
-      </div>
+      <HeroImage 
+        src={HERO_IMAGES.homepage} 
+        alt="Thriveni Premium Dealership Showroom" 
+        overlay="dark-left"
+        priority={true}
+        objectPosition="center 45%"
+      >
 
       <div className="container-custom relative z-20 w-full pt-20">
         <div className="max-w-3xl">
@@ -129,6 +120,7 @@ export function Hero() {
         />
         <span className="text-metal-500 text-[10px] uppercase tracking-[0.4em] font-bold">Scroll</span>
       </div>
+      </HeroImage>
     </section>
   );
 }
@@ -136,11 +128,11 @@ export function Hero() {
 // --- BRAND SHOWCASE ---
 export function BrandShowcase() {
   const brands = [
-    { name: 'Maruti Arena', models: 42, logo: 'MA' },
-    { name: 'NEXA', models: 18, logo: 'NX' },
-    { name: 'Honda', models: 15, logo: 'HD' },
-    { name: 'Royal Enfield', models: 28, logo: 'RE' },
-    { name: 'Commercial', models: 12, logo: 'CV' },
+    { name: 'Maruti Arena', id: 'arena', models: 42, bg: CAR_IMAGES.swift.side },
+    { name: 'NEXA', id: 'nexa', models: 18, bg: CAR_IMAGES.grandVitara.side },
+    { name: 'Honda', id: 'honda', models: 15, bg: CAR_IMAGES.city.side },
+    { name: 'Royal Enfield', id: 're', models: 28, bg: CAR_IMAGES.classic350.side },
+    { name: 'Commercial', id: 'commercial', models: 12, bg: CAR_IMAGES.swift.side },
   ];
 
   return (
@@ -174,7 +166,17 @@ export function BrandShowcase() {
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
         >
           {brands.map((brand, i) => (
-            <Link href={`/inventory?brand=${brand.name}`} key={i} className="group relative block bg-white border border-metal-100 p-10 overflow-hidden">
+            <Link 
+              href={`/inventory?brand=${brand.name}`} 
+              key={i} 
+              className="group relative block bg-white border border-metal-100 p-10 overflow-hidden transition-all duration-500"
+            >
+              {/* Ghostly Car Silhouette on Hover */}
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-15 transition-opacity duration-700 bg-cover bg-center pointer-events-none"
+                style={{ backgroundImage: `url(${brand.bg})` }}
+              />
+              
               {/* Wipe Reveal Background Overlay */}
               <motion.div 
                 variants={clipReveal}
@@ -183,8 +185,12 @@ export function BrandShowcase() {
               />
               
               <div className="relative z-10 text-center">
-                <div className="w-16 h-16 mx-auto bg-bg-section flex items-center justify-center font-display text-2xl text-metal-400 group-hover:text-white group-hover:bg-transparent transition-all mb-6">
-                  {brand.logo}
+                <div className="mx-auto flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                  <BrandLogo 
+                    brand={brand.id as 'arena' | 'nexa' | 'honda' | 're' | 'commercial'} 
+                    size="md" 
+                    variant={brand.id === 'nexa' ? 'dark' : 'light'} 
+                  />
                 </div>
                 <h3 className="font-body font-bold text-[13px] uppercase tracking-wider text-metal-900 group-hover:text-white transition-colors">
                   {brand.name}
@@ -246,13 +252,43 @@ export function FeaturedInventory() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {cars.map((car, i) => (
             <div key={i} className="car-card group cursor-pointer">
-              <div className="relative h-64 overflow-hidden rounded-sm bg-bg-section mb-6">
-                <Image src={car.image} alt={car.name} fill className="object-cover group-hover:scale-105 transition-all duration-700" />
-                <div className="absolute top-4 left-4 bg-amber-cta text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1">New Batch</div>
+              {/* Car Card Image Container */}
+              <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl bg-[#1A1E14] mb-6">
+                {car.image ? (
+                  <Image 
+                    src={car.image} 
+                    alt={`${car.brand} ${car.name}`} 
+                    fill 
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    placeholder="blur"
+                    blurDataURL={MEDIUM_BLUR}
+                    className="object-cover group-hover:scale-105 transition-all duration-700"
+                    style={{ 
+                      objectPosition: 'center 55%',
+                      filter: 'brightness(0.96) contrast(1.04)' 
+                    }}
+                  />
+                ) : (
+                  <CarImagePlaceholder />
+                )}
+                
+                {/* Subtle Bottom Gradient */}
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                
+                {/* Price Tag Overlay */}
+                <div className="absolute bottom-3 left-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded">
+                  <span className="font-mono text-amber-cta text-[13px] font-bold tracking-tight">
+                    {car.price}
+                  </span>
+                </div>
+
+                <div className="absolute top-4 right-4 bg-amber-cta text-white text-[9px] uppercase tracking-widest font-bold px-3 py-1">New Batch</div>
               </div>
-              <h3 className="font-display text-xl text-metal-900 group-hover:text-amber-cta transition-colors">{car.name}</h3>
-              <p className="text-metal-400 text-xs uppercase tracking-widest mt-1 mb-3">{car.brand}</p>
-              <div className="text-lg font-bold text-olive-700">From {car.price}</div>
+              <div className="px-1">
+                <h3 className="font-display text-xl text-metal-900 group-hover:text-amber-cta transition-colors">{car.name}</h3>
+                <p className="text-metal-400 text-xs uppercase tracking-widest mt-1 mb-3">{car.brand}</p>
+                <div className="text-sm font-bold text-olive-700 group-hover:translate-x-1 transition-transform inline-block">View Details →</div>
+              </div>
             </div>
           ))}
         </div>
@@ -271,6 +307,19 @@ export function TestimonialCarousel() {
 
   return (
     <section className="py-32 bg-metal-900 relative overflow-hidden">
+      {/* Background Image Texture */}
+      <div className="absolute inset-0 z-0">
+        <Image 
+          src={SECTION_BG_IMAGES.cityRoad} 
+          alt="Chennai City Road" 
+          fill 
+          sizes="100vw"
+          className="object-cover opacity-10"
+          style={{ filter: 'grayscale(100%) brightness(0.5)' }}
+        />
+        <div className="absolute inset-0 bg-metal-900/90" />
+      </div>
+
       <div className="container-custom text-center relative z-10">
         <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-6">STORY OF TRUST</span>
         <div className="max-w-4xl mx-auto overflow-hidden">
@@ -300,6 +349,18 @@ export function WhyChooseUs() {
 
   return (
     <section className="bg-metal-900 py-32 relative overflow-hidden">
+      {/* Background Image Texture */}
+      <div className="absolute inset-0 z-0">
+        <Image 
+          src={SECTION_BG_IMAGES.showroomInterior} 
+          alt="Thriveni Showroom Interior" 
+          fill 
+          sizes="100vw"
+          className="object-cover opacity-10"
+        />
+        <div className="absolute inset-0 bg-[#0F0E0C]/92" />
+      </div>
+
       {/* Particle Background Simulation */}
       <div className="absolute inset-0 opacity-[0.05]">
         {[...Array(20)].map((_, i) => (
@@ -572,16 +633,28 @@ export function OffersPreview() {
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: EASING.expoOut }}
-              className="bg-white border border-olive-600/10 p-10 relative group"
+              className="relative min-h-[300px] flex flex-col justify-end p-10 group overflow-hidden"
             >
-              <div className="absolute top-0 right-0 p-4">
-                 <span className="bg-olive-600 text-white text-[9px] uppercase tracking-widest px-3 py-1 font-bold">Offer Code: {offer.code}</span>
+              <Image 
+                src={i === 0 ? SECTION_BG_IMAGES.testDrive : CAR_IMAGES.city.side} 
+                alt={offer.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                style={{ filter: 'brightness(0.4)' }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              
+              <div className="absolute top-0 right-0 p-6 z-20">
+                 <span className="bg-amber-cta text-white text-[9px] uppercase tracking-widest px-3 py-1 font-bold">Code: {offer.code}</span>
               </div>
-              <h3 className="font-display text-2xl text-metal-900 mb-4">{offer.title}</h3>
-              <p className="text-metal-500 mb-8">{offer.disc}</p>
-              <Link href="/offers" className="text-amber-cta font-bold text-xs uppercase tracking-widest border-b border-transparent hover:border-amber-cta transition-all">
-                Claim Offer →
-              </Link>
+              
+              <div className="relative z-10">
+                <h3 className="font-display text-3xl text-white mb-4 group-hover:text-amber-cta transition-colors">{offer.title}</h3>
+                <p className="text-metal-300 mb-8 max-w-sm">{offer.disc}</p>
+                <Link href="/offers" className="text-amber-cta font-bold text-xs uppercase tracking-[0.2em] border-b border-amber-cta pb-1 hover:text-white hover:border-white transition-all">
+                  CLAIM OFFER →
+                </Link>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -593,7 +666,19 @@ export function OffersPreview() {
 export function CallToAction() {
   return (
     <section className="bg-olive-800 py-32 relative overflow-hidden">
-      <div className="container-custom">
+      {/* Atmospheric Background */}
+      <div className="absolute inset-0 z-0">
+        <Image 
+          src={SECTION_BG_IMAGES.testDrive} 
+          alt="Test Drive Experience" 
+          fill 
+          sizes="100vw"
+          className="object-cover opacity-20 filter grayscale saturate-50"
+        />
+        <div className="absolute inset-0 bg-olive-800/80" />
+      </div>
+
+      <div className="container-custom relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
           <motion.div 
             initial={{ x: 0, opacity: 0 }}

@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  fadeUp, 
-  EASING 
-} from '@/lib/animations';
+import { fadeUp } from '@/lib/animations';
 import { useGSAPOnMount } from '@/hooks/useScrollAnimation';
 import gsap from 'gsap';
+import HeroImage from '@/components/ui/HeroImage';
+import { CAR_IMAGES } from '@/lib/images';
 
 export default function CarDetailPage() {
   const [activeImage, setActiveImage] = useState(0);
@@ -19,8 +18,6 @@ export default function CarDetailPage() {
     'https://images.unsplash.com/photo-1542362567-b055002b97f4?auto=format&fit=crop&q=80&w=1200',
     'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1200'
   ];
-
-  const galleryRef = useRef(null);
 
   useGSAPOnMount((ctx) => {
     if (!ctx.selector) return;
@@ -35,25 +32,23 @@ export default function CarDetailPage() {
   return (
     <div className="min-h-screen bg-bg-primary pb-32">
       {/* SECTION 1 — SUBTLE HERO HERO */}
-      <section className="relative h-[60vh] overflow-hidden bg-metal-900 pt-20">
-        <motion.div 
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 10, ease: "linear" }}
-          className="absolute inset-0 z-0"
+      <section className="relative h-[60vh] overflow-hidden bg-metal-900">
+        <HeroImage 
+          src={CAR_IMAGES.swift.front} 
+          alt="Swift ZXI Plus Hero" 
+          overlay="dark-full"
+          objectPosition="center 50%"
+          priority
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-transparent to-metal-900/60 z-10" />
-          <Image src={images[0]} alt="Car Detail Hero" fill priority className="object-cover grayscale opacity-60" />
-        </motion.div>
-        
-        <div className="container-custom relative z-20 h-full flex flex-col justify-end pb-12">
-           <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-             <div className="text-metal-400 text-[10px] uppercase tracking-[0.4em] font-bold mb-4">
-                <Link href="/" className="hover:text-amber-cta">Main</Link> / <Link href="/inventory" className="hover:text-amber-cta">Inventory</Link> / Maruti Arena
-             </div>
-             <h1 className="font-display text-display-xl text-white">Swift ZXI Plus</h1>
-           </motion.div>
-        </div>
+          <div className="container-custom relative z-20 h-full flex flex-col justify-end pb-12">
+             <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+               <div className="text-metal-400 text-[10px] uppercase tracking-[0.4em] font-bold mb-4">
+                  <Link href="/" className="hover:text-amber-cta">Main</Link> / <Link href="/inventory" className="hover:text-amber-cta">Inventory</Link> / Maruti Arena
+               </div>
+               <h1 className="font-display text-display-xl text-white">Swift ZXI Plus</h1>
+             </motion.div>
+          </div>
+        </HeroImage>
       </section>
 
       <div className="container-custom mt-16">
@@ -61,7 +56,7 @@ export default function CarDetailPage() {
           {/* Main Content Component */}
           <div className="lg:w-2/3">
             {/* Gallery — Clip Wipe Interaction */}
-            <div className="main-image-container relative aspect-[16/9] bg-bg-section overflow-hidden rounded-sm border border-metal-100 shadow-2xl">
+            <div className="main-image-container relative aspect-[16/10] bg-[#1A1E14] overflow-hidden rounded-sm border border-metal-100 shadow-2xl">
               <AnimatePresence mode='wait'>
                 <motion.div
                   key={activeImage}
@@ -71,10 +66,22 @@ export default function CarDetailPage() {
                   transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                   className="absolute inset-0"
                 >
-                  <Image src={images[activeImage]} alt="Car" fill className="object-cover" />
+                  <Image 
+                    src={images[activeImage]} 
+                    alt="Car Detail View" 
+                    fill 
+                    sizes="(max-width: 1024px) 100vw, 65vw"
+                    className="object-cover" 
+                    style={{ 
+                      objectPosition: activeImage >= 3 ? 'center 40%' : 'center 50%',
+                      filter: 'brightness(1.02) contrast(1.08) saturate(0.95)'
+                    }}
+                  />
+                  {/* Bottom Gradient for Price badge indicator */}
+                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
                 </motion.div>
               </AnimatePresence>
-              <div className="absolute bottom-6 right-6 bg-metal-900 text-white text-[10px] uppercase tracking-[0.3em] px-4 py-2 font-bold z-20">
+              <div className="absolute bottom-6 right-6 bg-black/80 backdrop-blur-md text-amber-cta text-[10px] uppercase tracking-[0.3em] px-4 py-2 font-bold z-20 rounded border border-white/5">
                  Image 0{activeImage + 1} / 0{images.length}
               </div>
             </div>
@@ -84,9 +91,9 @@ export default function CarDetailPage() {
                 <button 
                   key={i} 
                   onClick={() => setActiveImage(i)}
-                  className={`relative w-24 h-16 rounded-sm overflow-hidden border-2 transition-all ${activeImage === i ? 'border-amber-cta' : 'border-transparent grayscale opacity-50 hover:opacity-100'}`}
+                  className={`relative w-24 h-16 aspect-[4/3] rounded-sm overflow-hidden border-2 transition-all duration-300 ${activeImage === i ? 'border-amber-cta scale-105 z-10' : 'border-transparent grayscale opacity-65 hover:opacity-100 hover:grayscale-0'}`}
                 >
-                  <Image src={img} alt="Thumb" fill className="object-cover" />
+                  <Image src={img} alt="Thumb" fill sizes="96px" className="object-cover" />
                 </button>
               ))}
             </div>
@@ -136,6 +143,30 @@ export default function CarDetailPage() {
                      <span className="text-olive-700 font-bold text-[10px] uppercase tracking-[0.4em] block mb-4">PRICE ESTIMATE</span>
                      <div className="font-display text-5xl text-metal-900">₹8.99 <span className="text-xl font-body font-normal text-metal-400">Lakh</span></div>
                      <p className="text-[10px] text-metal-400 uppercase tracking-widest mt-2">On-Road Chennai (Excl. VAT)</p>
+                  </div>
+
+                  {/* Standardized Colour Swatches */}
+                  <div className="mb-10">
+                    <span className="text-metal-400 text-[10px] uppercase tracking-widest font-bold block mb-4">Available Colours</span>
+                    <div className="flex flex-wrap gap-3">
+                      {[
+                        { name: 'Oxford Blue', hex: '#1B2A4A' },
+                        { name: 'Pearl White', hex: '#F5F4F0', border: true },
+                        { name: 'Magma Grey', hex: '#3C3C3C' },
+                        { name: 'Lucent Orange', hex: '#C4531A' },
+                        { name: 'Midnight Black', hex: '#0D0D0D' }
+                      ].map((color, i) => (
+                        <div key={i} className="group relative">
+                          <div 
+                            className={`w-7 h-7 rounded-full cursor-pointer transition-transform hover:scale-110 ${color.border ? 'ring-1 ring-metal-200' : ''}`}
+                            style={{ backgroundColor: color.hex }}
+                          />
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-metal-900 text-[9px] text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                            {color.name}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <form className="space-y-6">

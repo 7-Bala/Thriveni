@@ -1,14 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  fadeUp, 
-  staggerContainer, 
-  EASING 
-} from '@/lib/animations';
+import { motion } from 'framer-motion';
+import { fadeUp, EASING } from '@/lib/animations';
+import { CAR_IMAGES } from '@/lib/images';
+import { MEDIUM_BLUR } from '@/lib/blurPlaceholders';
 
 export default function OffersPage() {
   const [activeTab, setActiveTab] = useState('All Offers');
@@ -61,10 +59,10 @@ export default function OffersPage() {
       <section>
         <div className="container-custom">
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-             {[
-               { brand: 'NEXA', title: 'Grand Vitara Hybrid', disc: 'Up to ₹75,000 Off on top variants', img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800' },
-               { brand: 'Maruti Arena', title: 'The New Swift', disc: 'Zero down payment + Accessory kit worth ₹10k', img: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&q=80&w=800' },
-               { brand: 'Honda', title: 'City 5th Gen', disc: 'Exclusive exchange bonus of ₹50,000', img: 'https://images.unsplash.com/photo-1527247043589-98e6ac08f56c?auto=format&fit=crop&q=80&w=800' },
+            {[
+               { brand: 'NEXA', title: 'Grand Vitara Hybrid', disc: 'Up to ₹75,000 Off on top variants', img: CAR_IMAGES.grandVitara.side },
+               { brand: 'Maruti Arena', title: 'The New Swift', disc: 'Zero down payment + Accessory kit worth ₹10k', img: CAR_IMAGES.swift.side },
+               { brand: 'Honda', title: 'City 5th Gen', disc: 'Exclusive exchange bonus of ₹50,000', img: CAR_IMAGES.city.side },
              ].map((offer, i) => (
                 <motion.div 
                   key={i}
@@ -74,14 +72,24 @@ export default function OffersPage() {
                   transition={{ duration: 0.8, delay: i * 0.15 }}
                   className="bg-white border border-metal-100 group cursor-pointer relative overflow-hidden"
                 >
-                   {/* Ribbon Unfurl Effect */}
-                   <div className="absolute top-0 right-0 z-10 w-32 h-32 overflow-hidden">
-                      <div className="absolute top-0 right-0 bg-olive-700 text-white text-[9px] font-bold uppercase tracking-widest px-10 py-1 rotate-45 translate-x-8 translate-y-2 shadow-xl">Exclusive</div>
-                   </div>
+                    {/* Ribbon Unfurl Effect */}
+                    <div className="absolute top-0 right-0 z-20 w-32 h-32 overflow-hidden pointer-events-none">
+                       <div className="absolute top-0 right-0 bg-amber-cta text-white text-[9px] font-bold uppercase tracking-widest px-10 py-1 rotate-45 translate-x-8 translate-y-3 shadow-xl border-l border-white/20">Exclusive</div>
+                    </div>
 
-                   <div className="aspect-[4/3] relative overflow-hidden bg-bg-section">
-                      <Image src={offer.img} alt={offer.title} fill className="object-cover group-hover:scale-105 transition-transform duration-1000 grayscale group-hover:grayscale-0" />
-                   </div>
+                    <div className="aspect-[16/9] relative overflow-hidden bg-[#1A1E14]">
+                       <Image 
+                         src={offer.img} 
+                         alt={offer.title} 
+                         fill 
+                         sizes="(max-width: 768px) 100vw, 33vw"
+                         placeholder="blur"
+                         blurDataURL={MEDIUM_BLUR}
+                         className="object-cover group-hover:scale-105 transition-transform duration-1000" 
+                         style={{ filter: 'brightness(0.94) contrast(1.06) saturate(0.92)' }}
+                       />
+                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
+                    </div>
                    
                    <div className="p-10">
                       <div className="text-olive-700 font-bold text-[9px] uppercase tracking-widest mb-3">{offer.brand}</div>

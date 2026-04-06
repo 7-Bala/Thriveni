@@ -2,11 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  fadeUp, 
-  staggerContainer, 
-  EASING 
-} from '@/lib/animations';
+import { fadeUp } from '@/lib/animations';
 
 export default function ContactPage() {
   const [formStatus, setFormStatus] = useState<'idle' | 'success'>('idle');

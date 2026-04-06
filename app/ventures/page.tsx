@@ -2,62 +2,77 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
-import { 
-  fadeUp, 
-  staggerContainer, 
-  EASING 
-} from '@/lib/animations';
+import { fadeUp, EASING } from '@/lib/animations';
+import HeroImage from '@/components/ui/HeroImage';
+import { HERO_IMAGES, CAR_IMAGES, SECTION_BG_IMAGES } from '@/lib/images';
 
 export default function VenturesPage() {
   const ventures = [
-    { title: 'New Car Sales', brand: 'Multi-Brand Excellence', desc: 'Authorized retail for NEXA, Maruti Arena, and Honda with radical transparency.', img: 'https://images.unsplash.com/photo-1562519819-016930ada31c?auto=format&fit=crop&q=80&w=800', size: 'large' },
-    { title: 'Bespoke Service', brand: 'Factory Standards', desc: 'State-of-the-art diagnostic bays with genuine spare parts and certified technicians.', img: 'https://images.unsplash.com/photo-1530046339160-ce3e5b097a2f?auto=format&fit=crop&q=80&w=800', size: 'small' },
-    { title: 'Driving Suite', brand: 'Safety First', desc: 'Certified instructors and simulator-based training for the next generation of drivers.', img: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=800', size: 'small' },
-    { title: 'Finance Hub', brand: 'Instant Approval', desc: '10+ banking partners providing the most competitive interest rates in Chennai.', img: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=800', size: 'small' },
-    { title: 'Insurance Edge', brand: 'Cashless Claims', desc: 'Comprehensive motor insurance with zero-depreciation covers and instant renewals.', img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800', size: 'small' }
+    { title: 'New Car Sales', brand: 'Multi-Brand Excellence', desc: 'Authorized retail for NEXA, Maruti Arena, and Honda with radical transparency.', img: CAR_IMAGES.grandVitara.front, overlay: 'rgba(15, 14, 12, 0.75)', size: 'large' },
+    { title: 'Bespoke Service', brand: 'Factory Standards', desc: 'State-of-the-art diagnostic bays with genuine spare parts and certified technicians.', img: SECTION_BG_IMAGES.serviceCenter, overlay: 'rgba(15, 14, 12, 0.80)', size: 'small' },
+    { title: 'Driving Suite', brand: 'Safety First', desc: 'Certified instructors and simulator-based training for the next generation of drivers.', img: SECTION_BG_IMAGES.drivingSchool, overlay: 'rgba(15, 14, 12, 0.78)', size: 'small' },
+    { title: 'Finance & Insurance', brand: 'Instant Approval', desc: '10+ banking partners providing the most competitive interest rates in Chennai.', img: null, color: 'bg-olive-800', size: 'small' },
+    { title: 'Used Car Exchange', brand: 'Best Value', desc: 'Transparent evaluation and best-in-market price for your existing vehicle exchange.', img: CAR_IMAGES.city.side, overlay: 'rgba(15, 14, 12, 0.76)', size: 'small' }
   ];
 
   return (
-    <div className="min-h-screen bg-bg-primary pt-32 pb-32">
+    <div className="min-h-screen bg-bg-primary pb-32">
       
-      {/* SECTION 1 — HEADER */}
-      <section className="mb-24">
-        <div className="container-custom">
-           <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-             <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">ECOSYSTEM</span>
-             <h1 className="font-display text-display-xl text-metal-900 leading-tight mb-8">
-               Beyond the <span className="text-olive-700">Showroom.</span>
-             </h1>
-             <p className="text-metal-500 text-lg max-w-xl font-body font-light">
-               Thriveni is a complete automotive lifecycle partner. We manage everything from your first lesson to your 100,000km service.
-             </p>
-           </motion.div>
-        </div>
+      {/* SECTION 1 — HEADER HERO */}
+      <section className="bg-metal-900 overflow-hidden">
+        <HeroImage 
+          src={HERO_IMAGES.venturesPage} 
+          alt="Thriveni Cars Service Center" 
+          overlay="dark-left"
+          objectPosition="center 35%"
+          priority
+        >
+          <div className="container-custom py-32">
+            <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+              <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">ECOSYSTEM</span>
+              <h1 className="font-display text-display-xl text-white leading-tight mb-8">
+                Beyond the <span className="text-amber-cta underline decoration-1 underline-offset-8">Showroom.</span>
+              </h1>
+              <p className="text-metal-300 text-lg max-w-xl font-body font-light">
+                Thriveni is a complete automotive lifecycle partner. We manage everything from your first lesson to your 100,000km service.
+              </p>
+            </motion.div>
+          </div>
+        </HeroImage>
       </section>
 
       {/* SECTION 2 — ASYMMETRIC GRID */}
       <section>
         <div className="container-custom">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {ventures.map((v, i) => (
+               {ventures.map((v, i) => (
                 <motion.div 
                   key={i}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: i * 0.1, ease: EASING.expoOut }}
-                  className={`${v.size === 'large' ? 'md:col-span-2' : 'md:col-span-1'} group bg-white border border-metal-100 overflow-hidden relative`}
+                  className={`${v.size === 'large' ? 'md:col-span-2' : 'md:col-span-1'} group overflow-hidden relative min-h-[420px] flex flex-col justify-end border border-metal-100 ${v.color || ''}`}
                 >
-                   <div className="aspect-[16/10] relative overflow-hidden bg-bg-section">
-                      <Image src={v.img} alt={v.title} fill className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000" />
-                   </div>
-                   <div className="p-12">
-                      <div className="text-olive-600 font-bold text-[9px] uppercase tracking-widest mb-3">{v.brand}</div>
-                      <h3 className="font-display text-3xl text-metal-900 mb-4">{v.title}</h3>
-                      <p className="text-metal-500 text-sm mb-10 leading-relaxed max-w-sm">{v.desc}</p>
-                      <button className="text-amber-cta font-bold text-[10px] uppercase tracking-[0.3em] border-b-2 border-transparent hover:border-amber-cta transition-all">Explore Service →</button>
-                   </div>
+                    {v.img && (
+                      <>
+                        <Image 
+                          src={v.img} 
+                          alt={v.title} 
+                          fill 
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                          className="object-cover group-hover:scale-105 transition-all duration-1000" 
+                        />
+                        <div className="absolute inset-0 z-10" style={{ background: v.overlay || 'rgba(15, 14, 12, 0.7)' }} />
+                      </>
+                    )}
+                    
+                    <div className="p-12 relative z-20">
+                       <div className={`${v.img ? 'text-olive-200' : 'text-olive-300'} font-bold text-[9px] uppercase tracking-widest mb-3`}>{v.brand}</div>
+                       <h3 className={`font-display text-3xl ${v.img || v.color ? 'text-white' : 'text-metal-900'} mb-4`}>{v.title}</h3>
+                       <p className={`${v.img || v.color ? 'text-metal-300' : 'text-metal-500'} text-sm mb-10 leading-relaxed max-w-sm`}>{v.desc}</p>
+                       <button className="text-amber-cta font-bold text-[10px] uppercase tracking-[0.3em] border-b-2 border-transparent hover:border-amber-cta transition-all">Explore Service →</button>
+                    </div>
                 </motion.div>
               ))}
            </div>

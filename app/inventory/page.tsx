@@ -4,13 +4,14 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  fadeUp, 
-  staggerContainer, 
-  EASING 
-} from '@/lib/animations';
+import { fadeUp, EASING } from '@/lib/animations';
 import { useGSAPOnMount } from '@/hooks/useScrollAnimation';
 import gsap from 'gsap';
+import HeroImage from '@/components/ui/HeroImage';
+import BrandLogo from '@/components/ui/BrandLogo';
+import CarImagePlaceholder from '@/components/ui/CarImagePlaceholder';
+import { HERO_IMAGES } from '@/lib/images';
+import { MEDIUM_BLUR } from '@/lib/blurPlaceholders';
 
 export default function InventoryPage() {
   const [activeBrand, setActiveBrand] = useState('All');
@@ -41,15 +42,23 @@ export default function InventoryPage() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      {/* Header — Solid Background Rule */}
-      <section className="bg-metal-900 pt-32 pb-16">
-        <div className="container-custom">
-           <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-             <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">THRIVENI STOCK</span>
-             <h1 className="font-display text-5xl md:text-6xl text-white mb-6">Discovery Suite.</h1>
-             <p className="text-metal-400 text-lg max-w-xl">Explore our current inventory across 8 premium branches in Chennai.</p>
-           </motion.div>
-        </div>
+      {/* Header — Hero Section */}
+      <section className="bg-metal-900 overflow-hidden">
+        <HeroImage 
+          src={HERO_IMAGES.inventoryPage} 
+          alt="Thriveni Cars Inventory" 
+          overlay="dark-full"
+          objectPosition="center 60%"
+          priority
+        >
+          <div className="container-custom py-32">
+            <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+              <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">THRIVENI STOCK</span>
+              <h1 className="font-display text-5xl md:text-6xl text-white mb-6">Discovery Suite.</h1>
+              <p className="text-metal-400 text-lg max-w-xl">Explore our current inventory across 8 premium branches in Chennai.</p>
+            </motion.div>
+          </div>
+        </HeroImage>
       </section>
 
       <div className="container-custom py-16 flex flex-col lg:flex-row gap-12">
@@ -71,10 +80,20 @@ export default function InventoryPage() {
                     <button 
                       key={brand} 
                       onClick={() => setActiveBrand(brand)}
-                      className={`text-left text-sm transition-all flex items-center gap-3 group ${activeBrand === brand ? 'text-amber-cta font-bold' : 'text-metal-600 hover:text-metal-900'}`}
+                      className={`text-left text-sm transition-all flex items-center gap-4 group ${activeBrand === brand ? 'text-amber-cta font-bold' : 'text-metal-600 hover:text-metal-900'}`}
                     >
                       <span className={`w-1.5 h-1.5 rounded-full transition-all ${activeBrand === brand ? 'bg-amber-cta scale-125' : 'bg-metal-200 group-hover:bg-metal-400'}`} />
-                      {brand}
+                      {brand !== 'All' ? (
+                        <div className="flex items-center gap-2">
+                           <BrandLogo 
+                             brand={brand === 'Maruti Arena' ? 'arena' : brand === 'Royal Enfield' ? 're' : brand.toLowerCase() as 'arena' | 'nexa' | 'honda' | 're' | 'commercial'} 
+                             size="sm" 
+                             variant="light" 
+                           />
+                        </div>
+                      ) : (
+                        <span>All Brands</span>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -123,18 +142,45 @@ export default function InventoryPage() {
                   className="inventory-card bg-white border border-metal-100 overflow-hidden group cursor-pointer"
                 >
                   <Link href={`/inventory/${car.id}`}>
-                    <div className="aspect-[4/3] relative overflow-hidden bg-bg-section">
-                      <Image src={car.img} alt={car.model} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                      <div className="absolute top-4 left-4 bg-olive-700 text-white text-[9px] uppercase tracking-widest font-bold px-3 py-1">Featured Stock</div>
+                    <div className="aspect-[16/9] relative overflow-hidden bg-[#1A1E14]">
+                      {car.img ? (
+                        <Image 
+                          src={car.img} 
+                          alt={`${car.brand} ${car.model}`} 
+                          fill 
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          placeholder="blur"
+                          blurDataURL={MEDIUM_BLUR}
+                          className="object-cover group-hover:scale-[1.06] transition-transform duration-700" 
+                          style={{ 
+                            objectPosition: 'center 55%',
+                            filter: 'brightness(0.96) contrast(1.04)' 
+                          }}
+                        />
+                      ) : (
+                        <CarImagePlaceholder />
+                      )}
+                      
+                      {/* Subtle Bottom Gradient */}
+                      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                      
+                      {/* Price Tag Overlay */}
+                      <div className="absolute bottom-3 left-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded">
+                        <span className="font-mono text-amber-cta text-[14px] font-bold tracking-tight">
+                          ₹{car.price}L
+                        </span>
+                      </div>
+
+                      <div className="absolute top-4 right-4 bg-olive-700 text-white text-[9px] uppercase tracking-widest font-bold px-3 py-1">Featured Stock</div>
                     </div>
                     <div className="p-8">
                       <div className="text-[10px] font-bold text-olive-600 uppercase tracking-widest mb-3">{car.brand}</div>
-                      <h3 className="font-display text-2xl text-metal-900 mb-2">{car.model}</h3>
-                      <div className="flex gap-4 text-[10px] uppercase font-bold text-metal-400 mb-8">
+                      <h3 className="font-display text-2xl text-metal-900 mb-4">{car.model}</h3>
+                      <div className="flex gap-4 text-[10px] uppercase font-bold text-metal-400 mb-8 border-y border-metal-50 py-3">
                         <span>{car.fuel}</span>
-                        <span className="w-1 h-1 bg-metal-200 rounded-full my-auto" />
+                        <span className="w-1 h-1 bg-metal-100 rounded-full my-auto" />
                         <span>{car.trans}</span>
-                        <span className="w-1 h-1 bg-metal-200 rounded-full my-auto" />
+                        <span className="w-1 h-1 bg-metal-100 rounded-full my-auto" />
                         <span>{car.year}</span>
                       </div>
                       

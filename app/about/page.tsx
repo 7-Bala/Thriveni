@@ -2,19 +2,15 @@
 
 import { useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import gsap from 'gsap';
-import { 
-  fadeUp, 
-  staggerContainer, 
-  clipReveal, 
-  EASING 
-} from '@/lib/animations';
-import { useGSAPOnMount } from '@/hooks/useScrollAnimation';
+import { fadeUp, EASING } from '@/lib/animations';
+import HeroImage from '@/components/ui/HeroImage';
+import { HERO_IMAGES, PEOPLE_IMAGES, EVENT_IMAGES } from '@/lib/images';
+import { LIGHT_BLUR } from '@/lib/blurPlaceholders';
 
 export default function AboutPage() {
-  const containerRef = useRef(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   // Timeline SVG Drawing Logic
   const { scrollYProgress } = useScroll({
@@ -32,34 +28,31 @@ export default function AboutPage() {
     <div ref={containerRef} className="flex flex-col min-h-screen bg-bg-primary overflow-hidden">
       
       {/* SECTION 1 — PREMIUM HERO */}
-      <section className="relative h-[80vh] flex items-center bg-metal-900 pt-20">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-metal-900/60 via-transparent to-bg-primary z-10"></div>
-          <Image 
-            src="https://images.unsplash.com/photo-1562519819-016930ada31c?auto=format&fit=crop&q=80&w=1920" 
-            alt="Thriveni Heritage" 
-            fill 
-            priority 
-            className="object-cover object-center scale-105" 
-          />
-        </div>
-        
-        <div className="container-custom relative z-20">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: EASING.expoOut }}
-            className="max-w-3xl"
-          >
-            <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-6">SINCE 2009</span>
-            <h1 className="font-display text-display-2xl text-white leading-tight mb-8">
-              Legacy of <span className="text-amber-cta italic underline decoration-1 underline-offset-8">Trust</span>.
-            </h1>
-            <p className="text-metal-300 text-xl font-body font-light leading-relaxed max-w-xl">
-              Thriveni Cars is Chennai&apos;s answer to the need for transparent, premium multi-brand vehicle retail.
-            </p>
-          </motion.div>
-        </div>
+      <section className="relative min-h-[80vh] flex items-center bg-metal-900 overflow-hidden">
+        <HeroImage 
+          src={HERO_IMAGES.aboutPage} 
+          alt="Thriveni Cars Premium Showroom" 
+          overlay="dark-left"
+          priority={true}
+          objectPosition="center 30%"
+        >
+          <div className="container-custom relative z-20 py-32">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: EASING.expoOut }}
+              className="max-w-3xl"
+            >
+              <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-6">SINCE 2009</span>
+              <h1 className="font-display text-display-2xl text-white leading-tight mb-8">
+                Legacy of <span className="text-amber-cta italic underline decoration-1 underline-offset-8">Trust</span>.
+              </h1>
+              <p className="text-metal-300 text-xl font-body font-light leading-relaxed max-w-xl">
+                Thriveni Cars is Chennai&apos;s answer to the need for transparent, premium multi-brand vehicle retail.
+              </p>
+            </motion.div>
+          </div>
+        </HeroImage>
       </section>
 
       {/* SECTION 2 — THE STORY (SVG DRAWING TIMELINE) */}
@@ -129,13 +122,21 @@ export default function AboutPage() {
       {/* SECTION 3 — LEADERSHIP (MD FEATURE CARD) */}
       <section className="bg-metal-900 py-32 overflow-hidden">
         <div className="container-custom">
-           <div className="bg-metal-800 border border-white/5 flex flex-col md:flex-row items-center overflow-hidden">
-              <div className="md:w-2/5 aspect-[4/5] relative overflow-hidden">
+            <div className="bg-metal-800 border border-white/5 flex flex-col md:flex-row items-center overflow-hidden rounded-2xl">
+              <div className="md:w-2/5 aspect-[3/4] relative overflow-hidden rounded-l-2xl">
                  <Image 
-                   src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600" 
-                   alt="Managing Director" 
+                   src={PEOPLE_IMAGES.md} 
+                   alt="S. Thriveni, Managing Director" 
                    fill 
-                   className="object-cover grayscale hover:grayscale-0 transition-all duration-700" 
+                   sizes="(max-width: 1024px) 100vw, 40vw"
+                   placeholder="blur"
+                   blurDataURL={LIGHT_BLUR}
+                   className="object-cover transition-all duration-700" 
+                   style={{ 
+                     objectPosition: 'center 15%',
+                     filter: 'brightness(1.0) contrast(1.04) saturate(0.90)',
+                     boxShadow: 'inset -40px 0 40px rgba(15,14,12,0.4)'
+                   }}
                  />
               </div>
               <div className="md:w-3/5 p-16 md:p-24 relative">
@@ -170,9 +171,9 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
-              { title: 'Road Safety', stat: '5k+', desc: 'Young drivers trained in our defensive driving initiatives.' },
-              { title: 'Education', stat: '200', desc: 'Annual scholarships for underprivileged engineering students.' },
-              { title: 'Sustainability', stat: '10k', desc: 'Managed plantation drive across dealership network zones.' }
+              { title: 'Road Safety', stat: '5k+', desc: 'Young drivers trained in our defensive driving initiatives.', image: EVENT_IMAGES.roadSafety },
+              { title: 'Education', stat: '200', desc: 'Annual scholarships for underprivileged engineering students.', image: EVENT_IMAGES.scholarship },
+              { title: 'Sustainability', stat: '10k', desc: 'Managed plantation drive across dealership network zones.', image: EVENT_IMAGES.greenPledge }
             ].map((item, i) => (
               <motion.div 
                 key={i}
@@ -180,17 +181,29 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: i * 0.15 }}
-                className="bg-white p-12 relative overflow-hidden group shadow-xl border border-metal-100"
+                className="bg-white group shadow-xl border border-metal-100 overflow-hidden"
               >
-                {/* Visual Scan Line Effect */}
-                <motion.div 
-                  initial={{ top: '-100%' }}
-                  whileHover={{ top: '100%' }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                  className="absolute left-0 right-0 h-[2px] bg-olive-600/20 z-0 pointer-events-none"
-                />
+                <div className="relative aspect-[16/9] overflow-hidden">
+                   <Image 
+                     src={item.image} 
+                     alt={item.title} 
+                     fill 
+                     sizes="(max-width: 768px) 100vw, 33vw"
+                     className="object-cover group-hover:scale-105 transition-transform duration-1000"
+                     style={{ filter: 'saturate(0.82) brightness(0.94)' }}
+                   />
+                   <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-60" />
+                </div>
                 
-                <div className="relative z-10">
+                <div className="p-12 relative z-10">
+                   {/* Visual Scan Line Effect */}
+                   <motion.div 
+                     initial={{ top: '-100%' }}
+                     whileHover={{ top: '100%' }}
+                     transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                     className="absolute left-0 right-0 h-[2px] bg-olive-600/20 z-0 pointer-events-none"
+                   />
+                   
                    <div className="font-display text-6xl text-amber-cta mb-6">
                       <Counter value={parseInt(item.stat)} />
                       <span className="text-2xl ml-1">{item.stat.includes('k') ? 'k+' : '+'}</span>
@@ -248,5 +261,5 @@ function Counter({ value }: { value: number }) {
     });
   }, [value]);
   
-  return <span ref={ref as any} className="font-mono tabular-nums">0</span>;
+  return <span ref={ref as React.RefObject<HTMLSpanElement>} className="font-mono tabular-nums">0</span>;
 }

@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { NAV_LINKS } from '@/lib/constants';
+import BrandLogo from '@/components/ui/BrandLogo';
+import { CAR_IMAGES } from '@/lib/images';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -123,15 +125,32 @@ export default function Navbar() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 10 }}
                             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                            className="absolute top-full left-0 min-w-[240px] bg-metal-900 border border-white/5 shadow-2xl py-4 z-50"
+                            className="absolute top-full left-0 min-w-[280px] bg-metal-900 border border-white/5 shadow-2xl py-6 z-50 overflow-hidden"
                           >
+                            {/* Ghostly Background Image for Dropdown */}
+                            <div 
+                              className="absolute inset-0 opacity-[0.03] grayscale pointer-events-none bg-cover bg-center"
+                              style={{ backgroundImage: `url(${CAR_IMAGES.grandVitara.side})` }}
+                            />
+                            
                             {link.dropdown.map((sublink) => (
                               <Link 
                                 key={sublink.label} 
                                 href={sublink.href}
-                                className={`block py-3 px-6 text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-3 hover:translate-x-2 ${pathname === sublink.href ? 'text-amber-cta border-l-2 border-amber-cta bg-white/5' : 'text-metal-100 hover:text-amber-cta'}`}
+                                className={`group/sub block py-3 px-8 text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-300 flex items-center gap-4 hover:translate-x-2 relative z-10 ${pathname === sublink.href ? 'text-amber-cta border-l-2 border-amber-cta bg-white/5' : 'text-metal-300 hover:text-white'}`}
                               >
-                                {sublink.label}
+                                {sublink.label.includes('Maruti') || sublink.label.includes('NEXA') || sublink.label.includes('Honda') || sublink.label.includes('Royal') ? (
+                                  <div className="flex items-center gap-3">
+                                    <BrandLogo 
+                                      brand={sublink.label.includes('Arena') ? 'arena' : sublink.label.includes('NEXA') ? 'nexa' : sublink.label.includes('Honda') ? 'honda' : 're'} 
+                                      size="sm" 
+                                      variant="light" 
+                                    />
+                                    <span>{sublink.label}</span>
+                                  </div>
+                                ) : (
+                                  sublink.label
+                                )}
                               </Link>
                             ))}
                           </motion.div>

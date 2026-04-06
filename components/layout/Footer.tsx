@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { fadeUp, staggerContainer } from '@/lib/animations';
+import BrandLogo from '@/components/ui/BrandLogo';
+import { SECTION_BG_IMAGES } from '@/lib/images';
 
 export default function Footer() {
   return (
@@ -37,9 +39,18 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Main Footer - Solid Dark Background */}
-      <div className="bg-metal-900 pt-20 pb-12">
-        <div className="container-custom">
+      {/* Main Footer - Solid Dark Background with Texture */}
+      <div className="bg-metal-900 pt-20 pb-12 relative overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-[0.03] grayscale pointer-events-none">
+          <Image 
+            src={SECTION_BG_IMAGES.cityRoad} 
+            alt="Chennai City Map" 
+            fill 
+            className="object-cover" 
+          />
+        </div>
+
+        <div className="container-custom relative z-10">
           <motion.div 
             initial="hidden"
             whileInView="visible"
@@ -53,7 +64,7 @@ export default function Footer() {
               <Link href="/" className="inline-block w-fit">
                 <Image src="/images/thriveni-logo.svg" alt="Thriveni Cars Logo" width={160} height={46} className="w-auto h-10" />
               </Link>
-              <p className="text-metal-400 text-sm leading-relaxed max-w-xs">
+              <p className="text-metal-400 text-[13px] leading-relaxed max-w-xs font-body font-light">
                 Chennai&apos;s No.1 Multi-Brand Dealership. Your trusted partner for Maruti Arena, NEXA, Honda, Royal Enfield and Commercial vehicles since 2009.
               </p>
               <div className="flex gap-4">
@@ -91,10 +102,17 @@ export default function Footer() {
                 <span className="absolute -bottom-2 left-0 w-8 h-[2px] bg-amber-cta"></span>
               </h3>
               <div className="grid grid-cols-1 gap-4">
-                {['Maruti Arena', 'NEXA', 'Honda Cars', 'Royal Enfield', 'Commercial Vehicles', 'Certified Used Cars'].map((brand) => (
-                  <Link key={brand} href="/inventory" className="text-metal-400 text-sm hover:text-amber-cta transition-all flex items-center gap-3">
-                    <span className="w-1 h-1 rounded-full bg-olive-600"></span>
-                    {brand}
+                {[
+                  { name: 'Maruti Arena', id: 'arena' },
+                  { name: 'NEXA', id: 'nexa' },
+                  { name: 'Honda Cars', id: 'honda' },
+                  { name: 'Royal Enfield', id: 're' },
+                  { name: 'Commercial', id: 'arena' },
+                  { name: 'Premium Used', id: 'nexa' }
+                ].map((brand) => (
+                  <Link key={brand.name} href="/inventory" className="text-metal-400 text-xs uppercase tracking-widest font-bold hover:text-amber-cta transition-all flex items-center gap-3 group">
+                     <BrandLogo brand={brand.id as 'arena' | 'nexa' | 'honda' | 're' | 'commercial'} size="sm" variant="light" />
+                     <span className="group-hover:translate-x-1 transition-transform">{brand.name}</span>
                   </Link>
                 ))}
               </div>

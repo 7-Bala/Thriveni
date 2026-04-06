@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { 
   fadeUp, 
-  staggerContainer, 
   EASING 
 } from '@/lib/animations';
 import { useGSAPOnMount } from '@/hooks/useScrollAnimation';
@@ -17,8 +16,10 @@ export default function TestimonialsPage() {
     if (!ctx.selector) return;
     // Rating bar growth animation
     const bars = ctx.selector('.rating-bar-fill');
-    bars.forEach((bar: any) => {
+    bars.forEach((bar: Element) => {
       const targetWidth = bar.getAttribute('data-width');
+      if (!targetWidth) return;
+      
       gsap.fromTo(bar, 
         { width: '0%' },
         { 
