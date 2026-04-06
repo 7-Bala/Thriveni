@@ -23,7 +23,7 @@
 
   body {
     background-color: var(--metal-900);
-    color: var(--metal-900);
+    color: var(--metal-400);
     overflow-x: hidden;
   }
 
