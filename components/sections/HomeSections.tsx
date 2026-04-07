@@ -195,7 +195,7 @@ export function BrandShowcase() {
                 <h3 className="font-body font-bold text-[13px] uppercase tracking-wider text-metal-900 group-hover:text-white transition-colors">
                   {brand.name}
                 </h3>
-                <p className="text-olive-600 text-xs font-semibold mt-2 group-hover:text-olive-200 transition-colors">
+                <p className="font-display text-olive-600 text-xs font-bold mt-2 group-hover:text-olive-200 transition-colors">
                   {brand.models} Models
                 </p>
               </div>
@@ -277,7 +277,7 @@ export function FeaturedInventory() {
                 
                 {/* Price Tag Overlay */}
                 <div className="absolute bottom-3 left-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded">
-                  <span className="font-mono text-amber-cta text-[13px] font-bold tracking-tight">
+                  <span className="font-display text-amber-cta text-[14px] font-extrabold tracking-tight">
                     {car.price}
                   </span>
                 </div>
@@ -395,8 +395,8 @@ export function WhyChooseUs() {
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                 className="inline-block border border-white/10 px-4 py-1 mb-8"
               >
-                <span className="text-amber-cta font-mono text-[9px] uppercase tracking-[0.5em] font-bold">
-                  [WHY.THRIVENI]
+                <span className="text-amber-cta font-display text-[11px] uppercase tracking-[0.4em] font-bold">
+                  WHY THRIVENI
                 </span>
               </motion.div>
 
@@ -426,10 +426,10 @@ export function WhyChooseUs() {
                     className="flex items-center gap-8 group"
                   >
                     <div className="flex flex-col">
-                      <span className="text-metal-600 font-mono text-[9px] uppercase tracking-widest mb-1 group-hover:text-amber-cta transition-colors">
-                        [{stat.label.toUpperCase().replace(/ /g, '.')}]
+                      <span className="text-metal-400 font-display text-[11px] uppercase tracking-widest mb-1 group-hover:text-amber-cta transition-colors">
+                        {stat.label.toUpperCase()}
                       </span>
-                      <div className="font-display text-5xl md:text-6xl text-white flex items-baseline leading-none">
+                      <div className="font-display text-5xl md:text-6xl text-white flex items-baseline leading-none font-bold">
                         <Counter value={stat.value} />
                         <span className="text-amber-cta text-2xl ml-2 font-light">{stat.suffix}</span>
                       </div>
@@ -476,7 +476,7 @@ export function WhyChooseUs() {
                 className={`relative bg-metal-800/40 p-10 md:p-14 border border-white/5 group transition-all duration-500 hover:bg-metal-800/60 ${i % 2 !== 0 ? 'md:mt-12' : ''}`}
               >
                 {/* Numeral Watermark */}
-                <div className="absolute top-8 right-10 font-display text-8xl text-white/[0.03] select-none pointer-events-none group-hover:text-amber-cta/5 transition-colors duration-700">
+                <div className="absolute top-8 right-10 font-display font-black text-8xl text-white/[0.03] select-none pointer-events-none group-hover:text-amber-cta/5 transition-colors duration-700">
                   {feature.num}
                 </div>
 
@@ -516,7 +516,7 @@ function Counter({ value }: { value: number }) {
     if (!ref.current) return;
     
     const chars = '0123456789X$/#';
-    const targetStr = value.toString();
+    const targetStr = value.toLocaleString();
     
     gsap.to({ val: 0 }, {
       val: value,
@@ -534,24 +534,30 @@ function Counter({ value }: { value: number }) {
         
         let displayStr = '';
         for (let i = 0; i < targetStr.length; i++) {
-          // Progressively lock in digits based on overall completion
-          if (progress > (i / targetStr.length) * 0.85) {
-            displayStr += targetStr[i];
+          const char = targetStr[i];
+          
+          if (/[0-9]/.test(char)) {
+            // Digit scramble logic
+            if (progress > (i / targetStr.length) * 0.85) {
+              displayStr += char;
+            } else {
+              displayStr += chars[Math.floor(Math.random() * 10)];
+            }
           } else {
-            // Fast cycle random chars for "decoding" feel
-            displayStr += chars[Math.floor(Math.random() * chars.length)];
+            // Lock in special characters (commas, dots) immediately
+            displayStr += char;
           }
         }
         
         ref.current.innerText = displayStr;
       },
       onComplete: () => {
-        if (ref.current) ref.current.innerText = value.toString();
+        if (ref.current) ref.current.innerText = value.toLocaleString();
       }
     });
   }, [value]);
   
-  return <span ref={ref} className="font-mono tabular-nums">0</span>;
+  return <span ref={ref} className="font-display font-bold">0</span>;
 }
 
 // --- EMI CALCULATOR SECTION (NEW) ---
