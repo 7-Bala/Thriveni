@@ -60,7 +60,7 @@ export function Hero() {
           />
         </div>
         <div className="container-custom relative z-20 w-full min-h-screen flex flex-col justify-center pt-20">
-          <div className="max-w-[55%] lg:max-w-[55%]">
+          <div className="w-full sm:max-w-[80%] lg:max-w-[55%] pt-10 sm:pt-0">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -103,7 +103,7 @@ export function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 1.1, ease: EASING.expoOut }}
-              className="flex items-center gap-0 mb-10 divide-x divide-white/10"
+              className="grid grid-cols-2 sm:flex sm:items-center gap-y-6 sm:gap-0 mb-10 sm:divide-x divide-white/10"
             >
               {[
                 { val: '15', label: 'Years' },
@@ -111,7 +111,7 @@ export function Hero() {
                 { val: '10,000+', label: 'Families' },
                 { val: '8', label: 'Branches' },
               ].map((s, i) => (
-                <div key={i} className="px-6 first:pl-0">
+                <div key={i} className="pr-4 sm:px-6 sm:first:pl-0">
                   <div className="font-mono text-white font-bold text-base">{s.val}</div>
                   <div className="font-body text-[10px] text-metal-500 uppercase tracking-widest">{s.label}</div>
                 </div>
@@ -323,17 +323,15 @@ export function TestimonialCarousel() {
 
       <div className="container-custom text-center relative z-10">
         <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-6">STORY OF TRUST</span>
-        <div className="max-w-4xl mx-auto overflow-hidden">
-          <div className="flex gap-12 snap-x snap-mandatory">
+        <div className="max-w-4xl mx-auto overflow-x-auto touch-pan-x snap-x snap-mandatory flex gap-8 md:gap-12 pb-4 px-4" style={{ scrollbarWidth: 'none' }}>
             {testimonials.map((t, i) => (
-              <div key={i} className="min-w-full snap-center py-8">
+              <div key={i} className="min-w-[85%] md:min-w-full snap-center py-8">
                 <p className="font-body text-2xl md:text-3xl text-metal-300 italic mb-10 leading-relaxed font-light">
                   &quot;{t.body}&quot;
                 </p>
                 <div className="text-white font-display text-xl">— {t.name}</div>
               </div>
             ))}
-          </div>
         </div>
       </div>
     </section>
