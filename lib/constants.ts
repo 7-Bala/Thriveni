@@ -43,20 +43,20 @@ export const BRANCHES = [
   {
     id: 'b1',
     name: 'T.Nagar Showroom',
-    address: '123, G.N. Chetty Road, T.Nagar, Chennai - 600017',
+    address: '123, G.N. Chetty Road, T.Nagar, Salem - 600017',
     phone: '+91 98765 43210',
     whatsapp: '+91 98765 43210',
-    mapUrl: 'https://maps.google.com/?q=T.Nagar,Chennai',
+    mapUrl: 'https://maps.google.com/?q=T.Nagar,Salem',
     lat: 13.0405,
     lng: 80.2337
   },
   {
     id: 'b2',
     name: 'Anna Nagar Showroom',
-    address: '45, Second Avenue, Anna Nagar, Chennai - 600040',
+    address: '45, Second Avenue, Anna Nagar, Salem - 600040',
     phone: '+91 98765 43211',
     whatsapp: '+91 98765 43211',
-    mapUrl: 'https://maps.google.com/?q=Anna+Nagar,Chennai',
+    mapUrl: 'https://maps.google.com/?q=Anna+Nagar,Salem',
     lat: 13.0837,
     lng: 80.2119
   }

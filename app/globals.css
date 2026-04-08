@@ -98,3 +98,48 @@
 ::selection {
   @apply bg-amber-cta text-white;
 }
+
+/* Custom premium slider styles */
+input[type='range'].premium-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 1px;
+  background: #C9C6BF;
+  outline: none;
+}
+input[type='range'].premium-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #D4920A;
+  cursor: pointer;
+  border: 3px solid #FAFAF8;
+  box-shadow: 0 0 0 1px #D4920A;
+}
+input[type='range'].premium-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #D4920A;
+  cursor: pointer;
+  border: 3px solid #FAFAF8;
+  box-shadow: 0 0 0 1px #D4920A;
+}
+
+/* Animations */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ticker-track {
+  animation: ticker 22s linear infinite;
+  will-change: transform;
+}
+
+@keyframes loadbar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}

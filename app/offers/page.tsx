@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -8,9 +8,35 @@ import { fadeUp, EASING } from '@/lib/animations';
 import { CAR_IMAGES, HERO_IMAGES } from '@/lib/images';
 import { MEDIUM_BLUR } from '@/lib/blurPlaceholders';
 import HeroImage from '@/components/ui/HeroImage';
+import CarImagePlaceholder from '@/components/ui/CarImagePlaceholder';
 
 export default function OffersPage() {
   const [activeTab, setActiveTab] = useState('All Offers');
+  const [timeLeft, setTimeLeft] = useState({ days: 12, hours: 4, minutes: 45, seconds: 30 });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        let { days, hours, minutes, seconds } = prev;
+        if (seconds > 0) {
+          seconds--;
+        } else {
+          seconds = 59;
+          if (minutes > 0) minutes--;
+          else {
+            minutes = 59;
+            if (hours > 0) hours--;
+            else {
+              hours = 23;
+              if (days > 0) days--;
+            }
+          }
+        }
+        return { days, hours, minutes, seconds };
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div className="min-h-screen bg-bg-primary pb-32">
@@ -25,9 +51,9 @@ export default function OffersPage() {
         >
           <div className="container-custom py-32 flex flex-col lg:flex-row justify-between items-end gap-12">
               <motion.div initial="hidden" animate="visible" variants={fadeUp} className="max-w-2xl">
-                  <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">OPPORTUNITY</span>
+                  <span className="text-amber-cta text-[11px] uppercase tracking-widest font-bold block mb-4">OPPORTUNITY</span>
                   <h1 className="font-display text-display-xl text-white leading-tight">
-                    The Monsoon <br/> <span className="text-amber-cta underline decoration-1 underline-offset-8">Privilege Suite.</span>
+                    The Monsoon <br/> <span className="text-amber-cta">Privilege Suite.</span>
                   </h1>
               </motion.div>
               
@@ -35,14 +61,14 @@ export default function OffersPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: EASING.expoOut }}
-                className="bg-white/5 backdrop-blur-xl p-8 sm:p-10 border border-white/10 border-l-4 border-amber-cta shadow-2xl shrink-0"
+                className="bg-metal-800 p-8 sm:p-10 border-l-4 border-amber-cta shrink-0"
               >
-                 <div className="text-metal-400 text-[10px] uppercase tracking-[0.4em] font-bold mb-6">OFFER EXPIRY TRACKER</div>
+                 <div className="text-metal-400 text-[10px] uppercase tracking-widest font-bold mb-6">OFFER EXPIRY TRACKER</div>
                  <div className="flex gap-6 sm:gap-10">
-                    <CountdownUnit value={12} label="DAYS" />
-                    <CountdownUnit value={4} label="HRS" />
-                    <CountdownUnit value={45} label="MIN" />
-                    <CountdownUnit value={30} label="SEC" />
+                    <CountdownUnit value={timeLeft.days} label="DAYS" />
+                    <CountdownUnit value={timeLeft.hours} label="HRS" />
+                    <CountdownUnit value={timeLeft.minutes} label="MIN" />
+                    <CountdownUnit value={timeLeft.seconds} label="SEC" />
                  </div>
               </motion.div>
           </div>
@@ -78,23 +104,27 @@ export default function OffersPage() {
                 transition={{ duration: 0.8, delay: i * 0.15 }}
                 className="bg-white border border-metal-100 group cursor-pointer relative overflow-hidden"
               >
-                  {/* Ribbon Unfurl Effect */}
-                  <div className="absolute top-0 right-0 z-20 w-32 h-32 overflow-hidden pointer-events-none">
-                     <div className="absolute top-0 right-0 bg-amber-cta text-white text-[9px] font-bold uppercase tracking-widest px-10 py-1 rotate-45 translate-x-8 translate-y-3 shadow-xl border-l border-white/20">Exclusive</div>
+                  {/* Flat Marker */}
+                  <div className="absolute top-4 right-4 z-20">
+                     <span className="bg-amber-cta text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1">Exclusive</span>
                   </div>
 
-                  <div className="aspect-[16/9] relative overflow-hidden bg-[#1A1E14]">
-                     <Image 
-                       src={offer.img} 
-                       alt={offer.title} 
-                       fill 
-                       sizes="(max-width: 768px) 100vw, 33vw"
-                       placeholder="blur"
-                       blurDataURL={MEDIUM_BLUR}
-                       className="object-cover group-hover:scale-105 transition-transform duration-1000" 
-                       style={{ filter: 'brightness(0.94) contrast(1.06) saturate(0.92)' }}
-                     />
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
+                  <div className="aspect-[16/9] relative overflow-hidden bg-metal-900 flex items-center justify-center">
+                     {offer.img ? (
+                       <Image 
+                         src={offer.img} 
+                         alt={offer.title} 
+                         fill 
+                         sizes="(max-width: 768px) 100vw, 33vw"
+                         placeholder="blur"
+                         blurDataURL={MEDIUM_BLUR}
+                         className="object-cover object-center group-hover:scale-105 transition-transform duration-1000" 
+                         style={{ filter: 'brightness(0.94) contrast(1.06) saturate(0.92)' }}
+                       />
+                     ) : (
+                       <CarImagePlaceholder />
+                     )}
+                     <div className="absolute inset-0 bg-gradient-to-t from-metal-900 via-metal-900/40 to-transparent opacity-80" />
                   </div>
                  
                  <div className="p-10">
@@ -117,8 +147,7 @@ export default function OffersPage() {
         {/* SECTION 3 — URGENCY CTA */}
         <section className="mt-32">
           <div className="bg-amber-cta p-20 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
-             {/* Asymmetric Decor */}
-             <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+             {/* Asymmetric Decor Removed */}
              
              <div className="relative z-10">
                 <h2 className="font-display text-4xl text-metal-900 mb-4">Stock Clearing Initiative</h2>
@@ -139,7 +168,7 @@ export default function OffersPage() {
 function CountdownUnit({ value, label }: { value: number, label: string }) {
   return (
     <div className="text-center group">
-       <div className="font-display text-4xl sm:text-5xl text-white mb-2 group-hover:text-amber-cta transition-colors">
+       <div className="font-display text-4xl sm:text-5xl text-white mb-2 group-hover:text-amber-cta transition-colors tabular-nums w-12 sm:w-16">
           {value.toString().padStart(2, '0')}
        </div>
        <div className="text-metal-500 text-[9px] uppercase tracking-widest font-bold">{label}</div>

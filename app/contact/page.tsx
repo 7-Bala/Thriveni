@@ -6,12 +6,13 @@ import { fadeUp } from '@/lib/animations';
 
 export default function ContactPage() {
   const [formStatus, setFormStatus] = useState<'idle' | 'success'>('idle');
+  const [formError, setFormError] = useState('');
   const [activeBranch, setActiveBranch] = useState(0);
 
   const branches = [
-    { name: 'T.Nagar (H.O)', type: 'Maruti Suzuki Arena', address: '12, G.N. Chetty Road, T.Nagar, Chennai - 600017' },
-    { name: 'Anna Nagar', type: 'NEXA', address: '45, 2nd Avenue, Anna Nagar, Chennai - 600102' },
-    { name: 'Adyar', type: 'Honda Premium', address: '8, Sardar Patel Road, Adyar, Chennai - 600020' },
+    { name: 'T.Nagar (H.O)', type: 'Maruti Suzuki Arena', address: '12, G.N. Chetty Road, T.Nagar, Salem - 600017' },
+    { name: 'Anna Nagar', type: 'NEXA', address: '45, 2nd Avenue, Anna Nagar, Salem - 600102' },
+    { name: 'Adyar', type: 'Honda Premium', address: '8, Sardar Patel Road, Adyar, Salem - 600020' },
   ];
 
   return (
@@ -46,7 +47,7 @@ export default function ContactPage() {
                     <motion.button 
                       key={i}
                       onClick={() => setActiveBranch(i)}
-                      className={`w-full text-left p-8 border transition-all relative overflow-hidden group ${activeBranch === i ? 'bg-white border-amber-cta shadow-2xl' : 'bg-transparent border-metal-100 hover:border-metal-200'}`}
+                      className={`w-full text-left p-8 border transition-all relative overflow-hidden group ${activeBranch === i ? 'bg-white border-amber-cta' : 'bg-transparent border-metal-100 hover:border-metal-200'}`}
                     >
                        <div className="relative z-10">
                           <div className={`text-[9px] font-bold uppercase tracking-widest mb-2 ${activeBranch === i ? 'text-amber-cta' : 'text-metal-400'}`}>{br.type}</div>
@@ -66,27 +67,31 @@ export default function ContactPage() {
            </div>
 
            {/* Map Representative Pulse */}
-           <div className="aspect-square bg-bg-section relative overflow-hidden border border-metal-100 rounded-sm group">
-              <div className="absolute inset-0 bg-metal-900/5 z-0" />
+           {/* Map Representative Pulse */}
+           <div className="aspect-square bg-metal-900 relative overflow-hidden group">
+              <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
               <motion.div 
                 animate={{ 
-                  scale: [1, 1.2, 1],
-                  opacity: [0.1, 0.4, 0.1]
+                  scale: [1, 1.5, 1],
+                  opacity: [0.3, 0, 0.3]
                 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-amber-cta rounded-full"
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-amber-cta rounded-full"
               />
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-amber-cta border-2 border-white shadow-xl z-10" />
-              <div className="absolute bottom-8 left-8 right-8 bg-white p-6 shadow-2xl border border-metal-100">
-                 <div className="text-[10px] font-bold text-metal-400 uppercase tracking-widest mb-1">Active View</div>
-                 <div className="font-display text-lg text-metal-900">{branches[activeBranch].name} Position</div>
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-amber-cta ring-4 ring-amber-cta/20 shadow-[0_0_15px_rgba(202,152,73,0.8)] z-10" />
+              <div className="absolute bottom-8 left-8 right-8 bg-metal-800/80 backdrop-blur-md p-6 border border-white/5">
+                 <div className="text-[10px] font-bold text-amber-cta uppercase tracking-widest mb-1 flex items-center gap-2">
+                   <div className="w-1.5 h-1.5 bg-amber-cta rounded-full animate-pulse" />
+                   Live Coordinates
+                 </div>
+                 <div className="font-display text-lg text-white">{branches[activeBranch].name} Branch</div>
               </div>
            </div>
         </div>
 
         {/* SECTION 3 — INTERACTIVE FORM */}
         <div className="sm:col-span-7">
-           <div className="bg-white border border-metal-100 p-12 sm:p-20 shadow-2xl relative">
+           <div className="bg-white border border-metal-100 p-12 sm:p-20 relative">
               <AnimatePresence mode='wait'>
                 {formStatus === 'success' ? (
                   <motion.div 
@@ -106,21 +111,29 @@ export default function ContactPage() {
                   <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                      <h2 className="font-display text-4xl text-metal-900 mb-12">Submit Enquiry</h2>
                      
-                     <form onSubmit={(e) => { e.preventDefault(); setFormStatus('success'); }} className="space-y-10">
+                     <form onSubmit={(e) => { 
+                        e.preventDefault(); 
+                        const formData = new FormData(e.currentTarget);
+                        const phone = formData.get('phone') as string;
+                        if (!/^\d{10}$/.test(phone)) {
+                           setFormError('Please enter a valid 10-digit mobile number.');
+                           return;
+                        }
+                        setFormError('');
+                        setFormStatus('success'); 
+                     }} className="space-y-10">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                            <div className="relative group/field">
-                              <input required type="text" className="w-full bg-bg-section px-6 py-5 outline-none text-sm group-focus-within/field:ring-1 ring-amber-cta transition-all" placeholder="Full Name" />
-                              <div className="absolute bottom-0 left-0 h-[1px] bg-amber-cta w-0 group-focus-within/field:w-full transition-all duration-700" />
+                              <input required name="name" type="text" className="w-full bg-transparent border border-metal-200 px-6 py-5 outline-none text-sm focus:border-amber-cta focus:bg-metal-50 transition-all font-body text-metal-900 placeholder-metal-400" placeholder="Full Name" />
                            </div>
                            <div className="relative group/field">
-                              <input required type="tel" className="w-full bg-bg-section px-6 py-5 outline-none text-sm group-focus-within/field:ring-1 ring-amber-cta transition-all" placeholder="Mobile (+91)" />
-                              <div className="absolute bottom-0 left-0 h-[1px] bg-amber-cta w-0 group-focus-within/field:w-full transition-all duration-700" />
+                              <input required name="phone" type="tel" className="w-full bg-transparent border border-metal-200 px-6 py-5 outline-none text-sm focus:border-amber-cta focus:bg-metal-50 transition-all font-body text-metal-900 placeholder-metal-400" placeholder="Mobile (10 digits)" />
                            </div>
                         </div>
 
                         <div className="relative group/field">
-                            <select required className="w-full bg-bg-section px-6 py-5 outline-none text-sm appearance-none cursor-pointer">
-                               <option value="">Nature of Interest</option>
+                            <select required className="w-full bg-transparent border border-metal-200 px-6 py-5 outline-none text-sm appearance-none cursor-pointer focus:border-amber-cta focus:bg-metal-50 transition-all font-body text-metal-900">
+                               <option value="" disabled selected className="text-metal-400">Nature of Interest</option>
                                <option>New Car Purchase</option>
                                <option>Used Car Exchange</option>
                                <option>Finance Consultation</option>
@@ -132,10 +145,10 @@ export default function ContactPage() {
                         </div>
 
                         <div className="relative group/field">
-                           <textarea required rows={4} className="w-full bg-bg-section px-6 py-5 outline-none text-sm group-focus-within/field:ring-1 ring-amber-cta transition-all resize-none" placeholder="Your Message / Preferences" />
-                           <div className="absolute bottom-0 left-0 h-[1px] bg-amber-cta w-0 group-focus-within/field:w-full transition-all duration-700" />
+                           <textarea required rows={4} className="w-full bg-transparent border border-metal-200 px-6 py-5 outline-none text-sm focus:border-amber-cta focus:bg-metal-50 transition-all resize-none font-body text-metal-900 placeholder-metal-400" placeholder="Your Message / Preferences" />
                         </div>
 
+                        {formError && <div className="text-red-500 text-[11px] uppercase tracking-widest font-bold mt-2">{formError}</div>}
                         <div className="flex flex-col sm:flex-row items-center gap-8 pt-4">
                            <button type="submit" className="w-full sm:w-auto btn-primary px-12 py-5">Initiate Contact</button>
                            <div className="flex items-center gap-3 text-metal-400 text-[10px] uppercase tracking-widest leading-tight">

@@ -8,11 +8,11 @@ import { HERO_IMAGES, CAR_IMAGES, SECTION_BG_IMAGES } from '@/lib/images';
 
 export default function VenturesPage() {
   const ventures = [
-    { title: 'New Car Sales', brand: 'Multi-Brand Excellence', desc: 'Authorized retail for NEXA, Maruti Arena, and Honda with radical transparency.', img: CAR_IMAGES.grandVitara.front, overlay: 'rgba(15, 14, 12, 0.75)', size: 'large' },
-    { title: 'Bespoke Service', brand: 'Factory Standards', desc: 'State-of-the-art diagnostic bays with genuine spare parts and certified technicians.', img: SECTION_BG_IMAGES.serviceCenter, overlay: 'rgba(15, 14, 12, 0.80)', size: 'small' },
-    { title: 'Driving Suite', brand: 'Safety First', desc: 'Certified instructors and simulator-based training for the next generation of drivers.', img: SECTION_BG_IMAGES.drivingSchool, overlay: 'rgba(15, 14, 12, 0.78)', size: 'small' },
-    { title: 'Finance & Insurance', brand: 'Instant Approval', desc: '10+ banking partners providing the most competitive interest rates in Chennai.', img: SECTION_BG_IMAGES.showroomInterior, overlay: 'rgba(15, 14, 12, 0.76)', size: 'small' },
-    { title: 'Used Car Exchange', brand: 'Best Value', desc: 'Transparent evaluation and best-in-market price for your existing vehicle exchange.', img: CAR_IMAGES.city.side, overlay: 'rgba(15, 14, 12, 0.76)', size: 'small' }
+    { title: 'New Car Sales', brand: 'Multi-Brand Excellence', desc: 'Authorized retail for NEXA, Maruti Arena, and Honda with radical transparency.', img: CAR_IMAGES.grandVitara.front, verb: 'View Showrooms', size: 'large' },
+    { title: 'Bespoke Service', brand: 'Factory Standards', desc: 'State-of-the-art diagnostic bays with genuine spare parts and certified technicians.', img: SECTION_BG_IMAGES.serviceCenter, verb: 'Schedule Maintenance', size: 'small' },
+    { title: 'Driving Suite', brand: 'Safety First', desc: 'Certified instructors and simulator-based training for the next generation of drivers.', img: SECTION_BG_IMAGES.drivingSchool, verb: 'Join School', size: 'small' },
+    { title: 'Finance & Insurance', brand: 'Instant Approval', desc: '10+ banking partners providing the most competitive interest rates in Salem.', img: SECTION_BG_IMAGES.showroomInterior, verb: 'Check Rates', size: 'small' },
+    { title: 'Used Car Exchange', brand: 'Best Value', desc: 'Transparent evaluation and best-in-market price for your existing vehicle exchange.', img: CAR_IMAGES.city.side, verb: 'Get Valuation', size: 'small' }
   ];
 
   return (
@@ -29,9 +29,9 @@ export default function VenturesPage() {
         >
           <div className="container-custom py-32">
             <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-              <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">ECOSYSTEM</span>
+              <span className="text-amber-cta text-[11px] uppercase tracking-widest font-bold block mb-4">ECOSYSTEM</span>
               <h1 className="font-display text-display-xl text-white leading-tight mb-8">
-                Beyond the <span className="text-amber-cta underline decoration-1 underline-offset-8">Showroom.</span>
+                Beyond the <span className="text-amber-cta">Showroom.</span>
               </h1>
               <p className="text-metal-300 text-lg max-w-xl font-body font-light">
                 Thriveni is a complete automotive lifecycle partner. We manage everything from your first lesson to your 100,000km service.
@@ -63,7 +63,7 @@ export default function VenturesPage() {
                           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                           className="object-cover group-hover:scale-105 transition-all duration-1000" 
                         />
-                        <div className="absolute inset-0 z-10" style={{ background: v.overlay || 'rgba(15, 14, 12, 0.7)' }} />
+                        <div className="absolute inset-0 z-10 bg-gradient-to-t from-metal-900 via-metal-900/60 to-transparent" />
                       </>
                     )}
                     
@@ -71,7 +71,12 @@ export default function VenturesPage() {
                        <div className={`${v.img ? 'text-olive-200' : 'text-olive-300'} font-bold text-[9px] uppercase tracking-widest mb-3`}>{v.brand}</div>
                        <h3 className={`font-display text-3xl ${v.img ? 'text-white' : 'text-metal-900'} mb-4`}>{v.title}</h3>
                        <p className={`${v.img ? 'text-metal-300' : 'text-metal-500'} text-sm mb-10 leading-relaxed max-w-sm`}>{v.desc}</p>
-                       <button className="text-amber-cta font-bold text-[10px] uppercase tracking-[0.3em] border-b-2 border-transparent hover:border-amber-cta transition-all">Explore Service →</button>
+                       <div className="mt-auto group/btn flex items-center gap-4 w-fit cursor-pointer">
+                         <div className="w-10 h-10 border border-white/20 flex items-center justify-center transition-colors group-hover/btn:bg-white group-hover/btn:border-white">
+                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white group-hover/btn:text-metal-900 transition-colors"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                         </div>
+                         <span className="text-metal-100 font-bold text-[10px] uppercase tracking-widest group-hover/btn:text-white transition-colors">{v.verb}</span>
+                       </div>
                     </div>
                 </motion.div>
               ))}
@@ -83,13 +88,13 @@ export default function VenturesPage() {
       <section className="mt-32">
         <div className="container-custom">
            <div className="bg-metal-900 p-16 sm:p-24 flex flex-col items-center text-center relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-olive-700/10 blur-3xl -translate-y-1/2 translate-x-1/2" />
+              {/* Asymmetric decor removed */}
               
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="relative z-10">
                  <h2 className="font-display text-4xl sm:text-5xl text-white mb-8">Unified Service Request</h2>
                  <p className="text-metal-400 text-lg max-w-2xl mx-auto mb-16 font-body font-light">Whether it&apos;s a periodic service or a finance query, our central concierge handles all requests with a 15-minute callback guarantee.</p>
                  
-                 <form className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                 <form onSubmit={(e) => e.preventDefault()} className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
                     <div className="relative group/field">
                        <input type="text" placeholder="Full Name" className="w-full bg-white/5 border border-white/10 px-6 py-5 outline-none text-white text-sm focus:ring-1 focus:ring-amber-cta transition-all" />
                     </div>

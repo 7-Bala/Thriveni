@@ -3,7 +3,7 @@ import withPlaiceholder from '@plaiceholder/next';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['images.unsplash.com', 'res.cloudinary.com', 'lh3.googleusercontent.com'],
+    domains: ['images.unsplash.com', 'res.cloudinary.com', 'lh3.googleusercontent.com', 'upload.wikimedia.org'],
   },
   async headers() {
     return [

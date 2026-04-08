@@ -53,7 +53,7 @@ export default function TestimonialsPage() {
                 { label: 'Overall Rating', val: '4.9', sub: 'from 10k+ reviews' },
                 { label: 'Recommendation', val: '98%', sub: 'would buy again' },
                 { label: 'Callback Time', val: '15m', sub: 'average response' },
-                { label: 'Branches', val: '08', sub: 'across Chennai' }
+                { label: 'Branches', val: '08', sub: 'across Salem' }
               ].map((stat, i) => (
                 <motion.div 
                   key={i}
@@ -79,7 +79,7 @@ export default function TestimonialsPage() {
              {[
                { name: 'Vikram K.', branch: 'Anna Nagar', body: "Radical transparency at its best. Thriveni Cars didn't hide any charges. The Maruti Swift delivery was a celebration for my family.", car: 'Maruti Swift ZXI' },
                { name: 'Anitha R.', branch: 'T.Nagar', body: "I've been a customer since 2012. Their NEXA service standards are better than corporate showrooms. Highly recommended for premium SUVs.", car: 'NEXA Grand Vitara' },
-               { name: 'Sameer G.', branch: 'Adyar', body: "The best exchange value in Chennai. They valued my old Honda much higher than the competitors and delivered my new City in 4 days.", car: 'Honda City ZX' },
+               { name: 'Sameer G.', branch: 'Adyar', body: "The best exchange value in Salem. They valued my old Honda much higher than the competitors and delivered my new City in 4 days.", car: 'Honda City ZX' },
                { name: 'Priya S.', branch: 'Velachery', body: "Professional, polite, and punctual. Their doorstep test-drive service saved me so much time during the monsoon.", car: 'Maruti Grand Vitara' },
                { name: 'Rajesh M.', branch: 'OMR', body: "Bought my Royal Enfield from their bespoke showroom. The custom accessories fitment was perfect. Professional staff who know their bikes.", car: 'RE Classic 350' },
                { name: 'Karthik N.', branch: 'Mogappair', body: "Smooth finance processing. I got my loan approved in 24 hours through their internal tie-ups. Stress-free vehicle ownership.", car: 'Maruti Baleno' }
@@ -92,23 +92,16 @@ export default function TestimonialsPage() {
                  transition={{ duration: 0.8, ease: EASING.expoOut }}
                  className="break-inside-avoid mb-10 bg-white border border-metal-100 p-10 relative overflow-hidden"
                >
-                  <div className="flex gap-1 text-amber-cta mb-6">
-                     {[1,2,3,4,5].map(s => (
-                        <svg key={s} width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                     ))}
+                  <div className="relative">
+                    <div className="absolute -top-6 -left-4 font-display font-black text-metal-100 leading-none pointer-events-none select-none transition-colors group-hover:text-amber-cta/10" style={{ fontSize: '140px', lineHeight: 1 }}>&quot;</div>
+                    <p className="font-body font-medium text-metal-800 text-lg leading-relaxed pt-8 relative z-10">&quot;{rev.body}&quot;</p>
                   </div>
-                  <p className="font-body text-metal-600 text-lg leading-relaxed italic mb-8 font-light italic">
-                     &quot;{rev.body}&quot;
-                  </p>
-                  <div className="flex items-center gap-4 pt-8 border-t border-metal-50">
-                     <div className="w-10 h-10 bg-bg-section flex items-center justify-center font-display text-metal-400 border border-metal-100 uppercase text-xs">{rev.name.charAt(0)}</div>
-                     <div>
-                        <div className="font-display text-metal-900">{rev.name}</div>
-                        <div className="text-[10px] font-bold text-olive-600 uppercase tracking-widest">{rev.car}</div>
-                     </div>
+                  <div className="mt-10 flex flex-col gap-2 relative z-10">
+                    <span className="font-mono text-[11px] font-bold text-metal-900 tracking-widest uppercase">{rev.name}</span>
+                    <span className="font-mono text-[10px] text-metal-400 uppercase tracking-widest">{rev.car}</span>
                   </div>
-                  <div className="absolute top-0 right-0 p-4">
-                     <span className="text-[8px] font-bold text-metal-300 uppercase tracking-widest">{rev.branch}</span>
+                  <div className="absolute top-0 right-0 p-6 z-10">
+                     <span className="text-[9px] font-bold text-olive-600 bg-olive-50 px-2 py-1 uppercase tracking-widest">{rev.branch}</span>
                   </div>
                </motion.div>
              ))}

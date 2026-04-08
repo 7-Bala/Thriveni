@@ -5,7 +5,6 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import PageTransitionProvider from '@/components/providers/PageTransitionProvider';
-import CustomCursor from '@/components/ui/CustomCursor';
 
 const displayFont = Outfit({ 
   subsets: ['latin'], 
@@ -30,13 +29,13 @@ const monoFont = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Thriveni Cars | Chennai\'s No.1 Multi-Brand Dealership',
+    default: 'Thriveni Cars | Salem\'s No.1 Multi-Brand Dealership',
     template: '%s | Thriveni Cars'
   },
-  description: "Chennai's Premier Multi-Brand Dealership. Explore 200+ new and pre-owned vehicles across Maruti Arena, NEXA, Honda, Royal Enfield, and Commercial segments.",
+  description: "Salem's Premier Multi-Brand Dealership. Explore 200+ new and pre-owned vehicles across Maruti Arena, NEXA, Honda, Royal Enfield, and Commercial segments.",
   openGraph: {
     title: 'Thriveni Cars | Multi-Brand Dealership',
-    description: "Chennai's Premier Multi-Brand Dealership",
+    description: "Salem's Premier Multi-Brand Dealership",
     siteName: 'Thriveni Cars',
     type: 'website',
   },
@@ -52,7 +51,6 @@ export default function RootLayout({
       <body className="font-body antialiased selection:bg-amber-cta selection:text-white bg-metal-900 min-h-screen flex flex-col">
         <SmoothScrollProvider>
           <PageTransitionProvider>
-            <CustomCursor />
             <Navbar />
             <main className="flex-grow">
               {children}

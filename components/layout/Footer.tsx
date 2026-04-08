@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { fadeUp, staggerContainer } from '@/lib/animations';
-import BrandLogo from '@/components/ui/BrandLogo';
 import { SECTION_BG_IMAGES } from '@/lib/images';
 
 export default function Footer() {
@@ -20,7 +19,7 @@ export default function Footer() {
             variants={fadeUp}
             className="text-3xl font-display text-metal-50 text-center md:text-left leading-tight"
           >
-            Ready to find your <span className="text-amber-cta italic underline decoration-1 underline-offset-4">perfect</span> drive?
+            Ready to find your <span className="text-amber-cta">perfect</span> drive?
           </motion.h2>
           <motion.div 
             initial="hidden"
@@ -44,7 +43,7 @@ export default function Footer() {
         <div className="absolute inset-0 z-0 opacity-[0.03] grayscale pointer-events-none">
           <Image 
             src={SECTION_BG_IMAGES.cityRoad} 
-            alt="Chennai City Map" 
+            alt="Salem City Map" 
             fill 
             className="object-cover" 
           />
@@ -65,7 +64,7 @@ export default function Footer() {
               <Image src="/images/thriveni-logo.svg" alt="Thriveni Cars Logo" width={160} height={46} className="w-auto h-10 group-hover:scale-105 transition-transform duration-500" />
             </Link>
               <p className="text-metal-400 text-sm leading-relaxed max-w-[280px] font-body font-light">
-                Chennai&apos;s No.1 Multi-Brand Dealership. Your trusted partner for Maruti Arena, NEXA, Honda, Royal Enfield and Commercial vehicles since 2009.
+                Salem&apos;s No.1 Multi-Brand Dealership. Your trusted partner for Maruti Arena, NEXA, Honda, Royal Enfield and Commercial vehicles since 2009.
               </p>
               <div className="flex gap-4">
                 {['instagram', 'facebook', 'youtube', 'linkedin'].map((social) => (
@@ -111,7 +110,6 @@ export default function Footer() {
                   { name: 'Premium Used', id: 'nexa' }
                 ].map((brand) => (
                   <Link key={brand.name} href="/inventory" className="text-metal-400 text-xs uppercase tracking-widest font-bold hover:text-amber-cta transition-all flex items-center gap-3 group">
-                     <BrandLogo brand={brand.id as 'arena' | 'nexa' | 'honda' | 're' | 'commercial'} size="sm" variant="light" />
                      <span className="group-hover:translate-x-1 transition-transform">{brand.name}</span>
                   </Link>
                 ))}
@@ -131,7 +129,7 @@ export default function Footer() {
                   </div>
                   <div className="text-metal-400 text-sm leading-relaxed">
                     <p className="font-semibold text-metal-200">Corporate HQ</p>
-                    <p>123, G.N. Chetty Road, T.Nagar, Chennai</p>
+                    <p>123, G.N. Chetty Road, T.Nagar, Salem</p>
                   </div>
                 </li>
                 <li className="flex gap-4 items-center">

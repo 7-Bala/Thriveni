@@ -53,9 +53,9 @@ export default function InventoryPage() {
         >
           <div className="container-custom py-32">
             <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-              <span className="text-amber-cta text-[11px] uppercase tracking-[0.4em] font-bold block mb-4">THRIVENI STOCK</span>
+              <span className="text-amber-cta text-[11px] uppercase tracking-widest font-bold block mb-4">THRIVENI STOCK</span>
               <h1 className="font-display text-5xl md:text-6xl text-white mb-6">Discovery Suite.</h1>
-              <p className="text-metal-400 text-lg max-w-xl">Explore our current inventory across 8 premium branches in Chennai.</p>
+              <p className="text-metal-400 text-lg max-w-xl">Explore our current inventory across 8 premium branches in Salem.</p>
             </motion.div>
           </div>
         </HeroImage>
@@ -74,7 +74,7 @@ export default function InventoryPage() {
             
             <div className="space-y-10">
               <div>
-                <h3 className="text-[10px] uppercase tracking-[0.2em] font-bold text-metal-400 mb-6">Filter by Brand</h3>
+                <h3 className="text-[10px] uppercase tracking-widest font-bold text-metal-400 mb-6">Filter by Brand</h3>
                 <div className="flex flex-col gap-4">
                   {['All', 'Maruti Arena', 'NEXA', 'Honda', 'Royal Enfield', 'Commercial'].map(brand => (
                     <button 
@@ -82,7 +82,7 @@ export default function InventoryPage() {
                       onClick={() => setActiveBrand(brand)}
                       className={`text-left text-sm transition-all flex items-center gap-4 group ${activeBrand === brand ? 'text-amber-cta font-bold' : 'text-metal-600 hover:text-metal-900'}`}
                     >
-                      <span className={`w-1.5 h-1.5 rounded-full transition-all ${activeBrand === brand ? 'bg-amber-cta scale-125' : 'bg-metal-200 group-hover:bg-metal-400'}`} />
+                      <span className={`shrink-0 w-2 h-2 rounded-full ring-1 ring-offset-2 ring-offset-bg-section transition-all ${activeBrand === brand ? 'bg-amber-cta ring-amber-cta' : 'bg-transparent ring-metal-300 group-hover:ring-metal-400'}`} />
                       {brand !== 'All' ? (
                         <div className="flex items-center gap-2">
                            <BrandLogo 
@@ -100,7 +100,7 @@ export default function InventoryPage() {
               </div>
 
               <div>
-                 <h3 className="text-[10px] uppercase tracking-[0.2em] font-bold text-metal-400 mb-6">Price Range</h3>
+                 <h3 className="text-[10px] uppercase tracking-widest font-bold text-metal-400 mb-6">Price Range</h3>
                  <input type="range" className="w-full h-1 bg-bg-section appearance-none accent-olive-700" />
                  <div className="flex justify-between mt-4 text-[11px] uppercase font-bold text-metal-500">
                     <span>₹2L</span>
@@ -164,18 +164,15 @@ export default function InventoryPage() {
                       {/* Subtle Bottom Gradient */}
                       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
                       
-                      {/* Price Tag Overlay */}
-                      <div className="absolute bottom-3 left-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded">
-                        <span className="font-mono text-amber-cta text-[14px] font-bold tracking-tight">
-                          ₹{car.price}L
-                        </span>
-                      </div>
+                      {/* Price Tag Overlay Removed */}
 
                       <div className="absolute top-4 right-4 bg-olive-700 text-white text-[9px] uppercase tracking-widest font-bold px-3 py-1">Featured Stock</div>
                     </div>
                     <div className="p-8">
                       <div className="text-[10px] font-bold text-olive-600 uppercase tracking-widest mb-3">{car.brand}</div>
-                      <h3 className="font-display text-2xl text-metal-900 mb-4">{car.model}</h3>
+                      <h3 className="font-display text-2xl text-metal-900 mb-2">{car.model}</h3>
+                      <div className="font-display text-xl text-metal-700 mb-6">₹{car.price} <span className="text-sm font-body font-normal text-metal-400 uppercase tracking-widest">Lakh</span></div>
+                      
                       <div className="flex gap-4 text-[10px] uppercase font-bold text-metal-400 mb-8 border-y border-metal-50 py-3">
                         <span>{car.fuel}</span>
                         <span className="w-1 h-1 bg-metal-100 rounded-full my-auto" />
@@ -186,11 +183,11 @@ export default function InventoryPage() {
                       
                       <div className="flex items-end justify-between">
                         <div>
-                           <div className="text-metal-400 text-[10px] uppercase tracking-widest font-bold mb-1">Starting from</div>
-                           <div className="font-display text-3xl text-metal-900">₹{car.price} <span className="text-sm font-body font-normal text-metal-400">Lakh</span></div>
+                           <div className="text-metal-400 text-[10px] uppercase tracking-widest font-bold mb-1">Variant</div>
+                           <div className="font-body font-semibold text-metal-900 text-sm">{car.variant}</div>
                         </div>
-                        <div className="w-10 h-10 border border-metal-200 flex items-center justify-center group-hover:bg-metal-900 group-hover:text-white transition-all">
-                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                        <div className="text-olive-700 font-bold text-[11px] uppercase tracking-widest group-hover:translate-x-1 transition-transform">
+                           View Specs →
                         </div>
                       </div>
                     </div>

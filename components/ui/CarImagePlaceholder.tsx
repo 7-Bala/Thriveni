@@ -4,7 +4,10 @@ import React from 'react';
 
 export default function CarImagePlaceholder() {
   return (
-    <div className="w-full h-full bg-metal-800 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <div className="w-full h-full bg-metal-900 flex flex-col items-center justify-center p-6 relative overflow-hidden backdrop-blur-md">
+      {/* Premium Wireframe Mesh */}
+      <div className="absolute inset-0 opacity-[0.03] transition-opacity group-hover:opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+      
       {/* Subtle car outline SVG silhouette */}
       <svg 
         width="64" 
@@ -13,13 +16,13 @@ export default function CarImagePlaceholder() {
         fill="none" 
         stroke="currentColor" 
         strokeWidth="1" 
-        className="text-metal-600 opacity-20 mb-3"
+        className="text-amber-cta opacity-30 mb-4 transition-all group-hover:opacity-60 group-hover:scale-110"
       >
-        <path d="M7 11v-1c0-1.1.9-2 2-2h6a2 2 0 0 1 2 2v1m-10 0h10a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2zM5 16h14m-12 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm10 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+        <path strokeLinecap="square" strokeLinejoin="miter" d="M3 11l2-4h8l2 4h6v6H3v-6zm0 0v-2h4M19 11v-2h-4M5 13h2M17 13h2" />
       </svg>
       
-      <span className="text-metal-500 text-[10px] uppercase tracking-[0.2em] font-bold">
-        Image Coming Soon
+      <span className="text-metal-400 text-[9px] uppercase tracking-[0.3em] font-bold z-10 transition-colors group-hover:text-amber-cta">
+        Stock Arriving Soon
       </span>
       
       {/* Decorative metal corner */}

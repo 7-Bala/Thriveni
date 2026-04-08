@@ -73,11 +73,11 @@ export default function CarDetailPage() {
       </section>
 
       <div className="container-custom mt-16">
-        <div className="flex flex-col lg:flex-row gap-20">
+        <div className="flex flex-col gap-20 max-w-5xl mx-auto w-full">
           {/* Main Content Component */}
-          <div className="lg:w-2/3">
+          <div className="w-full">
             {/* Gallery — Clip Wipe Interaction */}
-            <div className="main-image-container relative aspect-[16/10] bg-[#1A1E14] overflow-hidden rounded-sm border border-white/5 shadow-2xl">
+            <div className="main-image-container relative aspect-[16/10] bg-[#1A1E14] overflow-hidden rounded-sm border border-white/5">
               <AnimatePresence mode='wait'>
                 <motion.div
                   key={activeImage}
@@ -104,7 +104,7 @@ export default function CarDetailPage() {
                 </motion.div>
               </AnimatePresence>
               <div className="absolute bottom-6 left-6 flex items-center gap-4 z-20">
-                 <div className="bg-metal-900/90 backdrop-blur-md text-amber-cta text-[10px] uppercase tracking-[0.3em] px-4 py-2 font-bold rounded border border-white/10">
+                 <div className="bg-metal-900/90 backdrop-blur-md text-amber-cta text-[10px] uppercase tracking-widest px-4 py-2 font-bold rounded border border-white/10">
                     {activeImage + 1} / {carData.gallery.length}
                  </div>
               </div>
@@ -125,7 +125,7 @@ export default function CarDetailPage() {
             {/* Specifications Suite */}
             <div className="mt-20">
                <h2 className="font-display text-4xl text-metal-900 mb-12 flex items-center gap-6">
-                  Industrial Specification
+                  Technical Specifications
                   <span className="h-px flex-1 bg-metal-100" />
                </h2>
                <div className="grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-8">
@@ -138,7 +138,7 @@ export default function CarDetailPage() {
                     transition={{ delay: i * 0.1 }}
                     className="group"
                   >
-                    <div className="text-[10px] uppercase font-bold text-metal-400 tracking-[0.3em] mb-4 group-hover:text-amber-cta transition-colors">{spec.label}</div>
+                    <div className="text-[10px] uppercase font-bold text-metal-400 tracking-widest mb-4 group-hover:text-amber-cta transition-colors">{spec.label}</div>
                     <div className="font-display text-2xl text-metal-900 border-l-2 border-amber-cta pl-6 py-1">{spec.val}</div>
                   </motion.div>
                 ))}
@@ -146,59 +146,40 @@ export default function CarDetailPage() {
             </div>
 
             <div className="mt-24 p-12 bg-bg-section border-l-4 border-olive-700">
-               <h2 className="font-display text-3xl text-metal-900 mb-8">Performance Heritage</h2>
+               <h2 className="font-display text-3xl text-metal-900 mb-8">Vehicle Overview</h2>
                <p className="text-metal-500 text-lg leading-relaxed font-body font-light max-w-2xl">
-                 The {carData.name} remains the benchmark for the urban navigation experience in Chennai. Beyond the sportier silhouette, the dual-jet architecture provides a precise power-to-weight ratio tailored for efficient city commutes and highway stability.
+                 The {carData.name} remains the benchmark for the urban navigation experience in Salem. Beyond the sportier silhouette, the dual-jet architecture provides a precise power-to-weight ratio tailored for efficient city commutes and highway stability.
                </p>
             </div>
-          </div>
 
-          {/* Sticky Conversion Suite */}
-          <aside className="lg:w-1/3">
-            <div className="sticky top-32">
-               <div className="bg-white border border-metal-100 p-10 shadow-2xl relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-[6px] bg-amber-cta" />
-                  
-                  <div className="mb-12">
-                     <span className="text-olive-700 font-bold text-[10px] uppercase tracking-[0.4em] block mb-4">DRIVE-AWAY PRICE</span>
-                     <div className="font-display text-6xl text-metal-900 flex items-baseline gap-2">
-                        ₹{carData.price} 
-                        <span className="text-xl font-body font-normal text-metal-400 uppercase tracking-widest">Lakh</span>
+            {/* Static Conversion Suite */}
+            <div className="mt-12 bg-white flex flex-col md:flex-row justify-between items-end border border-metal-100 p-10 shadow-sm">
+               <div className="w-full md:w-auto">
+                  <span className="text-olive-700 font-bold text-[10px] uppercase tracking-widest block mb-4">DRIVE-AWAY PRICE</span>
+                  <div className="font-display text-6xl text-metal-900 flex items-baseline gap-2 mb-2">
+                     ₹{carData.price} 
+                     <span className="text-xl font-body font-normal text-metal-400 uppercase tracking-widest">Lakh</span>
+                  </div>
+                  <p className="text-[10px] text-metal-400 uppercase tracking-widest font-bold">Standard Spec • Salem On-Road</p>
+               </div>
+               
+               <div className="mt-8 md:mt-0 w-full md:w-auto">
+                 <span className="text-metal-900 text-[10px] uppercase tracking-widest font-black block mb-4">COLOR PALETTE</span>
+                 <div className="flex flex-wrap gap-4 mb-8">
+                   {carData.colors.map((color, i) => (
+                     <div key={i} className="group relative">
+                       <div className={`w-8 h-8 rounded-full cursor-pointer transition-all hover:scale-110 shadow-inner ${color.border ? 'ring-1 ring-metal-200' : ''}`} style={{ backgroundColor: color.hex }} />
                      </div>
-                     <p className="text-[10px] text-metal-400 uppercase tracking-widest mt-4 font-bold">Standard Spec • Chennai On-Road</p>
-                  </div>
-
-                  <div className="mb-12">
-                    <span className="text-metal-900 text-[10px] uppercase tracking-[0.3em] font-black block mb-6">COLOR PALETTE</span>
-                    <div className="flex flex-wrap gap-4">
-                      {carData.colors.map((color, i) => (
-                        <div key={i} className="group relative">
-                          <div 
-                            className={`w-8 h-8 rounded-full cursor-pointer transition-all hover:scale-110 shadow-inner ${color.border ? 'ring-1 ring-metal-200' : ''}`}
-                            style={{ backgroundColor: color.hex }}
-                          />
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 bg-metal-900 text-[9px] text-white px-3 py-1.5 rounded-sm opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100 whitespace-nowrap pointer-events-none z-30">
-                            {color.name}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
-                    <button className="w-full btn-primary py-5 shadow-lg shadow-amber-cta/10">Initiate Purchase</button>
-                    <Link href="/contact" className="w-full flex items-center justify-center border border-metal-200 py-5 font-bold text-[10px] uppercase tracking-widest text-metal-600 hover:bg-metal-900 hover:text-white transition-all">Schedule Test Drive</Link>
-                  </div>
-
-                  <div className="mt-12 pt-10 border-t border-metal-50">
-                     <div className="flex items-center gap-4 text-metal-400 text-[10px] uppercase tracking-[0.3em] font-bold leading-none">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        Secured Thriveni Processing
-                     </div>
-                  </div>
+                   ))}
+                 </div>
+                 <div className="flex flex-col sm:flex-row gap-4">
+                    <button className="flex-1 btn-primary py-4 px-8 whitespace-nowrap">Reserve This Car</button>
+                    <Link href="/contact" className="flex-1 flex items-center justify-center border border-metal-200 px-8 py-4 font-bold text-[10px] uppercase tracking-widest text-metal-600 hover:bg-metal-900 hover:text-white transition-all whitespace-nowrap">Test Drive</Link>
+                 </div>
                </div>
             </div>
-          </aside>
+
+          </div>
         </div>
       </div>
     </div>
