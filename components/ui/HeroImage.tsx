@@ -59,9 +59,18 @@ export default function HeroImage({
 
       // Smoothly decelerate during the final 0.8 seconds
       if (timeLeft < 0.8 && timeLeft > 0) {
-        // Linear ramp down of playback rate
-        const newRate = Math.max(0, timeLeft / 0.8);
-        video.playbackRate = newRate;
+        try {
+          // Clamp to a safe minimum (0.1) as some browsers throw errors for very low rates
+          const newRate = Math.max(0.1, timeLeft / 0.8);
+          video.playbackRate = newRate;
+          
+          if (timeLeft < 0.1) {
+            video.pause();
+          }
+        } catch (e) {
+          // Fallback to immediate pause if rate manipulation is not supported
+          video.pause();
+        }
       }
     };
 
