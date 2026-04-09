@@ -26,10 +26,39 @@ interface CarDetailClientProps {
   };
 }
 
+interface CarSpecs {
+  power?: string;
+  engine?: string;
+  [key: string]: string | undefined;
+}
+
+interface CarFeatures {
+  items?: string[];
+}
+
 export default function CarDetailClient({ car }: CarDetailClientProps) {
-  const gallery = JSON.parse(car.images);
-  const specs = JSON.parse(car.specs);
-  const features = JSON.parse(car.features);
+  let gallery: string[] = [];
+  let specs: CarSpecs = {};
+  let features: CarFeatures = {};
+
+  try {
+    gallery = car.images ? JSON.parse(car.images) : [];
+  } catch (e) {
+    console.error('Failed to parse gallery for car:', car.id, e);
+  }
+
+  try {
+    specs = car.specs ? JSON.parse(car.specs) : {};
+  } catch (e) {
+    console.error('Failed to parse specs for car:', car.id, e);
+  }
+
+  try {
+    features = car.features ? JSON.parse(car.features) : {};
+  } catch (e) {
+    console.error('Failed to parse features for car:', car.id, e);
+  }
+
   const displayPrice = (car.price / 100000).toFixed(2);
 
   const [activeImage, setActiveImage] = useState(0);

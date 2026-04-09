@@ -11,13 +11,15 @@ interface PageProps {
 }
 
 export default async function CarDetailPage({ params }: PageProps) {
-  const car = await prisma.car.findUnique({
+  const carRaw = await prisma.car.findUnique({
     where: { id: params.id }
   });
 
-  if (!car) {
+  if (!carRaw) {
     notFound();
   }
+
+  const car = JSON.parse(JSON.stringify(carRaw));
 
   return <CarDetailClient car={car} />;
 }

@@ -442,7 +442,7 @@ export function EMICalculator() {
   return (
     <section className="py-32 bg-bg-section">
       <div className="container-custom">
-        <div className="flex flex-col lg:flex-row gap-20 lg:gap-32 lg:items-center">
+        <div className="flex flex-col lg:flex-row gap-20 lg:gap-32 lg:items-start">
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -497,7 +497,7 @@ export function EMICalculator() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: EASING.expoOut }}
-            className="lg:w-1/2 w-full"
+            className="lg:w-1/2 w-full lg:pt-36"
           >
             <div className="border-t-2 border-metal-900 pt-10">
               <div className="font-body font-light text-metal-500 text-sm uppercase tracking-[0.2em] mb-3">Monthly EMI</div>
