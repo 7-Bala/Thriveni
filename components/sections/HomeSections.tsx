@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import gsap from 'gsap';
 import { EASING, fadeUp } from '@/lib/animations';
 import { useGSAPOnMount, useParallax } from '@/hooks/useScrollAnimation';
@@ -404,165 +404,101 @@ function ScrambleNumber({ value }: { value: string }) {
 }
 
 export function WhyThriveni() {
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [-50, 50]);
+
   const features = [
     {
-      id: '01',
-      title: 'Exclusive Leads',
-      desc: 'Verified enquiries reach only our team, ensuring absolute privacy and zero spam.',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </svg>
-      )
+      num: "01",
+      title: "Exclusive Leads",
+      desc: "Verified enquiries reach only our team, ensuring absolute privacy and zero spam. Your data never leaves our encrypted ecosystem."
     },
     {
-      id: '02',
-      title: 'Velocity Response',
-      desc: 'Engineered for speed. Our dedicated concierge team responds within 15 minutes.',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10" />
-          <polyline points="12 6 12 12 16 14" />
-        </svg>
-      )
+      num: "02",
+      title: "Velocity Response",
+      desc: "Engineered for speed. Our dedicated concierge team is mandated to respond within 15 minutes of your initial inquiry."
     },
     {
-      id: '03',
-      title: 'Integrated Hub',
-      desc: 'Sales, finance, insurance, and RTO services coordinated under a single technical roof.',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2" /><path d="M12 20v2" />
-          <path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" />
-          <path d="M2 12h2" /><path d="M20 12h2" />
-          <path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" />
-        </svg>
-      )
+      num: "03",
+      title: "Integrated Hub",
+      desc: "Sales, finance, insurance, and RTO services seamlessly coordinated under a single architectural roof."
     },
     {
-      id: '04',
-      title: 'Certified Scale',
-      desc: 'Salem\'s largest multi-brand inventory, with factory-certified technicians for every model.',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" />
-          <line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" />
-        </svg>
-      )
+      num: "04",
+      title: "Certified Scale",
+      desc: "Salem's largest multi-brand inventory, maintained exclusively by factory-certified technicians for every specific model."
     }
   ];
 
-  useGSAPOnMount((ctx) => {
-    if (!ctx.selector) return;
-    const cards = ctx.selector('.feature-card');
-    gsap.from(cards, {
-      opacity: 0,
-      y: 50,
-      rotateX: -10,
-      stagger: 0.15,
-      duration: 1,
-      ease: 'expo.out',
-      scrollTrigger: {
-        trigger: '.features-grid',
-        start: 'top 80%'
-      }
-    });
-
-    // Vertical Watermark Parallax
-    gsap.to('.vertical-watermark', {
-      y: -100,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.why-thriveni-section',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true
-      }
-    });
-  });
-
   return (
-    <section className="why-thriveni-section py-32 bg-metal-900 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 z-0 opacity-10 [background-image:radial-gradient(#ffffff_1px,transparent_1px)] [background-size:40px_40px]" />
+    <section ref={containerRef} className="why-thriveni-section py-32 bg-metal-900 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
       
-      {/* Vertical Watermark */}
-      <div className="absolute right-0 top-0 bottom-0 flex items-center items-end select-none pointer-events-none z-0">
-        <div className="vertical-watermark font-display font-black text-white/5 opacity-50 uppercase tracking-[0.5em] leading-none whitespace-nowrap origin-bottom rotate-[-90deg] translate-x-1/2" style={{ fontSize: '20vh' }}>
-          THRIVENI
-        </div>
-      </div>
-
       <div className="container-custom relative z-10">
         <div className="flex flex-col lg:flex-row gap-20 lg:gap-32">
           
-          {/* Left Side: Content */}
-          <div className="lg:w-[40%]">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: EASING.expoOut }}
-              className="inline-flex items-center gap-4 mb-8"
-            >
-              <div className="w-2 h-2 rounded-full bg-amber-cta ring-4 ring-amber-cta/20" />
-              <span className="text-metal-400 text-[11px] uppercase tracking-[0.4em] font-bold">Why Thriveni</span>
-            </motion.div>
-
-            <h2 className="font-display font-extrabold text-white leading-tight mb-10" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)' }}>
-              Engineering <span className="text-amber-cta italic">Trust</span> Since 2009.
-            </h2>
-
-            <p className="font-body font-light text-metal-400 text-lg leading-relaxed max-w-sm mb-16">
-              We dismantle the traditional dealership experience, replacing generic sales with technical precision and radical transparency.
-            </p>
-
-            {/* Quick Stats Block */}
-            <div className="grid grid-cols-2 gap-10 border-t border-white/10 pt-16">
-              <div>
-                <div className="font-display text-4xl text-white font-bold mb-1">28<span className="text-amber-cta">+</span></div>
-                <div className="font-body text-[10px] text-metal-500 uppercase tracking-widest font-bold">Strategic Branches</div>
+          <div className="lg:w-5/12 flex flex-col justify-between relative">
+            <div className="lg:sticky lg:top-40">
+              <div className="flex items-center gap-4 mb-12">
+                <div className="w-2 h-2 bg-amber-cta rounded-full" />
+                <span className="font-body text-[10px] text-metal-400 uppercase tracking-[0.3em] font-bold">Why Thriveni</span>
               </div>
-              <div>
-                <div className="font-display text-4xl text-white font-bold mb-1">10<span className="text-amber-cta">k</span></div>
-                <div className="font-body text-[10px] text-metal-500 uppercase tracking-widest font-bold">Technical Team</div>
+              
+              <h2 className="font-display font-extrabold text-white leading-[1.05] tracking-tight mb-8" style={{ fontSize: 'clamp(3rem, 5vw, 5rem)' }}>
+                Engineering <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-light to-amber-cta">Trust</span> Since <br />
+                2009.
+              </h2>
+              
+              <p className="font-body font-light text-metal-400 text-lg leading-relaxed max-w-md mb-20">
+                We dismantle the traditional dealership experience, replacing generic sales tactics with technical precision and radical transparency.
+              </p>
+
+              <div className="flex items-center gap-16 border-t border-white/10 pt-10">
+                <div>
+                  <div className="font-display text-5xl text-white mb-2">28<span className="text-amber-cta">+</span></div>
+                  <div className="font-body text-[9px] text-metal-500 uppercase tracking-widest font-bold">Strategic Branches</div>
+                </div>
+                <div>
+                  <div className="font-display text-5xl text-white mb-2">10<span className="text-amber-cta">k</span></div>
+                  <div className="font-body text-[9px] text-metal-500 uppercase tracking-widest font-bold">Technical Team</div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Right Side: Cards Grid */}
-          <div className="lg:w-[60%] flex items-center">
-            <div className="features-grid grid grid-cols-1 md:grid-cols-2 gap-8 perspective-1000">
-              {features.map((f, i) => (
-                <div 
-                  key={i} 
-                  className="feature-card group relative bg-metal-800/40 border border-white/5 p-10 hover:bg-metal-800 transition-all duration-500"
-                >
-                  {/* Large BG Number */}
-                  <div className="absolute top-4 right-8 font-display font-black text-white/5 text-8xl transition-all group-hover:text-white/10 select-none">
-                    {f.id}
+          <div className="lg:w-7/12 grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+            <motion.div style={{ y: y1 }} className="flex flex-col gap-6 pt-0 md:pt-20">
+              {[features[0], features[2]].map((feat) => (
+                <div key={feat.num} className="group bg-[#141311] border border-white/5 p-10 hover:border-amber-cta/30 transition-colors duration-500 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span className="font-display text-6xl text-white">{feat.num}</span>
                   </div>
-
-                  {/* Icon Box */}
-                  <div className="w-14 h-14 bg-white flex items-center justify-center text-metal-900 mb-8 shadow-2xl relative z-10 transition-transform group-hover:-translate-y-1">
-                    {f.icon}
-                  </div>
-
-                  <div className="relative z-10">
-                    <h3 className="font-display text-2xl text-white mb-4 group-hover:text-amber-cta transition-colors">
-                      {f.title}
-                    </h3>
-                    <p className="font-body font-light text-metal-400 text-sm leading-relaxed">
-                      {f.desc}
-                    </p>
-                  </div>
-                  
-                  {/* Card Bottom Accent */}
-                  <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-amber-cta transition-all duration-700 group-hover:w-full" />
+                  <div className="font-mono text-[10px] text-amber-cta mb-8">{feat.num} //</div>
+                  <h3 className="font-display text-2xl text-white mb-4">{feat.title}</h3>
+                  <p className="font-body font-light text-metal-400 text-sm leading-relaxed">{feat.desc}</p>
                 </div>
               ))}
-            </div>
+            </motion.div>
+
+            <motion.div style={{ y: y2 }} className="flex flex-col gap-6">
+              {[features[1], features[3]].map((feat) => (
+                <div key={feat.num} className="group bg-[#141311] border border-white/5 p-10 hover:border-amber-cta/30 transition-colors duration-500 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span className="font-display text-6xl text-white">{feat.num}</span>
+                  </div>
+                  <div className="font-mono text-[10px] text-amber-cta mb-8">{feat.num} //</div>
+                  <h3 className="font-display text-2xl text-white mb-4">{feat.title}</h3>
+                  <p className="font-body font-light text-metal-400 text-sm leading-relaxed">{feat.desc}</p>
+                </div>
+              ))}
+            </motion.div>
           </div>
 
         </div>
@@ -570,6 +506,7 @@ export function WhyThriveni() {
     </section>
   );
 }
+
 
 
 // --- EMI CALCULATOR SECTION (NEW) ---

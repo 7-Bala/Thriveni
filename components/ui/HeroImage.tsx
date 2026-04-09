@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, { ReactNode, useRef, useEffect, useState } from 'react';
+import React, { ReactNode, useRef, useEffect, useCallback, useState } from 'react';
 
 interface HeroImageProps {
   src: string;
@@ -25,15 +25,20 @@ export default function HeroImage({
   isAbsolute = false
 }: HeroImageProps) {
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const videoARef = useRef<HTMLVideoElement>(null);
+  const videoBRef = useRef<HTMLVideoElement>(null);
   
-  const PAUSE_DURATION = 4000; // 4 seconds
+  // Internal state for crossfade
+  const activeIsA = useRef(true);
+  const isTransitioning = useRef(false);
+
+  const CROSSFADE_DURATION = 1000; // ms
+  const CROSSFADE_TRIGGER_OFFSET = 1.0; // seconds before end to trigger crossfade
 
   const getOverlayStyle = () => {
     switch (overlay) {
       case 'dark-left':
-        return 'linear-gradient(105deg, rgba(15, 14, 12, 0.95) 0%, rgba(15, 14, 12, 0.88) 30%, rgba(15, 14, 12, 0.55) 55%, rgba(15, 14, 12, 0.15) 80%, rgba(15, 14, 12, 0.05) 100%)';
+        return 'linear-gradient(105deg, rgba(15, 14, 12, 0.72) 0%, rgba(15, 14, 12, 0.65) 25%, rgba(15, 14, 12, 0.45) 50%, rgba(15, 14, 12, 0.15) 75%, rgba(15, 14, 12, 0.05) 100%)';
       case 'dark-center':
         return 'linear-gradient(180deg, rgba(15, 14, 12, 0.75) 0%, rgba(15, 14, 12, 0.60) 40%, rgba(15, 14, 12, 0.75) 100%)';
       case 'dark-full':
@@ -45,74 +50,67 @@ export default function HeroImage({
     }
   };
 
-  useEffect(() => {
-    if (!videoSrc || !videoRef.current) return;
+  const performCrossfade = useCallback(() => {
+    if (isTransitioning.current) return;
+    isTransitioning.current = true;
 
-    const video = videoRef.current;
-    let rafId: number;
-    let lastTimestamp: number = 0;
+    const currentVid = activeIsA.current ? videoARef.current : videoBRef.current;
+    const nextVid    = activeIsA.current ? videoBRef.current : videoARef.current;
+
+    if (!currentVid || !nextVid) return;
+
+    // 1. Reset and play the incoming video
+    nextVid.currentTime = 0;
+    nextVid.play().catch(() => {});
+
+    // 2. Crossfade opacities
+    nextVid.style.transition = `opacity ${CROSSFADE_DURATION}ms ease-in-out`;
+    currentVid.style.transition = `opacity ${CROSSFADE_DURATION}ms ease-in-out`;
     
-    // States: 'forward' | 'pause-end' | 'reverse' | 'pause-start'
-    let mode: 'forward' | 'pause-end' | 'reverse' | 'pause-start' = 'forward';
+    nextVid.style.opacity = '1';
+    currentVid.style.opacity = '0';
 
-    const startReverse = () => {
-      mode = 'reverse';
-      lastTimestamp = 0;
-      rafId = requestAnimationFrame(reverseStep);
-    };
+    // 3. Swap active state after transition completes
+    setTimeout(() => {
+      currentVid.pause();
+      currentVid.currentTime = 0;
+      activeIsA.current = !activeIsA.current;
+      isTransitioning.current = false;
+    }, CROSSFADE_DURATION);
+  }, []);
 
-    const reverseStep = (timestamp: number) => {
-      if (mode !== 'reverse') return;
-      
-      if (!lastTimestamp) lastTimestamp = timestamp;
-      const deltaTime = (timestamp - lastTimestamp) / 1000;
-      lastTimestamp = timestamp;
+  useEffect(() => {
+    if (!videoSrc) return;
 
-      if (video.currentTime > 0) {
-        // We decrement currentTime manually. 
-        // Note: This can be jumpy if the video doesn't have many keyframes.
-        video.currentTime = Math.max(0, video.currentTime - deltaTime);
-        rafId = requestAnimationFrame(reverseStep);
-      } else {
-        // Reached the start
-        mode = 'pause-start';
-        setTimeout(() => {
-          if (videoRef.current) {
-            mode = 'forward';
-            video.play().catch(() => {});
-          }
-        }, PAUSE_DURATION);
+    const videoA = videoARef.current;
+    const videoB = videoBRef.current;
+    if (!videoA || !videoB) return;
+
+    // Initial setup
+    videoA.style.opacity = '1';
+    videoB.style.opacity = '0';
+    videoA.play().catch(() => {});
+
+    const handleTimeUpdate = () => {
+      const active = activeIsA.current ? videoA : videoB;
+      if (!active.duration) return;
+
+      const timeLeft = active.duration - active.currentTime;
+      if (timeLeft <= CROSSFADE_TRIGGER_OFFSET) {
+        performCrossfade();
       }
     };
 
-    let endTimeout: NodeJS.Timeout;
-    let startTimeout: NodeJS.Timeout;
-
-    const handleForwardEnd = () => {
-      if (mode !== 'forward') return;
-      
-      mode = 'pause-end';
-      video.pause();
-      
-      endTimeout = setTimeout(() => {
-        if (videoRef.current) {
-          startReverse();
-        }
-      }, PAUSE_DURATION);
-    };
-
-    video.addEventListener('ended', handleForwardEnd);
-
-    // Initial Start
-    video.play().catch(() => {});
+    videoA.addEventListener('timeupdate', handleTimeUpdate);
+    videoB.addEventListener('timeupdate', handleTimeUpdate);
 
     return () => {
-      video.removeEventListener('ended', handleForwardEnd);
-      cancelAnimationFrame(rafId);
-      clearTimeout(endTimeout);
-      clearTimeout(startTimeout);
+      videoA.removeEventListener('timeupdate', handleTimeUpdate);
+      videoB.removeEventListener('timeupdate', handleTimeUpdate);
+      videoA.pause();
+      videoB.pause();
     };
-  }, [videoSrc]);
+  }, [videoSrc, performCrossfade]);
 
   const videoStyles: React.CSSProperties = {
     objectPosition,
@@ -123,32 +121,46 @@ export default function HeroImage({
     <div className={`${isAbsolute ? 'absolute inset-0' : 'relative w-full h-full min-h-[60vh]'} overflow-hidden bg-metal-950`}>
 
       {videoSrc && (
-        <video
-          ref={videoRef}
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover z-[5]"
-          style={videoStyles}
-        >
-          <source src={videoSrc} type="video/mp4" />
-        </video>
+        <div className="absolute inset-0 w-full h-full animate-breath z-[5]">
+          <video
+            ref={videoARef}
+            muted
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ ...videoStyles, opacity: 1 }}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+          <video
+            ref={videoBRef}
+            muted
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ ...videoStyles, opacity: 0 }}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        </div>
       )}
 
       {/* Image background — fallback or single image pages */}
       {!videoSrc && src && (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          sizes="100vw"
-          className="absolute inset-0 w-full h-full object-cover z-[5]"
-          style={{
-            objectPosition,
-            filter: 'brightness(0.95) contrast(1.05) saturate(1)'
-          }}
-        />
+        <div className="absolute inset-0 w-full h-full animate-breath z-[5]">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            priority={priority}
+            sizes="100vw"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              objectPosition,
+              filter: 'brightness(0.95) contrast(1.05) saturate(1)'
+            }}
+          />
+        </div>
       )}
 
       {/* Overlay */}
@@ -161,6 +173,17 @@ export default function HeroImage({
       <div className="relative z-20 w-full h-full">
         {children}
       </div>
+
+      <style jsx global>{`
+        @keyframes breath {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.03); }
+          100% { transform: scale(1); }
+        }
+        .animate-breath {
+          animation: breath 12s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }
