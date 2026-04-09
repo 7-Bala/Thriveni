@@ -442,7 +442,7 @@ export function EMICalculator() {
   return (
     <section className="py-32 bg-bg-section">
       <div className="container-custom">
-        <div className="flex flex-col lg:flex-row gap-20 lg:gap-32 items-start">
+        <div className="flex flex-col lg:flex-row gap-20 lg:gap-32 lg:items-center">
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
