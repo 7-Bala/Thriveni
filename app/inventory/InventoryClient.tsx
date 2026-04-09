@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fadeUp, EASING } from '@/lib/animations';
+import { EASING } from '@/lib/animations';
 import { useGSAPOnMount } from '@/hooks/useScrollAnimation';
 import gsap from 'gsap';
 import BrandLogo from '@/components/ui/BrandLogo';
@@ -20,7 +20,7 @@ interface Car {
   fuel: string;
   transmission: string;
   year: number;
-  images: string; // JSON string
+  images: string;
 }
 
 interface InventoryClientProps {
@@ -33,7 +33,7 @@ export default function InventoryClient({ initialCars }: InventoryClientProps) {
   const cars = initialCars.map(car => ({
     ...car,
     img: JSON.parse(car.images)[0],
-    displayPrice: (car.price / 100000).toFixed(2) // Convert to Lakhs
+    displayPrice: (car.price / 100000).toFixed(2)
   }));
 
   const filteredCars = activeBrand === 'All' ? cars : cars.filter(c => c.brand === activeBrand);
@@ -55,7 +55,6 @@ export default function InventoryClient({ initialCars }: InventoryClientProps) {
 
   return (
     <div className="container-custom py-16 flex flex-col lg:flex-row gap-12">
-      {/* Sidebar — Animated Entry */}
       <motion.aside
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
@@ -106,7 +105,6 @@ export default function InventoryClient({ initialCars }: InventoryClientProps) {
         </div>
       </motion.aside>
 
-      {/* Results — Layout Shuffle */}
       <main className="flex-1">
         <div className="flex justify-between items-center mb-10 pb-6 border-b border-metal-100">
           <span className="text-metal-500 text-xs uppercase tracking-widest font-bold">

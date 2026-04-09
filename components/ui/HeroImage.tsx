@@ -47,28 +47,23 @@ export default function HeroImage({
 
     const video = videoRef.current;
     
-    // Initial play with catch for autoplay policies
     video.play().catch(() => {});
 
-    // The video should NOT loop. It stops at the final frame as requested.
     video.loop = false;
 
     const handleSettle = () => {
       if (!video) return;
       const timeLeft = video.duration - video.currentTime;
 
-      // Smoothly decelerate during the final 0.8 seconds
       if (timeLeft < 0.8 && timeLeft > 0) {
         try {
-          // Clamp to a safe minimum (0.1) as some browsers throw errors for very low rates
           const newRate = Math.max(0.1, timeLeft / 0.8);
           video.playbackRate = newRate;
           
           if (timeLeft < 0.1) {
             video.pause();
           }
-        } catch (e) {
-          // Fallback to immediate pause if rate manipulation is not supported
+        } catch {
           video.pause();
         }
       }
@@ -101,7 +96,6 @@ export default function HeroImage({
         </div>
       )}
 
-      {/* Image background — fallback or single image pages */}
       {!videoSrc && src && (
         <div className="absolute inset-0 w-full h-full animate-cinematic-zoom z-[5]">
           <Image
@@ -119,13 +113,11 @@ export default function HeroImage({
         </div>
       )}
 
-      {/* Overlay */}
       <div
         className="absolute inset-0 z-10"
         style={{ background: getOverlayStyle() }}
       />
 
-      {/* Content */}
       <div className="relative z-20 w-full h-full">
         {children}
       </div>
@@ -136,8 +128,6 @@ export default function HeroImage({
           100% { transform: scale(1); }
         }
         .animate-cinematic-zoom {
-          /* 18 seconds is a typical duration for these sedan videos. 
-             If yours is different, it will still feel smooth. */
           animation: cinematic-zoom 22s cubic-bezier(0.19, 1, 0.22, 1) forwards;
         }
       `}</style>

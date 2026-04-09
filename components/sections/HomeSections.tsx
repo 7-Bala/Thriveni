@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import gsap from 'gsap';
 import { EASING, fadeUp } from '@/lib/animations';
 import { useGSAPOnMount, useParallax } from '@/hooks/useScrollAnimation';
@@ -12,16 +12,13 @@ import CarImagePlaceholder from '@/components/ui/CarImagePlaceholder';
 import { HERO_IMAGES, CAR_IMAGES, SECTION_BG_IMAGES } from '@/lib/images';
 import { MEDIUM_BLUR } from '@/lib/blurPlaceholders';
 
-// --- HERO SECTION ---
 export function Hero() {
   const containerRef = useRef(null);
   const bgRef = useRef(null);
 
-  // Parallax background
   useParallax(bgRef, 0.4);
 
   useGSAPOnMount((ctx) => {
-    // Word Rolling Animation
     if (!ctx.selector) return;
     const words = ctx.selector('.word-roll');
     gsap.from(words, {
@@ -31,8 +28,6 @@ export function Hero() {
       ease: 'expo.out',
       delay: 0.5
     });
-
-    // Removed floating brand logos
   });
 
   const heroLine1 = ["Salem's", "Most", "Trusted"];
@@ -49,7 +44,6 @@ export function Hero() {
         overlay="dark-left"
         isAbsolute={false}
       >
-
         <div className="container-custom relative z-20 w-full min-h-screen flex flex-col justify-center pt-20">
           <div className="w-full sm:max-w-[80%] lg:max-w-[55%] pt-10 sm:pt-0">
             <motion.div
@@ -119,7 +113,6 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Brand Ticker */}
         <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/5 overflow-hidden">
           <div className="flex ticker-track whitespace-nowrap py-4">
             {[...Array(2)].map((_, setIdx) => (
@@ -139,7 +132,6 @@ export function Hero() {
   );
 }
 
-// --- BRAND SHOWCASE ---
 export function BrandShowcase() {
   const brands = [
     { name: 'Maruti Arena', count: '18 Models', desc: 'Entry to mid-segment' },
@@ -198,8 +190,6 @@ export function BrandShowcase() {
   );
 }
 
-// --- WHY CHOOSE US (UPDATED) ---
-// --- FEATURED INVENTORY (NEW) ---
 interface Car {
   id: string;
   brand: string;
@@ -209,7 +199,7 @@ interface Car {
   fuel: string;
   transmission: string;
   year: number;
-  images: string; // JSON
+  images: string;
 }
 
 export function FeaturedInventory({ initialCars = [] }: { initialCars?: Car[] }) {
@@ -226,7 +216,6 @@ export function FeaturedInventory({ initialCars = [] }: { initialCars?: Car[] })
   useGSAPOnMount((ctx) => {
     if (!ctx.selector) return;
     const cards = ctx.selector('.car-card');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     cards.forEach((card: any, i: number) => {
       gsap.from(card, {
         opacity: 0,
@@ -304,7 +293,6 @@ export function FeaturedInventory({ initialCars = [] }: { initialCars?: Car[] })
   );
 }
 
-// --- TESTIMONIAL CAROUSEL (NEW) ---
 export function TestimonialCarousel() {
   const testimonials = [
     { name: 'Vikram K.', body: "Thriveni Cars made my buying experience effortless. No hidden fees, just true service." },
@@ -314,7 +302,6 @@ export function TestimonialCarousel() {
 
   return (
     <section className="py-32 bg-metal-900 relative overflow-hidden">
-      {/* Background Image Texture */}
       <div className="absolute inset-0 z-0">
         <Image
           src={SECTION_BG_IMAGES.cityRoad}
@@ -333,7 +320,7 @@ export function TestimonialCarousel() {
             {testimonials.map((t, i) => (
               <div key={i} className="min-w-[85%] md:min-w-full snap-center py-8">
                 <p className="font-body text-2xl md:text-3xl text-metal-300 italic mb-10 leading-relaxed font-light">
-                  &quot;{t.body}&quot;
+                  "{t.body}"
                 </p>
                 <div className="text-white font-display text-xl">— {t.name}</div>
               </div>
@@ -342,65 +329,6 @@ export function TestimonialCarousel() {
       </div>
     </section>
   );
-}
-
-// --- SCRAMBLE NUMBER COMPONENT ---
-function ScrambleNumber({ value }: { value: string }) {
-  const [display, setDisplay] = useState(value);
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-60px' });
-  const hasRun = useRef(false);
-
-  useEffect(() => {
-    if (!isInView || hasRun.current) return;
-    hasRun.current = true;
-
-    const CHARS = '0123456789';
-    const TICK_MS = 30;          // speed of each random tick
-    const SCRAMBLE_TICKS = 12;   // how many random ticks before a digit locks in
-    const LOCK_DELAY_PER_DIGIT = 4; // ticks between each digit locking (left→right stagger)
-
-    // Pull out only the digit positions so we stagger by digit count not char count
-    const digitIndices = value
-      .split('')
-      .map((ch, i) => (/[0-9]/.test(ch) ? i : null))
-      .filter((i): i is number => i !== null);
-
-    // ticksPerPosition[i] = at which global tick does position i lock in
-    const lockAtTick: Record<number, number> = {};
-    digitIndices.forEach((charIdx, digitOrder) => {
-      lockAtTick[charIdx] = SCRAMBLE_TICKS + digitOrder * LOCK_DELAY_PER_DIGIT;
-    });
-
-    const totalTicks =
-      SCRAMBLE_TICKS + digitIndices.length * LOCK_DELAY_PER_DIGIT + 2;
-
-    let tick = 0;
-
-    const interval = setInterval(() => {
-      tick++;
-
-      const scrambled = value
-        .split('')
-        .map((ch, i) => {
-          if (!/[0-9]/.test(ch)) return ch; // punctuation & symbols stay put
-          if (tick >= (lockAtTick[i] ?? totalTicks)) return ch; // locked in
-          return CHARS[Math.floor(Math.random() * CHARS.length)]; // still scrambling
-        })
-        .join('');
-
-      setDisplay(scrambled);
-
-      if (tick >= totalTicks) {
-        setDisplay(value);
-        clearInterval(interval);
-      }
-    }, TICK_MS);
-
-    return () => clearInterval(interval);
-  }, [isInView, value]);
-
-  return <span ref={ref}>{display}</span>;
 }
 
 export function WhyThriveni() {
@@ -485,10 +413,6 @@ export function WhyThriveni() {
   );
 }
 
-
-
-
-// --- EMI CALCULATOR SECTION (NEW) ---
 export function EMICalculator() {
   const [carPrice, setCarPrice] = useState(850000);
   const [downPayment, setDownPayment] = useState(150000);
@@ -507,8 +431,6 @@ export function EMICalculator() {
     <section className="py-32 bg-bg-section">
       <div className="container-custom">
         <div className="flex flex-col lg:flex-row gap-20 lg:gap-32 items-start">
-
-          {/* Left — Sliders */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -537,7 +459,7 @@ export function EMICalculator() {
                   <label className="font-body text-[11px] font-medium text-metal-600 uppercase tracking-[0.15em]">Down Payment</label>
                   <span className="font-mono text-metal-900 font-bold">₹{fmt(downPayment)}</span>
                 </div>
-                <input type="range" className="w-full h-1 bg-metal-100 rounded-lg appearance-none cursor-pointer accent-amber-cta" min={0} max={Math.floor(carPrice * 0.5)} step={10000} value={Math.min(downPayment, Math.floor(carPrice * 0.5))} onChange={e => setDownPayment(Number(e.target.value))} />
+                <input type="range" className="premium-slider" min={0} max={Math.floor(carPrice * 0.5)} step={10000} value={Math.min(downPayment, Math.floor(carPrice * 0.5))} onChange={e => setDownPayment(Number(e.target.value))} />
                 <div className="flex justify-between mt-2">
                   <span className="font-mono text-[10px] text-metal-400">₹0</span>
                   <span className="font-mono text-[10px] text-metal-400">₹{fmt(Math.floor(carPrice * 0.5))}</span>
@@ -549,7 +471,7 @@ export function EMICalculator() {
                   <label className="font-body text-[11px] font-medium text-metal-600 uppercase tracking-[0.15em]">Tenure</label>
                   <span className="font-mono text-metal-900 font-bold">{tenure} months</span>
                 </div>
-                <input type="range" className="w-full h-1 bg-metal-100 rounded-lg appearance-none cursor-pointer accent-amber-cta" min={12} max={84} step={6} value={tenure} onChange={e => setTenure(Number(e.target.value))} />
+                <input type="range" className="premium-slider" min={12} max={84} step={6} value={tenure} onChange={e => setTenure(Number(e.target.value))} />
                 <div className="flex justify-between mt-2">
                   <span className="font-mono text-[10px] text-metal-400">12 mo</span>
                   <span className="font-mono text-[10px] text-metal-400">84 mo</span>
@@ -558,7 +480,6 @@ export function EMICalculator() {
             </div>
           </motion.div>
 
-          {/* Right — Result */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -588,15 +509,12 @@ export function EMICalculator() {
               <Link href="/contact" className="btn-primary mt-10 w-full text-center block">Get Bank Quotes</Link>
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>
   );
 }
 
-// --- CALL TO ACTION (UPDATED CENTER-OUT) ---
-// --- OFFERS PREVIEW (NEW) ---
 export function OffersPreview() {
   const offers = [
     { title: 'Festival Bonanza', disc: 'Up to ₹75,000 Off on NEXA Range', code: 'THRIVENI75' },
@@ -630,7 +548,6 @@ export function OffersPreview() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
               <div className="absolute top-0 right-0 p-6 z-20">
-                {/* Ribbon removed */}
               </div>
 
               <div className="relative z-10">
