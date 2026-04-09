@@ -48,12 +48,25 @@ export default function HeroImage({
     const video = videoRef.current;
     
     // Initial play with catch for autoplay policies
-    video.play().catch(() => {
-      console.warn("Video autoplay failed, waiting for interaction.");
-    });
+    video.play().catch(() => {});
 
     // The video should NOT loop. It stops at the final frame as requested.
     video.loop = false;
+
+    const handleSettle = () => {
+      if (!video) return;
+      const timeLeft = video.duration - video.currentTime;
+
+      // Smoothly decelerate during the final 0.8 seconds
+      if (timeLeft < 0.8 && timeLeft > 0) {
+        // Linear ramp down of playback rate
+        const newRate = Math.max(0, timeLeft / 0.8);
+        video.playbackRate = newRate;
+      }
+    };
+
+    video.addEventListener('timeupdate', handleSettle);
+    return () => video.removeEventListener('timeupdate', handleSettle);
   }, [videoSrc]);
 
   const videoStyles: React.CSSProperties = {
