@@ -435,9 +435,8 @@ export function WhyThriveni() {
       <div className="container-custom relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between border-b border-metal-800 pb-16 mb-8 gap-10">
           <div className="max-w-3xl">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-2 h-2 bg-amber-cta rounded-full" />
-              <span className="font-body text-[10px] text-metal-400 uppercase tracking-[0.3em] font-bold">Why Thriveni</span>
+            <div className="mb-10">
+              <span className="font-body text-[13px] text-metal-400 uppercase tracking-[0.4em] font-bold">Why Thriveni</span>
             </div>
             <h2 className="font-display font-extrabold text-white leading-[1.05] tracking-tight" style={{ fontSize: 'clamp(3rem, 5vw, 5rem)' }}>
               Engineering <span className="text-amber-cta">Trust</span> <br />Since 2009.
