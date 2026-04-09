@@ -1,8 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { ReactNode } from 'react';
-import { DARK_BLUR } from '@/lib/blurPlaceholders';
+import { ReactNode, useRef, useEffect, useCallback } from 'react';
 
 interface HeroImageProps {
   src: string;
@@ -26,6 +25,15 @@ export default function HeroImage({
   isAbsolute = false
 }: HeroImageProps) {
 
+  const videoARef = useRef<HTMLVideoElement>(null);
+  const videoBRef = useRef<HTMLVideoElement>(null);
+  // true = A is active/visible, false = B is active/visible
+  const activeIsA = useRef(true);
+  const isTransitioning = useRef(false);
+
+  const CROSSFADE_DURATION = 600; // ms
+  const CROSSFADE_TRIGGER_BEFORE_END = 0.5; // seconds before video end to start crossfade
+
   const getOverlayStyle = () => {
     switch (overlay) {
       case 'dark-left':
@@ -41,39 +49,116 @@ export default function HeroImage({
     }
   };
 
-  return (
-    <div className={`${isAbsolute ? 'absolute inset-0' : 'relative w-full h-full min-h-[60vh]'} overflow-hidden`}>
-      {/* Background Image (as poster/fallback) */}
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        priority={priority}
-        placeholder="blur"
-        blurDataURL={DARK_BLUR}
-        style={{
-          objectFit: 'cover',
-          objectPosition,
-          filter: 'brightness(0.92) contrast(1.05) saturate(0.88)'
-        }}
-        sizes="100vw"
-      />
+  const doTransition = useCallback(() => {
+    if (isTransitioning.current) return;
+    isTransitioning.current = true;
 
-      {/* Background Video */}
+    const activeVid  = activeIsA.current ? videoARef.current : videoBRef.current;
+    const inactiveVid = activeIsA.current ? videoBRef.current : videoARef.current;
+
+    if (!activeVid || !inactiveVid) return;
+
+    // Reset and prepare the incoming video
+    inactiveVid.currentTime = 0;
+    inactiveVid.play().catch(() => {});
+
+    // Fade in incoming, fade out outgoing
+    inactiveVid.style.transition = `opacity ${CROSSFADE_DURATION}ms ease-in-out`;
+    activeVid.style.transition   = `opacity ${CROSSFADE_DURATION}ms ease-in-out`;
+    inactiveVid.style.opacity = '1';
+    activeVid.style.opacity   = '0';
+
+    // After crossfade completes, pause and reset the now-hidden video
+    setTimeout(() => {
+      activeVid.pause();
+      activeVid.currentTime = 0;
+      activeIsA.current = !activeIsA.current;
+      isTransitioning.current = false;
+    }, CROSSFADE_DURATION);
+  }, []);
+
+  useEffect(() => {
+    if (!videoSrc) return;
+
+    const videoA = videoARef.current;
+    const videoB = videoBRef.current;
+    if (!videoA || !videoB) return;
+
+    // Set initial opacity states
+    videoA.style.opacity = '1';
+    videoB.style.opacity = '0';
+
+    // Start playback on A
+    videoA.play().catch(() => {});
+
+    const handleTimeUpdate = () => {
+      const active = activeIsA.current ? videoA : videoB;
+      if (!active.duration || isNaN(active.duration)) return;
+      const timeLeft = active.duration - active.currentTime;
+      if (timeLeft <= CROSSFADE_TRIGGER_BEFORE_END) {
+        doTransition();
+      }
+    };
+
+    videoA.addEventListener('timeupdate', handleTimeUpdate);
+    videoB.addEventListener('timeupdate', handleTimeUpdate);
+
+    return () => {
+      videoA.removeEventListener('timeupdate', handleTimeUpdate);
+      videoB.removeEventListener('timeupdate', handleTimeUpdate);
+      videoA.pause();
+      videoB.pause();
+    };
+  }, [videoSrc, doTransition]);
+
+  const videoStyles: React.CSSProperties = {
+    objectPosition,
+    filter: 'brightness(0.85) contrast(1.1) saturate(0.9)',
+    transition: `opacity ${CROSSFADE_DURATION}ms ease-in-out`,
+  };
+
+  return (
+    <div className={`${isAbsolute ? 'absolute inset-0' : 'relative w-full h-full min-h-[60vh]'} overflow-hidden bg-metal-950`}>
+
       {videoSrc && (
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
+        <>
+          <video
+            ref={videoARef}
+            muted
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full object-cover z-[5]"
+            style={videoStyles}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+          <video
+            ref={videoBRef}
+            muted
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full object-cover z-[5]"
+            style={{ ...videoStyles, opacity: 0 }}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        </>
+      )}
+
+      {/* Image background — all other pages */}
+      {!videoSrc && src && (
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          priority={priority}
+          sizes="100vw"
           className="absolute inset-0 w-full h-full object-cover z-[5]"
           style={{
             objectPosition,
             filter: 'brightness(0.85) contrast(1.1) saturate(0.9)'
           }}
-        >
-          <source src={videoSrc} type="video/mp4" />
-        </video>
+        />
       )}
 
       {/* Overlay */}

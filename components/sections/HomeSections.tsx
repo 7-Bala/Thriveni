@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import gsap from 'gsap';
 import { EASING, fadeUp } from '@/lib/animations';
 import { useGSAPOnMount, useParallax } from '@/hooks/useScrollAnimation';
@@ -63,7 +63,7 @@ export function Hero() {
               </span>
             </motion.div>
 
-            <h1 className="font-display font-extrabold text-display-2xl text-white leading-[1.05] mb-10">
+            <h1 className="font-display font-bold text-display-2xl text-white leading-[1.1] mb-10">
               <div>
                 {heroLine1.map((word, i) => (
                   <span key={i} className="inline-block overflow-hidden mr-4">
@@ -343,6 +343,65 @@ export function TestimonialCarousel() {
   );
 }
 
+// --- SCRAMBLE NUMBER COMPONENT ---
+function ScrambleNumber({ value }: { value: string }) {
+  const [display, setDisplay] = useState(value);
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-60px' });
+  const hasRun = useRef(false);
+
+  useEffect(() => {
+    if (!isInView || hasRun.current) return;
+    hasRun.current = true;
+
+    const CHARS = '0123456789';
+    const TICK_MS = 30;          // speed of each random tick
+    const SCRAMBLE_TICKS = 12;   // how many random ticks before a digit locks in
+    const LOCK_DELAY_PER_DIGIT = 4; // ticks between each digit locking (left→right stagger)
+
+    // Pull out only the digit positions so we stagger by digit count not char count
+    const digitIndices = value
+      .split('')
+      .map((ch, i) => (/[0-9]/.test(ch) ? i : null))
+      .filter((i): i is number => i !== null);
+
+    // ticksPerPosition[i] = at which global tick does position i lock in
+    const lockAtTick: Record<number, number> = {};
+    digitIndices.forEach((charIdx, digitOrder) => {
+      lockAtTick[charIdx] = SCRAMBLE_TICKS + digitOrder * LOCK_DELAY_PER_DIGIT;
+    });
+
+    const totalTicks =
+      SCRAMBLE_TICKS + digitIndices.length * LOCK_DELAY_PER_DIGIT + 2;
+
+    let tick = 0;
+
+    const interval = setInterval(() => {
+      tick++;
+
+      const scrambled = value
+        .split('')
+        .map((ch, i) => {
+          if (!/[0-9]/.test(ch)) return ch; // punctuation & symbols stay put
+          if (tick >= (lockAtTick[i] ?? totalTicks)) return ch; // locked in
+          return CHARS[Math.floor(Math.random() * CHARS.length)]; // still scrambling
+        })
+        .join('');
+
+      setDisplay(scrambled);
+
+      if (tick >= totalTicks) {
+        setDisplay(value);
+        clearInterval(interval);
+      }
+    }, TICK_MS);
+
+    return () => clearInterval(interval);
+  }, [isInView, value]);
+
+  return <span ref={ref}>{display}</span>;
+}
+
 export function BrandAuthority() {
   return (
     <section className="py-32 bg-metal-900">
@@ -377,7 +436,9 @@ export function BrandAuthority() {
               { val: '8', label: 'Branches across Salem' },
             ].map((stat, i) => (
               <div key={i}>
-                <div className="font-mono text-3xl font-bold text-white">{stat.val}</div>
+                <div className="font-display text-3xl font-bold text-white">
+                  <ScrambleNumber value={stat.val} />
+                </div>
                 <div className="font-body font-light text-metal-500 text-sm mt-1">{stat.label}</div>
                 {i < 3 && <div className="h-px bg-white/5 mt-10" />}
               </div>

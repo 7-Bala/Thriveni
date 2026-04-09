@@ -44,7 +44,7 @@ const config: Config = {
         mono: ['var(--font-mono)', 'monospace'],
       },
       fontSize: {
-        'display-2xl': 'clamp(3.5rem, 8vw, 7rem)',
+        'display-2xl': 'clamp(2.2rem, 4.5vw, 4rem)',
         'display-xl': 'clamp(2.5rem, 5vw, 4.5rem)',
         'display-lg': 'clamp(2rem, 4vw, 3.5rem)',
       },

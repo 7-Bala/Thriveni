@@ -51,9 +51,13 @@ export default function Navbar() {
     setActiveDropdown(null);
   }, [pathname]);
 
-  const isHome = pathname === '/';
-  // SOLID bg for secondary pages, blurred only on scroll as requested
-  const navBg = isScrolled ? 'bg-metal-900/90 backdrop-blur-md border-b border-white/5' : (isHome ? 'bg-transparent' : 'bg-metal-900');
+  const TRANSPARENT_NAV_ROUTES = ['/', '/about', '/inventory', '/ventures', '/offers'];
+  const isTransparentPage = TRANSPARENT_NAV_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(route + '/')
+  );
+  const navBg = isScrolled
+    ? 'bg-metal-900/90 backdrop-blur-md border-b border-white/5'
+    : (isTransparentPage ? 'bg-transparent' : 'bg-metal-900');
 
   return (
     <>

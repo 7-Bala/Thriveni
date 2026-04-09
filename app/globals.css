@@ -57,7 +57,7 @@
 }
 
 /* Typography Scale with Clamp (Fluid Sizing) */
-.text-display-2xl { font-size: clamp(2.5rem, 8vw, 4.5rem); }
+.text-display-2xl { font-size: clamp(2.2rem, 4.5vw, 4rem); }
 .text-display-xl { font-size: clamp(2rem, 6vw, 3.5rem); }
 .text-display-lg { font-size: clamp(1.75rem, 5vw, 2.75rem); }
 
