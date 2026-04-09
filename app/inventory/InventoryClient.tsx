@@ -44,7 +44,12 @@ export default function InventoryClient({ initialCars }: InventoryClientProps) {
     return {
       ...car,
       img,
-      displayPrice: (car.price / 100000).toFixed(2)
+      displayPrice: car.price ? (car.price / 100000).toFixed(2) : '0.00',
+      brand: car.brand || 'Thriveni',
+      model: car.model || 'Unknown Model',
+      fuel: car.fuel || 'P/D',
+      transmission: car.transmission || 'MT/AT',
+      year: car.year || 2024
     };
   });
 
@@ -134,9 +139,9 @@ export default function InventoryClient({ initialCars }: InventoryClientProps) {
           className="inventory-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
         >
           <AnimatePresence mode='popLayout'>
-            {filteredCars.map(car => (
+            {filteredCars.map((car, index) => (
               <motion.div
-                key={car.id}
+                key={`${car.id}-${index}`}
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}

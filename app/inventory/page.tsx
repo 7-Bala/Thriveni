@@ -6,11 +6,16 @@ import { HERO_IMAGES } from '@/lib/images';
 export const dynamic = 'force-dynamic';
 
 export default async function InventoryPage() {
-  const carsRaw = await prisma.car.findMany({
-    orderBy: { createdAt: 'desc' }
-  });
-
-  const cars = JSON.parse(JSON.stringify(carsRaw));
+  let cars = [];
+  try {
+    const carsRaw = await prisma.car.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
+    cars = JSON.parse(JSON.stringify(carsRaw));
+  } catch (error) {
+    console.error('Database connection or data fetching failed on inventory page:', error);
+    // Continue with empty cars array to allow page to render its basic layout
+  }
 
   return (
     <div className="min-h-screen bg-bg-primary">
