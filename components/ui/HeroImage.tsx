@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import React, { ReactNode, useRef, useEffect, useCallback, useState } from 'react';
+import React, { ReactNode, useRef, useEffect, useState } from 'react';
+import gsap from 'gsap';
 
 interface HeroImageProps {
   src: string;
@@ -25,15 +26,9 @@ export default function HeroImage({
   isAbsolute = false
 }: HeroImageProps) {
 
-  const videoARef = useRef<HTMLVideoElement>(null);
-  const videoBRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   
-  // Internal state for crossfade
-  const activeIsA = useRef(true);
-  const isTransitioning = useRef(false);
-
-  const CROSSFADE_DURATION = 1000; // ms
-  const CROSSFADE_TRIGGER_OFFSET = 1.0; // seconds before end to trigger crossfade
+  const PAUSE_DURATION = 1000; // 1 second as requested
 
   const getOverlayStyle = () => {
     switch (overlay) {
@@ -50,67 +45,89 @@ export default function HeroImage({
     }
   };
 
-  const performCrossfade = useCallback(() => {
-    if (isTransitioning.current) return;
-    isTransitioning.current = true;
-
-    const currentVid = activeIsA.current ? videoARef.current : videoBRef.current;
-    const nextVid    = activeIsA.current ? videoBRef.current : videoARef.current;
-
-    if (!currentVid || !nextVid) return;
-
-    // 1. Reset and play the incoming video
-    nextVid.currentTime = 0;
-    nextVid.play().catch(() => {});
-
-    // 2. Crossfade opacities
-    nextVid.style.transition = `opacity ${CROSSFADE_DURATION}ms ease-in-out`;
-    currentVid.style.transition = `opacity ${CROSSFADE_DURATION}ms ease-in-out`;
-    
-    nextVid.style.opacity = '1';
-    currentVid.style.opacity = '0';
-
-    // 3. Swap active state after transition completes
-    setTimeout(() => {
-      currentVid.pause();
-      currentVid.currentTime = 0;
-      activeIsA.current = !activeIsA.current;
-      isTransitioning.current = false;
-    }, CROSSFADE_DURATION);
-  }, []);
-
   useEffect(() => {
-    if (!videoSrc) return;
+    if (!videoSrc || !videoRef.current) return;
 
-    const videoA = videoARef.current;
-    const videoB = videoBRef.current;
-    if (!videoA || !videoB) return;
+    const video = videoRef.current;
+    
+    // States: 'forward' | 'pausing-end' | 'reverse' | 'pausing-start'
+    let mode: 'forward' | 'pausing-end' | 'reverse' | 'pausing-start' = 'forward';
+    let reverseTween: gsap.core.Tween | null = null;
 
-    // Initial setup
-    videoA.style.opacity = '1';
-    videoB.style.opacity = '0';
-    videoA.play().catch(() => {});
+    const startReverse = () => {
+      mode = 'reverse';
+      const playhead = { time: video.currentTime };
+      
+      // Use GSAP to 'scrub' the video backwards. 
+      // Power1.inOut creates a smooth magnetic feel as requested.
+      reverseTween = gsap.to(playhead, {
+        time: 0,
+        duration: video.duration,
+        ease: 'power1.inOut',
+        onUpdate: () => {
+          video.currentTime = playhead.time;
+        },
+        onComplete: () => {
+          handleReverseEnd();
+        }
+      });
+    };
 
-    const handleTimeUpdate = () => {
-      const active = activeIsA.current ? videoA : videoB;
-      if (!active.duration) return;
+    const handleReverseEnd = () => {
+      mode = 'pausing-start';
+      setTimeout(() => {
+        if (!videoRef.current) return;
+        mode = 'forward';
+        
+        // Smoothly accelerate back to normal speed
+        gsap.to(video, {
+          playbackRate: 1,
+          duration: 0.8,
+          ease: 'power2.in',
+          onStart: () => video.play()
+        });
+      }, PAUSE_DURATION);
+    };
 
-      const timeLeft = active.duration - active.currentTime;
-      if (timeLeft <= CROSSFADE_TRIGGER_OFFSET) {
-        performCrossfade();
+    const handleForwardEnd = () => {
+      if (mode !== 'forward') return;
+      
+      mode = 'pausing-end';
+      
+      // Smoothly decelerate to a stop
+      gsap.to(video, {
+        playbackRate: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        onComplete: () => {
+          video.pause();
+          setTimeout(() => {
+            if (videoRef.current) startReverse();
+          }, PAUSE_DURATION);
+        }
+      });
+    };
+
+    // We check for 'near-end' rather than 'ended' for the smooth deceleration
+    const checkTime = () => {
+      if (mode === 'forward' && video.duration > 0) {
+        const timeLeft = video.duration - video.currentTime;
+        if (timeLeft < 0.9) { // Trigger deceleration slightly before literal end
+          handleForwardEnd();
+        }
       }
     };
 
-    videoA.addEventListener('timeupdate', handleTimeUpdate);
-    videoB.addEventListener('timeupdate', handleTimeUpdate);
+    video.addEventListener('timeupdate', checkTime);
+
+    // Initial Start
+    video.play().catch(() => {});
 
     return () => {
-      videoA.removeEventListener('timeupdate', handleTimeUpdate);
-      videoB.removeEventListener('timeupdate', handleTimeUpdate);
-      videoA.pause();
-      videoB.pause();
+      video.removeEventListener('timeupdate', checkTime);
+      reverseTween?.kill();
     };
-  }, [videoSrc, performCrossfade]);
+  }, [videoSrc]);
 
   const videoStyles: React.CSSProperties = {
     objectPosition,
@@ -121,46 +138,32 @@ export default function HeroImage({
     <div className={`${isAbsolute ? 'absolute inset-0' : 'relative w-full h-full min-h-[60vh]'} overflow-hidden bg-metal-950`}>
 
       {videoSrc && (
-        <div className="absolute inset-0 w-full h-full animate-breath z-[5]">
-          <video
-            ref={videoARef}
-            muted
-            playsInline
-            preload="auto"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ ...videoStyles, opacity: 1 }}
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-          <video
-            ref={videoBRef}
-            muted
-            playsInline
-            preload="auto"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ ...videoStyles, opacity: 0 }}
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-        </div>
+        <video
+          ref={videoRef}
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover z-[5]"
+          style={videoStyles}
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
       )}
 
       {/* Image background — fallback or single image pages */}
       {!videoSrc && src && (
-        <div className="absolute inset-0 w-full h-full animate-breath z-[5]">
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            priority={priority}
-            sizes="100vw"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{
-              objectPosition,
-              filter: 'brightness(0.95) contrast(1.05) saturate(1)'
-            }}
-          />
-        </div>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          priority={priority}
+          sizes="100vw"
+          className="absolute inset-0 w-full h-full object-cover z-[5]"
+          style={{
+            objectPosition,
+            filter: 'brightness(0.95) contrast(1.05) saturate(1)'
+          }}
+        />
       )}
 
       {/* Overlay */}
@@ -173,17 +176,6 @@ export default function HeroImage({
       <div className="relative z-20 w-full h-full">
         {children}
       </div>
-
-      <style jsx global>{`
-        @keyframes breath {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.03); }
-          100% { transform: scale(1); }
-        }
-        .animate-breath {
-          animation: breath 12s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 }

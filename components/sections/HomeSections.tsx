@@ -405,13 +405,7 @@ function ScrambleNumber({ value }: { value: string }) {
 
 export function WhyThriveni() {
   const containerRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-
-  const y1 = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [-50, 50]);
+  const isInView = useInView(containerRef, { once: true, margin: "-50px" });
 
   const features = [
     {
@@ -437,75 +431,61 @@ export function WhyThriveni() {
   ];
 
   return (
-    <section ref={containerRef} className="why-thriveni-section py-32 bg-metal-900 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
-      
+    <section ref={containerRef} className="py-32 bg-metal-900 relative">
       <div className="container-custom relative z-10">
-        <div className="flex flex-col lg:flex-row gap-20 lg:gap-32">
-          
-          <div className="lg:w-5/12 flex flex-col justify-between relative">
-            <div className="lg:sticky lg:top-40">
-              <div className="flex items-center gap-4 mb-12">
-                <div className="w-2 h-2 bg-amber-cta rounded-full" />
-                <span className="font-body text-[10px] text-metal-400 uppercase tracking-[0.3em] font-bold">Why Thriveni</span>
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between border-b border-metal-800 pb-16 mb-8 gap-10">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-2 h-2 bg-amber-cta rounded-full" />
+              <span className="font-body text-[10px] text-metal-400 uppercase tracking-[0.3em] font-bold">Why Thriveni</span>
+            </div>
+            <h2 className="font-display font-extrabold text-white leading-[1.05] tracking-tight" style={{ fontSize: 'clamp(3rem, 5vw, 5rem)' }}>
+              Engineering <span className="text-amber-cta">Trust</span> <br />Since 2009.
+            </h2>
+          </div>
+          <div className="max-w-md">
+            <p className="font-body font-light text-metal-400 text-lg leading-relaxed mb-10">
+              We dismantle the traditional dealership experience, replacing generic sales tactics with technical precision and radical transparency.
+            </p>
+            <div className="flex items-center gap-12">
+              <div>
+                <div className="font-display text-4xl text-white mb-1">28<span className="text-amber-cta">+</span></div>
+                <div className="font-body text-[9px] text-metal-500 uppercase tracking-widest font-bold">Strategic Branches</div>
               </div>
-              
-              <h2 className="font-display font-extrabold text-white leading-[1.05] tracking-tight mb-8" style={{ fontSize: 'clamp(3rem, 5vw, 5rem)' }}>
-                Engineering <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-light to-amber-cta">Trust</span> Since <br />
-                2009.
-              </h2>
-              
-              <p className="font-body font-light text-metal-400 text-lg leading-relaxed max-w-md mb-20">
-                We dismantle the traditional dealership experience, replacing generic sales tactics with technical precision and radical transparency.
-              </p>
-
-              <div className="flex items-center gap-16 border-t border-white/10 pt-10">
-                <div>
-                  <div className="font-display text-5xl text-white mb-2">28<span className="text-amber-cta">+</span></div>
-                  <div className="font-body text-[9px] text-metal-500 uppercase tracking-widest font-bold">Strategic Branches</div>
-                </div>
-                <div>
-                  <div className="font-display text-5xl text-white mb-2">10<span className="text-amber-cta">k</span></div>
-                  <div className="font-body text-[9px] text-metal-500 uppercase tracking-widest font-bold">Technical Team</div>
-                </div>
+              <div>
+                <div className="font-display text-4xl text-white mb-1">10<span className="text-amber-cta">k</span></div>
+                <div className="font-body text-[9px] text-metal-500 uppercase tracking-widest font-bold">Technical Team</div>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="lg:w-7/12 grid grid-cols-1 md:grid-cols-2 gap-6 relative">
-            <motion.div style={{ y: y1 }} className="flex flex-col gap-6 pt-0 md:pt-20">
-              {[features[0], features[2]].map((feat) => (
-                <div key={feat.num} className="group bg-[#141311] border border-white/5 p-10 hover:border-amber-cta/30 transition-colors duration-500 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <span className="font-display text-6xl text-white">{feat.num}</span>
-                  </div>
-                  <div className="font-mono text-[10px] text-amber-cta mb-8">{feat.num} //</div>
-                  <h3 className="font-display text-2xl text-white mb-4">{feat.title}</h3>
-                  <p className="font-body font-light text-metal-400 text-sm leading-relaxed">{feat.desc}</p>
-                </div>
-              ))}
+        <div className="flex flex-col">
+          {features.map((feat, i) => (
+            <motion.div
+              key={feat.num}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.8, delay: i * 0.1 }}
+              className="group flex flex-col md:flex-row items-start md:items-center py-12 border-b border-metal-800 hover:border-metal-600 transition-colors cursor-default"
+            >
+              <div className="md:w-1/5 mb-4 md:mb-0">
+                <span className="font-mono text-5xl font-light text-metal-800 group-hover:text-amber-cta transition-colors duration-500">{feat.num}</span>
+              </div>
+              <div className="md:w-2/5 mb-4 md:mb-0 pr-8">
+                <h3 className="font-display text-3xl text-metal-100 group-hover:translate-x-4 transition-transform duration-500">{feat.title}</h3>
+              </div>
+              <div className="md:w-2/5">
+                <p className="font-body font-light text-metal-400 text-base leading-relaxed group-hover:text-metal-100 transition-colors duration-500">{feat.desc}</p>
+              </div>
             </motion.div>
-
-            <motion.div style={{ y: y2 }} className="flex flex-col gap-6">
-              {[features[1], features[3]].map((feat) => (
-                <div key={feat.num} className="group bg-[#141311] border border-white/5 p-10 hover:border-amber-cta/30 transition-colors duration-500 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <span className="font-display text-6xl text-white">{feat.num}</span>
-                  </div>
-                  <div className="font-mono text-[10px] text-amber-cta mb-8">{feat.num} //</div>
-                  <h3 className="font-display text-2xl text-white mb-4">{feat.title}</h3>
-                  <p className="font-body font-light text-metal-400 text-sm leading-relaxed">{feat.desc}</p>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
+          ))}
         </div>
       </div>
     </section>
   );
 }
+
 
 
 
