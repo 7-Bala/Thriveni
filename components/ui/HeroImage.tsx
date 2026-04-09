@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import React, { ReactNode, useRef, useEffect } from 'react';
-import gsap from 'gsap';
 
 interface HeroImageProps {
   src: string;
@@ -27,11 +26,6 @@ export default function HeroImage({
 }: HeroImageProps) {
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const mode = useRef<'forward' | 'pausing-end' | 'reverse' | 'pausing-start'>('forward');
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isTransitioning = useRef(false);
-  
-  const PAUSE_DURATION = 1000; // 1 second
 
   const getOverlayStyle = () => {
     switch (overlay) {
@@ -53,107 +47,13 @@ export default function HeroImage({
 
     const video = videoRef.current;
     
-    // GSAP Context to handle clean scope-killing
-    const ctx = gsap.context(() => {});
-
-    const clearExistingTimeout = () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-    };
-
-    const startReverse = () => {
-      if (!videoRef.current) return;
-      mode.current = 'reverse';
-      isTransitioning.current = false;
-      
-      const playhead = { time: video.currentTime };
-      
-      ctx.add(() => {
-        gsap.to(playhead, {
-          time: 0,
-          duration: video.duration || 5,
-          ease: 'power1.inOut',
-          onUpdate: () => {
-            if (videoRef.current) videoRef.current.currentTime = playhead.time;
-          },
-          onComplete: () => {
-            handleReverseEnd();
-          }
-        });
-      });
-    };
-
-    const handleReverseEnd = () => {
-      if (!videoRef.current) return;
-      mode.current = 'pausing-start';
-      isTransitioning.current = true;
-      
-      clearExistingTimeout();
-      timeoutRef.current = setTimeout(() => {
-        if (!videoRef.current) return;
-        mode.current = 'forward';
-        isTransitioning.current = false;
-        
-        ctx.add(() => {
-          gsap.to(video, {
-            playbackRate: 1,
-            duration: 0.8,
-            ease: 'power2.in',
-            onStart: () => {
-              video.play().catch(() => {});
-            }
-          });
-        });
-      }, PAUSE_DURATION);
-    };
-
-    const handleForwardEnd = () => {
-      // Guard to prevent multiple parallel transition attempts
-      if (mode.current !== 'forward' || isTransitioning.current) return;
-      
-      isTransitioning.current = true;
-      mode.current = 'pausing-end';
-      
-      ctx.add(() => {
-        gsap.to(video, {
-          playbackRate: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-          onComplete: () => {
-            if (!videoRef.current) return;
-            video.pause();
-            clearExistingTimeout();
-            timeoutRef.current = setTimeout(() => {
-              startReverse();
-            }, PAUSE_DURATION);
-          }
-        });
-      });
-    };
-
-    const checkTime = () => {
-      if (mode.current === 'forward' && !isTransitioning.current && video.duration > 0) {
-        const timeLeft = video.duration - video.currentTime;
-        if (timeLeft < 0.9) { 
-          handleForwardEnd();
-        }
-      }
-    };
-
-    video.addEventListener('timeupdate', checkTime);
-
     // Initial play with catch for autoplay policies
     video.play().catch(() => {
       console.warn("Video autoplay failed, waiting for interaction.");
     });
 
-    return () => {
-      video.removeEventListener('timeupdate', checkTime);
-      clearExistingTimeout();
-      ctx.revert(); // Kills all GSAP tweens tracked in ctx
-    };
+    // The video should NOT loop. It stops at the final frame as requested.
+    video.loop = false;
   }, [videoSrc]);
 
   const videoStyles: React.CSSProperties = {
@@ -165,32 +65,36 @@ export default function HeroImage({
     <div className={`${isAbsolute ? 'absolute inset-0' : 'relative w-full h-full min-h-[60vh]'} overflow-hidden bg-metal-950`}>
 
       {videoSrc && (
-        <video
-          ref={videoRef}
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover z-[5]"
-          style={videoStyles}
-        >
-          <source src={videoSrc} type="video/mp4" />
-        </video>
+        <div className="absolute inset-0 w-full h-full animate-cinematic-zoom z-[5]">
+          <video
+            ref={videoRef}
+            muted
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={videoStyles}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        </div>
       )}
 
       {/* Image background — fallback or single image pages */}
       {!videoSrc && src && (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          sizes="100vw"
-          className="absolute inset-0 w-full h-full object-cover z-[5]"
-          style={{
-            objectPosition,
-            filter: 'brightness(0.95) contrast(1.05) saturate(1)'
-          }}
-        />
+        <div className="absolute inset-0 w-full h-full animate-cinematic-zoom z-[5]">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            priority={priority}
+            sizes="100vw"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              objectPosition,
+              filter: 'brightness(0.95) contrast(1.05) saturate(1)'
+            }}
+          />
+        </div>
       )}
 
       {/* Overlay */}
@@ -203,6 +107,18 @@ export default function HeroImage({
       <div className="relative z-20 w-full h-full">
         {children}
       </div>
+
+      <style jsx global>{`
+        @keyframes cinematic-zoom {
+          0% { transform: scale(1.07); }
+          100% { transform: scale(1); }
+        }
+        .animate-cinematic-zoom {
+          /* 18 seconds is a typical duration for these sedan videos. 
+             If yours is different, it will still feel smooth. */
+          animation: cinematic-zoom 22s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+      `}</style>
     </div>
   );
 }
