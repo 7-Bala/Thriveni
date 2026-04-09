@@ -46,7 +46,7 @@ export function Hero() {
         alt="Thriveni Premium Dealership Showroom"
         priority={true}
         objectPosition="center 45%"
-        overlay="none"
+        overlay="dark-left"
         isAbsolute={false}
       >
 
