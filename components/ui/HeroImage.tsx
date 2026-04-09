@@ -84,7 +84,7 @@ export default function HeroImage({
           playbackRate: 1,
           duration: 0.8,
           ease: 'power2.in',
-          onStart: () => video.play()
+          onStart: () => { video.play(); }
         });
       }, PAUSE_DURATION);
     };
