@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, { ReactNode, useRef, useEffect, useState } from 'react';
+import React, { ReactNode, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 
 interface HeroImageProps {
@@ -27,8 +27,11 @@ export default function HeroImage({
 }: HeroImageProps) {
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const mode = useRef<'forward' | 'pausing-end' | 'reverse' | 'pausing-start'>('forward');
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isTransitioning = useRef(false);
   
-  const PAUSE_DURATION = 1000; // 1 second as requested
+  const PAUSE_DURATION = 1000; // 1 second
 
   const getOverlayStyle = () => {
     switch (overlay) {
@@ -50,69 +53,90 @@ export default function HeroImage({
 
     const video = videoRef.current;
     
-    // States: 'forward' | 'pausing-end' | 'reverse' | 'pausing-start'
-    let mode: 'forward' | 'pausing-end' | 'reverse' | 'pausing-start' = 'forward';
-    let reverseTween: gsap.core.Tween | null = null;
+    // GSAP Context to handle clean scope-killing
+    const ctx = gsap.context(() => {});
+
+    const clearExistingTimeout = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
 
     const startReverse = () => {
-      mode = 'reverse';
+      if (!videoRef.current) return;
+      mode.current = 'reverse';
+      isTransitioning.current = false;
+      
       const playhead = { time: video.currentTime };
       
-      // Use GSAP to 'scrub' the video backwards. 
-      // Power1.inOut creates a smooth magnetic feel as requested.
-      reverseTween = gsap.to(playhead, {
-        time: 0,
-        duration: video.duration,
-        ease: 'power1.inOut',
-        onUpdate: () => {
-          video.currentTime = playhead.time;
-        },
-        onComplete: () => {
-          handleReverseEnd();
-        }
+      ctx.add(() => {
+        gsap.to(playhead, {
+          time: 0,
+          duration: video.duration || 5,
+          ease: 'power1.inOut',
+          onUpdate: () => {
+            if (videoRef.current) videoRef.current.currentTime = playhead.time;
+          },
+          onComplete: () => {
+            handleReverseEnd();
+          }
+        });
       });
     };
 
     const handleReverseEnd = () => {
-      mode = 'pausing-start';
-      setTimeout(() => {
+      if (!videoRef.current) return;
+      mode.current = 'pausing-start';
+      isTransitioning.current = true;
+      
+      clearExistingTimeout();
+      timeoutRef.current = setTimeout(() => {
         if (!videoRef.current) return;
-        mode = 'forward';
+        mode.current = 'forward';
+        isTransitioning.current = false;
         
-        // Smoothly accelerate back to normal speed
-        gsap.to(video, {
-          playbackRate: 1,
-          duration: 0.8,
-          ease: 'power2.in',
-          onStart: () => { video.play(); }
+        ctx.add(() => {
+          gsap.to(video, {
+            playbackRate: 1,
+            duration: 0.8,
+            ease: 'power2.in',
+            onStart: () => {
+              video.play().catch(() => {});
+            }
+          });
         });
       }, PAUSE_DURATION);
     };
 
     const handleForwardEnd = () => {
-      if (mode !== 'forward') return;
+      // Guard to prevent multiple parallel transition attempts
+      if (mode.current !== 'forward' || isTransitioning.current) return;
       
-      mode = 'pausing-end';
+      isTransitioning.current = true;
+      mode.current = 'pausing-end';
       
-      // Smoothly decelerate to a stop
-      gsap.to(video, {
-        playbackRate: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-        onComplete: () => {
-          video.pause();
-          setTimeout(() => {
-            if (videoRef.current) startReverse();
-          }, PAUSE_DURATION);
-        }
+      ctx.add(() => {
+        gsap.to(video, {
+          playbackRate: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          onComplete: () => {
+            if (!videoRef.current) return;
+            video.pause();
+            clearExistingTimeout();
+            timeoutRef.current = setTimeout(() => {
+              startReverse();
+            }, PAUSE_DURATION);
+          }
+        });
       });
     };
 
-    // We check for 'near-end' rather than 'ended' for the smooth deceleration
     const checkTime = () => {
-      if (mode === 'forward' && video.duration > 0) {
+      if (mode.current === 'forward' && !isTransitioning.current && video.duration > 0) {
         const timeLeft = video.duration - video.currentTime;
-        if (timeLeft < 0.9) { // Trigger deceleration slightly before literal end
+        if (timeLeft < 0.9) { 
           handleForwardEnd();
         }
       }
@@ -120,12 +144,15 @@ export default function HeroImage({
 
     video.addEventListener('timeupdate', checkTime);
 
-    // Initial Start
-    video.play().catch(() => {});
+    // Initial play with catch for autoplay policies
+    video.play().catch(() => {
+      console.warn("Video autoplay failed, waiting for interaction.");
+    });
 
     return () => {
       video.removeEventListener('timeupdate', checkTime);
-      reverseTween?.kill();
+      clearExistingTimeout();
+      ctx.revert(); // Kills all GSAP tweens tracked in ctx
     };
   }, [videoSrc]);
 
