@@ -113,7 +113,7 @@ export default function HeroImage({
 
   const videoStyles: React.CSSProperties = {
     objectPosition,
-    filter: 'brightness(0.85) contrast(1.1) saturate(0.9)',
+    filter: 'brightness(1) contrast(1.05) saturate(1)',
     transition: `opacity ${CROSSFADE_DURATION}ms ease-in-out`,
   };
 
@@ -156,7 +156,7 @@ export default function HeroImage({
           className="absolute inset-0 w-full h-full object-cover z-[5]"
           style={{
             objectPosition,
-            filter: 'brightness(0.85) contrast(1.1) saturate(0.9)'
+            filter: 'brightness(1) contrast(1.05) saturate(1)'
           }}
         />
       )}
