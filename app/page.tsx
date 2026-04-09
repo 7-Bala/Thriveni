@@ -3,7 +3,7 @@ import {
   Hero, 
   BrandShowcase, 
   FeaturedInventory,
-  BrandAuthority, 
+  WhyThriveni, 
   EMICalculator,
   TestimonialCarousel,
   OffersPreview,
@@ -27,7 +27,7 @@ export default async function Home() {
       <Hero />
       <BrandShowcase />
       <FeaturedInventory initialCars={carsToShow} />
-      <BrandAuthority />
+      <WhyThriveni />
       <EMICalculator />
       <TestimonialCarousel />
       <OffersPreview />

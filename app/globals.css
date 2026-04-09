@@ -61,6 +61,11 @@
 .text-display-xl { font-size: clamp(2rem, 6vw, 3.5rem); }
 .text-display-lg { font-size: clamp(1.75rem, 5vw, 2.75rem); }
 
+/* 3D Utils */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

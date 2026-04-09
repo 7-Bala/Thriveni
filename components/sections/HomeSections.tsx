@@ -402,77 +402,174 @@ function ScrambleNumber({ value }: { value: string }) {
   return <span ref={ref}>{display}</span>;
 }
 
-export function BrandAuthority() {
+export function WhyThriveni() {
+  const features = [
+    {
+      id: '01',
+      title: 'Exclusive Leads',
+      desc: 'Verified enquiries reach only our team, ensuring absolute privacy and zero spam.',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      )
+    },
+    {
+      id: '02',
+      title: 'Velocity Response',
+      desc: 'Engineered for speed. Our dedicated concierge team responds within 15 minutes.',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      )
+    },
+    {
+      id: '03',
+      title: 'Integrated Hub',
+      desc: 'Sales, finance, insurance, and RTO services coordinated under a single technical roof.',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" /><path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" /><path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" />
+        </svg>
+      )
+    },
+    {
+      id: '04',
+      title: 'Certified Scale',
+      desc: 'Salem\'s largest multi-brand inventory, with factory-certified technicians for every model.',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" />
+          <line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" />
+        </svg>
+      )
+    }
+  ];
+
+  useGSAPOnMount((ctx) => {
+    if (!ctx.selector) return;
+    const cards = ctx.selector('.feature-card');
+    gsap.from(cards, {
+      opacity: 0,
+      y: 50,
+      rotateX: -10,
+      stagger: 0.15,
+      duration: 1,
+      ease: 'expo.out',
+      scrollTrigger: {
+        trigger: '.features-grid',
+        start: 'top 80%'
+      }
+    });
+
+    // Vertical Watermark Parallax
+    gsap.to('.vertical-watermark', {
+      y: -100,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.why-thriveni-section',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
+  });
+
   return (
-    <section className="py-32 bg-metal-900">
-      <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 lg:gap-20">
+    <section className="why-thriveni-section py-32 bg-metal-900 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 z-0 opacity-10 [background-image:radial-gradient(#ffffff_1px,transparent_1px)] [background-size:40px_40px]" />
+      
+      {/* Vertical Watermark */}
+      <div className="absolute right-0 top-0 bottom-0 flex items-center items-end select-none pointer-events-none z-0">
+        <div className="vertical-watermark font-display font-black text-white/5 opacity-50 uppercase tracking-[0.5em] leading-none whitespace-nowrap origin-bottom rotate-[-90deg] translate-x-1/2" style={{ fontSize: '20vh' }}>
+          THRIVENI
+        </div>
+      </div>
 
-          {/* Column 1 — The Big Number */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, ease: EASING.expoOut }}
-          >
-            <div className="font-display font-extrabold text-white leading-none" style={{ fontSize: 'clamp(5rem, 12vw, 9rem)' }}>15</div>
-            <div className="font-body font-light text-metal-400 text-lg mt-3">Years of automotive excellence in Salem.</div>
-            <div className="h-px bg-white/10 mt-10 mb-10" />
-            <p className="font-body font-light text-metal-500 text-sm leading-relaxed">Founded in 2009, Thriveni Cars has built a reputation on one principle: the customer decides when they&apos;re ready, not the salesperson.</p>
-          </motion.div>
+      <div className="container-custom relative z-10">
+        <div className="flex flex-col lg:flex-row gap-20 lg:gap-32">
+          
+          {/* Left Side: Content */}
+          <div className="lg:w-[40%]">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: EASING.expoOut }}
+              className="inline-flex items-center gap-4 mb-8"
+            >
+              <div className="w-2 h-2 rounded-full bg-amber-cta ring-4 ring-amber-cta/20" />
+              <span className="text-metal-400 text-[11px] uppercase tracking-[0.4em] font-bold">Why Thriveni</span>
+            </motion.div>
 
-          {/* Column 2 — Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, delay: 0.15, ease: EASING.expoOut }}
-            className="flex flex-col gap-10"
-          >
-            {[
-              { val: '10,000+', label: 'Families served since 2009' },
-              { val: '200+', label: 'Vehicles in live inventory' },
-              { val: '5', label: 'Authorized brand franchises' },
-              { val: '8', label: 'Branches across Salem' },
-            ].map((stat, i) => (
-              <div key={i}>
-                <div className="font-display text-3xl font-bold text-white">
-                  <ScrambleNumber value={stat.val} />
+            <h2 className="font-display font-extrabold text-white leading-tight mb-10" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)' }}>
+              Engineering <span className="text-amber-cta italic">Trust</span> Since 2009.
+            </h2>
+
+            <p className="font-body font-light text-metal-400 text-lg leading-relaxed max-w-sm mb-16">
+              We dismantle the traditional dealership experience, replacing generic sales with technical precision and radical transparency.
+            </p>
+
+            {/* Quick Stats Block */}
+            <div className="grid grid-cols-2 gap-10 border-t border-white/10 pt-16">
+              <div>
+                <div className="font-display text-4xl text-white font-bold mb-1">28<span className="text-amber-cta">+</span></div>
+                <div className="font-body text-[10px] text-metal-500 uppercase tracking-widest font-bold">Strategic Branches</div>
+              </div>
+              <div>
+                <div className="font-display text-4xl text-white font-bold mb-1">10<span className="text-amber-cta">k</span></div>
+                <div className="font-body text-[10px] text-metal-500 uppercase tracking-widest font-bold">Technical Team</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side: Cards Grid */}
+          <div className="lg:w-[60%] flex items-center">
+            <div className="features-grid grid grid-cols-1 md:grid-cols-2 gap-8 perspective-1000">
+              {features.map((f, i) => (
+                <div 
+                  key={i} 
+                  className="feature-card group relative bg-metal-800/40 border border-white/5 p-10 hover:bg-metal-800 transition-all duration-500"
+                >
+                  {/* Large BG Number */}
+                  <div className="absolute top-4 right-8 font-display font-black text-white/5 text-8xl transition-all group-hover:text-white/10 select-none">
+                    {f.id}
+                  </div>
+
+                  {/* Icon Box */}
+                  <div className="w-14 h-14 bg-white flex items-center justify-center text-metal-900 mb-8 shadow-2xl relative z-10 transition-transform group-hover:-translate-y-1">
+                    {f.icon}
+                  </div>
+
+                  <div className="relative z-10">
+                    <h3 className="font-display text-2xl text-white mb-4 group-hover:text-amber-cta transition-colors">
+                      {f.title}
+                    </h3>
+                    <p className="font-body font-light text-metal-400 text-sm leading-relaxed">
+                      {f.desc}
+                    </p>
+                  </div>
+                  
+                  {/* Card Bottom Accent */}
+                  <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-amber-cta transition-all duration-700 group-hover:w-full" />
                 </div>
-                <div className="font-body font-light text-metal-500 text-sm mt-1">{stat.label}</div>
-                {i < 3 && <div className="h-px bg-white/5 mt-10" />}
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Column 3 — Differentiators */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, delay: 0.3, ease: EASING.expoOut }}
-            className="flex flex-col gap-8"
-          >
-            <div className="font-body text-[11px] font-medium text-metal-600 uppercase tracking-[0.2em] mb-2">Why Thriveni</div>
-            {[
-              'Exclusive stock not listed on CarDekho or CarWale.',
-              '15-minute callback guarantee, no exceptions.',
-              '10+ banking partners for the lowest EMI in Salem.',
-              'Factory-certified technicians only. No outsourcing.',
-              'Price transparency — no hidden charges, ever.',
-            ].map((fact, i) => (
-              <div key={i} className="flex gap-4 items-start">
-                <div className="w-4 h-px bg-olive-600 mt-3 shrink-0" />
-                <p className="font-body font-light text-metal-400 text-base leading-relaxed">{fact}</p>
-              </div>
-            ))}
-          </motion.div>
+              ))}
+            </div>
+          </div>
 
         </div>
       </div>
     </section>
   );
 }
+
 
 // --- EMI CALCULATOR SECTION (NEW) ---
 export function EMICalculator() {
