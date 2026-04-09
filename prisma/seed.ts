@@ -1,6 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// @ts-ignore
+const prisma = new PrismaClient({
+  datasourceUrl: 'file:./dev.db'
+});
 
 async function main() {
   console.log('Seeding database (SQLite)...');
@@ -50,7 +53,7 @@ async function main() {
       year: 2024,
       mileage: 22.38,
       color: JSON.stringify(['Red', 'White', 'Silver']),
-      images: JSON.stringify(['https://images.unsplash.com/photo-1525609004556-c46c7d6cf048?auto=format&fit=crop&q=80&w=800']),
+      images: JSON.stringify(['https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Suzuki_Swift_%282024%29_hybrid_DSC_6076.jpg/960px-Suzuki_Swift_%282024%29_hybrid_DSC_6076.jpg']),
       features: JSON.stringify({ items: ['Touchscreen', 'Alloy Wheels', 'Auto AC'] }),
       specs: JSON.stringify({ engine: '1197cc', power: '89bhp' }),
       isNew: true,
@@ -67,7 +70,7 @@ async function main() {
       year: 2024,
       mileage: 22.94,
       color: JSON.stringify(['Blue', 'Grey', 'Silver']),
-      images: JSON.stringify(['https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800']),
+      images: JSON.stringify(['https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Suzuki_Baleno_front_20071004.jpg/960px-Suzuki_Baleno_front_20071004.jpg']),
       features: JSON.stringify({ items: ['HUD', '360 Camera', '6 Airbags'] }),
       specs: JSON.stringify({ engine: '1197cc', power: '88bhp' }),
       isNew: true,
@@ -84,9 +87,26 @@ async function main() {
       year: 2023,
       mileage: 18.4,
       color: JSON.stringify(['White', 'Brown', 'Red']),
-      images: JSON.stringify(['https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&q=80&w=800']),
+      images: JSON.stringify(['https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/2022_Honda_City_ZX_i-VTEC_%28India%29_front_view_%28cropped%29.jpg/960px-2022_Honda_City_ZX_i-VTEC_%28India%29_front_view_%28cropped%29.jpg']),
       features: JSON.stringify({ items: ['Sunroof', 'ADAS', 'Leather Seats'] }),
       specs: JSON.stringify({ engine: '1498cc', power: '119bhp' }),
+      isNew: true,
+      branchId: createdBranches[1].id
+    },
+    {
+      brand: 'Royal Enfield',
+      model: 'Classic 350',
+      variant: 'Stealth Black',
+      type: 'MOTORCYCLE',
+      price: 225000,
+      fuel: 'PETROL',
+      transmission: 'MANUAL',
+      year: 2024,
+      mileage: 35.0,
+      color: JSON.stringify(['Black', 'Silver', 'Chrome']),
+      images: JSON.stringify(['https://upload.wikimedia.org/wikipedia/commons/f/f2/Royal_Enfield_Meteor.png']),
+      features: JSON.stringify({ items: ['Dual Channel ABS', 'Digital Console', 'LED Tail Light'] }),
+      specs: JSON.stringify({ engine: '349cc', power: '20.2bhp' }),
       isNew: true,
       branchId: createdBranches[1].id
     }

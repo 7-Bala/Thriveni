@@ -42,23 +42,13 @@ export function Hero() {
     <section ref={containerRef} className="relative overflow-hidden bg-metal-900">
       <HeroImage
         src={HERO_IMAGES.homepage}
+        videoSrc="/videos/blacksedan.mp4"
         alt="Thriveni Premium Dealership Showroom"
         priority={true}
         objectPosition="center 45%"
         isAbsolute={false}
       >
-        <div className="absolute right-0 top-0 bottom-0 w-2/5 hidden lg:block pointer-events-none z-10">
-          <div className="absolute inset-0 bg-gradient-to-r from-metal-900 via-metal-900/60 to-transparent z-10" />
-          <Image
-            src={CAR_IMAGES.grandVitara.side}
-            alt="Featured Vehicle"
-            fill
-            sizes="40vw"
-            className="object-cover object-left"
-            style={{ filter: 'grayscale(0.3) contrast(1.05)' }}
-            priority
-          />
-        </div>
+
         <div className="container-custom relative z-20 w-full min-h-screen flex flex-col justify-center pt-20">
           <div className="w-full sm:max-w-[80%] lg:max-w-[55%] pt-10 sm:pt-0">
             <motion.div
@@ -209,13 +199,28 @@ export function BrandShowcase() {
 
 // --- WHY CHOOSE US (UPDATED) ---
 // --- FEATURED INVENTORY (NEW) ---
-export function FeaturedInventory() {
-  const cars = [
-    { name: 'Swift', brand: 'Maruti Arena', price: '₹6.5L', image: CAR_IMAGES.swift.side },
-    { name: 'Grand Vitara', brand: 'NEXA', price: '₹14.2L', image: CAR_IMAGES.grandVitara.side },
-    { name: 'City', brand: 'Honda', price: '₹12.8L', image: CAR_IMAGES.city.side },
-    { name: 'Himalayan', brand: 'Royal Enfield', price: '₹2.3L', image: CAR_IMAGES.himalayan.side },
-  ];
+interface Car {
+  id: string;
+  brand: string;
+  model: string;
+  variant: string;
+  price: number;
+  fuel: string;
+  transmission: string;
+  year: number;
+  images: string; // JSON
+}
+
+export function FeaturedInventory({ initialCars = [] }: { initialCars?: Car[] }) {
+  const cars = initialCars.map(car => ({
+    name: car.model,
+    brand: car.brand,
+    price: `₹${(car.price / 100000).toFixed(1)}L`,
+    image: JSON.parse(car.images)[0],
+    fuel: car.fuel,
+    trans: car.transmission,
+    year: car.year
+  }));
 
   useGSAPOnMount((ctx) => {
     if (!ctx.selector) return;
@@ -281,11 +286,11 @@ export function FeaturedInventory() {
                     </div>
                   </div>
                   <div className="mt-4 pt-4 border-t border-metal-50 flex gap-4 text-[11px] font-body text-metal-400">
-                    <span>Petrol</span>
+                    <span>{car.fuel}</span>
                     <span className="text-metal-200">·</span>
-                    <span>Manual</span>
+                    <span>{car.trans}</span>
                     <span className="text-metal-200">·</span>
-                    <span className="font-mono">2023</span>
+                    <span className="font-mono">{car.year}</span>
                   </div>
                 </div>
               </Link>

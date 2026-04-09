@@ -7,6 +7,7 @@ import { DARK_BLUR } from '@/lib/blurPlaceholders';
 interface HeroImageProps {
   src: string;
   alt: string;
+  videoSrc?: string;
   overlay?: 'dark-left' | 'dark-center' | 'dark-full' | 'dark-bottom';
   priority?: boolean;
   children?: ReactNode;
@@ -17,13 +18,14 @@ interface HeroImageProps {
 export default function HeroImage({
   src,
   alt,
+  videoSrc,
   overlay = 'dark-full',
   priority = false,
   children,
   objectPosition = 'center 40%',
   isAbsolute = false
 }: HeroImageProps) {
-  
+
   const getOverlayStyle = () => {
     switch (overlay) {
       case 'dark-left':
@@ -41,7 +43,7 @@ export default function HeroImage({
 
   return (
     <div className={`${isAbsolute ? 'absolute inset-0' : 'relative w-full h-full min-h-[60vh]'} overflow-hidden`}>
-      {/* Background Image */}
+      {/* Background Image (as poster/fallback) */}
       <Image
         src={src}
         alt={alt}
@@ -49,20 +51,37 @@ export default function HeroImage({
         priority={priority}
         placeholder="blur"
         blurDataURL={DARK_BLUR}
-        style={{ 
-          objectFit: 'cover', 
+        style={{
+          objectFit: 'cover',
           objectPosition,
-          filter: 'brightness(0.92) contrast(1.05) saturate(0.88)' 
+          filter: 'brightness(0.92) contrast(1.05) saturate(0.88)'
         }}
         sizes="100vw"
       />
-      
+
+      {/* Background Video */}
+      {videoSrc && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-[5]"
+          style={{
+            objectPosition,
+            filter: 'brightness(0.85) contrast(1.1) saturate(0.9)'
+          }}
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      )}
+
       {/* Overlay */}
-      <div 
-        className="absolute inset-0 z-10" 
-        style={{ background: getOverlayStyle() }} 
+      <div
+        className="absolute inset-0 z-10"
+        style={{ background: getOverlayStyle() }}
       />
-      
+
       {/* Content */}
       <div className="relative z-20 w-full h-full">
         {children}
