@@ -30,7 +30,7 @@ export function Hero() {
     });
   });
 
-  const heroLine1 = ["Salem's", "Most", "Trusted"];
+  const heroLine1 = ["Salem&apos;s", "Most", "Trusted"];
   const heroLine2 = ["Auto", "Dealership."];
 
   return (
@@ -216,7 +216,7 @@ export function FeaturedInventory({ initialCars = [] }: { initialCars?: Car[] })
   useGSAPOnMount((ctx) => {
     if (!ctx.selector) return;
     const cards = ctx.selector('.car-card');
-    cards.forEach((card: any, i: number) => {
+    cards.forEach((card: Element, i: number) => {
       gsap.from(card, {
         opacity: 0,
         y: 60,
@@ -320,7 +320,7 @@ export function TestimonialCarousel() {
             {testimonials.map((t, i) => (
               <div key={i} className="min-w-[85%] md:min-w-full snap-center py-8">
                 <p className="font-body text-2xl md:text-3xl text-metal-300 italic mb-10 leading-relaxed font-light">
-                  "{t.body}"
+                  &quot;{t.body}&quot;
                 </p>
                 <div className="text-white font-display text-xl">— {t.name}</div>
               </div>
