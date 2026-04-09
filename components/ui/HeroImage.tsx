@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { ReactNode, useRef, useEffect, useCallback } from 'react';
+import React, { ReactNode, useRef, useEffect, useCallback } from 'react';
 
 interface HeroImageProps {
   src: string;
