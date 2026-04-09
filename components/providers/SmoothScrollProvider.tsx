@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, ReactNode } from 'react';
-// @ts-ignore - Module will be found after running npm install
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
