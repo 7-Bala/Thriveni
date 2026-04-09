@@ -1,13 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import React, { ReactNode, useRef, useEffect, useCallback } from 'react';
+import React, { ReactNode, useRef, useEffect, useState } from 'react';
 
 interface HeroImageProps {
   src: string;
   alt: string;
   videoSrc?: string;
-  overlay?: 'dark-left' | 'dark-center' | 'dark-full' | 'dark-bottom';
+  overlay?: 'dark-left' | 'dark-center' | 'dark-full' | 'dark-bottom' | 'none';
   priority?: boolean;
   children?: ReactNode;
   objectPosition?: string;
@@ -25,14 +25,10 @@ export default function HeroImage({
   isAbsolute = false
 }: HeroImageProps) {
 
-  const videoARef = useRef<HTMLVideoElement>(null);
-  const videoBRef = useRef<HTMLVideoElement>(null);
-  // true = A is active/visible, false = B is active/visible
-  const activeIsA = useRef(true);
-  const isTransitioning = useRef(false);
-
-  const CROSSFADE_DURATION = 600; // ms
-  const CROSSFADE_TRIGGER_BEFORE_END = 0.5; // seconds before video end to start crossfade
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  
+  const PAUSE_DURATION = 4000; // 4 seconds
 
   const getOverlayStyle = () => {
     switch (overlay) {
@@ -49,103 +45,97 @@ export default function HeroImage({
     }
   };
 
-  const doTransition = useCallback(() => {
-    if (isTransitioning.current) return;
-    isTransitioning.current = true;
-
-    const activeVid  = activeIsA.current ? videoARef.current : videoBRef.current;
-    const inactiveVid = activeIsA.current ? videoBRef.current : videoARef.current;
-
-    if (!activeVid || !inactiveVid) return;
-
-    // Reset and prepare the incoming video
-    inactiveVid.currentTime = 0;
-    inactiveVid.play().catch(() => {});
-
-    // Fade in incoming, fade out outgoing
-    inactiveVid.style.transition = `opacity ${CROSSFADE_DURATION}ms ease-in-out`;
-    activeVid.style.transition   = `opacity ${CROSSFADE_DURATION}ms ease-in-out`;
-    inactiveVid.style.opacity = '1';
-    activeVid.style.opacity   = '0';
-
-    // After crossfade completes, pause and reset the now-hidden video
-    setTimeout(() => {
-      activeVid.pause();
-      activeVid.currentTime = 0;
-      activeIsA.current = !activeIsA.current;
-      isTransitioning.current = false;
-    }, CROSSFADE_DURATION);
-  }, []);
-
   useEffect(() => {
-    if (!videoSrc) return;
+    if (!videoSrc || !videoRef.current) return;
 
-    const videoA = videoARef.current;
-    const videoB = videoBRef.current;
-    if (!videoA || !videoB) return;
+    const video = videoRef.current;
+    let rafId: number;
+    let lastTimestamp: number = 0;
+    
+    // States: 'forward' | 'pause-end' | 'reverse' | 'pause-start'
+    let mode: 'forward' | 'pause-end' | 'reverse' | 'pause-start' = 'forward';
 
-    // Set initial opacity states
-    videoA.style.opacity = '1';
-    videoB.style.opacity = '0';
+    const startReverse = () => {
+      mode = 'reverse';
+      lastTimestamp = 0;
+      rafId = requestAnimationFrame(reverseStep);
+    };
 
-    // Start playback on A
-    videoA.play().catch(() => {});
+    const reverseStep = (timestamp: number) => {
+      if (mode !== 'reverse') return;
+      
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const deltaTime = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
 
-    const handleTimeUpdate = () => {
-      const active = activeIsA.current ? videoA : videoB;
-      if (!active.duration || isNaN(active.duration)) return;
-      const timeLeft = active.duration - active.currentTime;
-      if (timeLeft <= CROSSFADE_TRIGGER_BEFORE_END) {
-        doTransition();
+      if (video.currentTime > 0) {
+        // We decrement currentTime manually. 
+        // Note: This can be jumpy if the video doesn't have many keyframes.
+        video.currentTime = Math.max(0, video.currentTime - deltaTime);
+        rafId = requestAnimationFrame(reverseStep);
+      } else {
+        // Reached the start
+        mode = 'pause-start';
+        setTimeout(() => {
+          if (videoRef.current) {
+            mode = 'forward';
+            video.play().catch(() => {});
+          }
+        }, PAUSE_DURATION);
       }
     };
 
-    videoA.addEventListener('timeupdate', handleTimeUpdate);
-    videoB.addEventListener('timeupdate', handleTimeUpdate);
+    let endTimeout: NodeJS.Timeout;
+    let startTimeout: NodeJS.Timeout;
+
+    const handleForwardEnd = () => {
+      if (mode !== 'forward') return;
+      
+      mode = 'pause-end';
+      video.pause();
+      
+      endTimeout = setTimeout(() => {
+        if (videoRef.current) {
+          startReverse();
+        }
+      }, PAUSE_DURATION);
+    };
+
+    video.addEventListener('ended', handleForwardEnd);
+
+    // Initial Start
+    video.play().catch(() => {});
 
     return () => {
-      videoA.removeEventListener('timeupdate', handleTimeUpdate);
-      videoB.removeEventListener('timeupdate', handleTimeUpdate);
-      videoA.pause();
-      videoB.pause();
+      video.removeEventListener('ended', handleForwardEnd);
+      cancelAnimationFrame(rafId);
+      clearTimeout(endTimeout);
+      clearTimeout(startTimeout);
     };
-  }, [videoSrc, doTransition]);
+  }, [videoSrc]);
 
   const videoStyles: React.CSSProperties = {
     objectPosition,
     filter: 'brightness(0.95) contrast(1.05) saturate(1)',
-    transition: `opacity ${CROSSFADE_DURATION}ms ease-in-out`,
   };
 
   return (
     <div className={`${isAbsolute ? 'absolute inset-0' : 'relative w-full h-full min-h-[60vh]'} overflow-hidden bg-metal-950`}>
 
       {videoSrc && (
-        <>
-          <video
-            ref={videoARef}
-            muted
-            playsInline
-            preload="auto"
-            className="absolute inset-0 w-full h-full object-cover z-[5]"
-            style={videoStyles}
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-          <video
-            ref={videoBRef}
-            muted
-            playsInline
-            preload="auto"
-            className="absolute inset-0 w-full h-full object-cover z-[5]"
-            style={{ ...videoStyles, opacity: 0 }}
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-        </>
+        <video
+          ref={videoRef}
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover z-[5]"
+          style={videoStyles}
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
       )}
 
-      {/* Image background — all other pages */}
+      {/* Image background — fallback or single image pages */}
       {!videoSrc && src && (
         <Image
           src={src}
