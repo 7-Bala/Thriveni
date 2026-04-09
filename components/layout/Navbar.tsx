@@ -13,7 +13,6 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -32,9 +31,7 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
