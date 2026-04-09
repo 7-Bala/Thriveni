@@ -11,16 +11,18 @@ import {
 } from '@/components/sections/HomeSections';
 
 export default async function Home() {
-  const featuredCars = await prisma.car.findMany({
+  const featuredCarsRaw = await prisma.car.findMany({
     where: { isFeatured: true },
     take: 4,
     orderBy: { createdAt: 'desc' }
   });
 
+  const featuredCars = JSON.parse(JSON.stringify(featuredCarsRaw));
+
   // Fallback to latest 4 cars if no featured ones are marked
   const carsToShow = featuredCars.length > 0 
     ? featuredCars 
-    : await prisma.car.findMany({ take: 4, orderBy: { createdAt: 'desc' } });
+    : JSON.parse(JSON.stringify(await prisma.car.findMany({ take: 4, orderBy: { createdAt: 'desc' } })));
 
   return (
     <>

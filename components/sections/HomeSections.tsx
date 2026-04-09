@@ -203,15 +203,27 @@ interface Car {
 }
 
 export function FeaturedInventory({ initialCars = [] }: { initialCars?: Car[] }) {
-  const cars = initialCars.map(car => ({
-    name: car.model,
-    brand: car.brand,
-    price: `₹${(car.price / 100000).toFixed(1)}L`,
-    image: JSON.parse(car.images)[0],
-    fuel: car.fuel,
-    trans: car.transmission,
-    year: car.year
-  }));
+  const cars = initialCars.map(car => {
+    let image = null;
+    try {
+      if (car.images) {
+        const parsed = JSON.parse(car.images);
+        image = Array.isArray(parsed) ? parsed[0] : null;
+      }
+    } catch (e) {
+      console.error('Failed to parse images for featured car:', car.model, e);
+    }
+
+    return {
+      name: car.model,
+      brand: car.brand,
+      price: `₹${(car.price / 100000).toFixed(1)}L`,
+      image,
+      fuel: car.fuel,
+      trans: car.transmission,
+      year: car.year
+    };
+  });
 
   useGSAPOnMount((ctx) => {
     if (!ctx.selector) return;

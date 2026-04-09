@@ -6,9 +6,11 @@ import { HERO_IMAGES } from '@/lib/images';
 export const dynamic = 'force-dynamic';
 
 export default async function InventoryPage() {
-  const cars = await prisma.car.findMany({
+  const carsRaw = await prisma.car.findMany({
     orderBy: { createdAt: 'desc' }
   });
+
+  const cars = JSON.parse(JSON.stringify(carsRaw));
 
   return (
     <div className="min-h-screen bg-bg-primary">

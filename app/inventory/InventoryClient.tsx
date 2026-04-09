@@ -30,11 +30,23 @@ interface InventoryClientProps {
 export default function InventoryClient({ initialCars }: InventoryClientProps) {
   const [activeBrand, setActiveBrand] = useState('All');
 
-  const cars = initialCars.map(car => ({
-    ...car,
-    img: JSON.parse(car.images)[0],
-    displayPrice: (car.price / 100000).toFixed(2)
-  }));
+  const cars = initialCars.map(car => {
+    let img = null;
+    try {
+      if (car.images) {
+        const parsed = JSON.parse(car.images);
+        img = Array.isArray(parsed) ? parsed[0] : null;
+      }
+    } catch (e) {
+      console.error('Failed to parse images for car:', car.id, e);
+    }
+    
+    return {
+      ...car,
+      img,
+      displayPrice: (car.price / 100000).toFixed(2)
+    };
+  });
 
   const filteredCars = activeBrand === 'All' ? cars : cars.filter(c => c.brand === activeBrand);
 
