@@ -30,7 +30,7 @@ export function Hero() {
     });
   });
 
-  const heroLine1 = ["Salem&apos;s", "Most", "Trusted"];
+  const heroLine1 = ["Salem's", "Most", "Trusted"];
   const heroLine2 = ["Auto", "Dealership."];
 
   return (
