@@ -1,13 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fadeUp } from '@/lib/animations';
+import { fadeUp, EASING } from '@/lib/animations';
 import { useGSAPOnMount } from '@/hooks/useScrollAnimation';
 import gsap from 'gsap';
 import HeroImage from '@/components/ui/HeroImage';
+import ColorSwitcher from '@/components/sections/ColorSwitcher';
+import CarViewer360 from '@/components/sections/CarViewer360';
+import ExplodingView from '@/components/sections/ExplodingView';
 import { MEDIUM_BLUR } from '@/lib/blurPlaceholders';
 
 interface CarDetailClientProps {
@@ -62,6 +65,7 @@ export default function CarDetailClient({ car }: CarDetailClientProps) {
   const displayPrice = (car.price / 100000).toFixed(2);
 
   const [activeImage, setActiveImage] = useState(0);
+  const mainImageRef = useRef<HTMLImageElement>(null);
 
   const detailSpecs = [
     { label: 'Power', val: specs.power || 'N/A' },
@@ -147,6 +151,39 @@ export default function CarDetailClient({ car }: CarDetailClientProps) {
                 </button>
               ))}
             </div>
+
+            {/* Color Switcher Section */}
+            <motion.div
+              className="mt-20 p-12 bg-gradient-to-br from-white to-metal-50 border border-metal-200 rounded-lg"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: EASING.expoOut }}
+            >
+              <ColorSwitcher imageRef={mainImageRef} />
+            </motion.div>
+
+            {/* 360 Degree Viewer Section */}
+            <motion.div
+              className="mt-20"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: EASING.expoOut, delay: 0.1 }}
+            >
+              <CarViewer360 images={gallery} carName={car.model} />
+            </motion.div>
+
+            {/* Exploding View Section */}
+            <motion.div
+              className="mt-20"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: EASING.expoOut, delay: 0.2 }}
+            >
+              <ExplodingView carImage={gallery[0]} carName={car.model} />
+            </motion.div>
 
             <div className="mt-20">
                <h2 className="font-display text-4xl text-metal-900 mb-12 flex items-center gap-6">

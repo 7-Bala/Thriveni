@@ -1,22 +1,33 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useInView } from 'framer-motion';
 import gsap from 'gsap';
-import { EASING, fadeUp } from '@/lib/animations';
-import { useGSAPOnMount, useParallax } from '@/hooks/useScrollAnimation';
+import { EASING, fadeUp, createParticleField } from '@/lib/animations';
+import { useGSAPOnMount, useParallax, use3DParallax, useNumberFlip } from '@/hooks/useScrollAnimation';
 import HeroImage from '@/components/ui/HeroImage';
 import CarImagePlaceholder from '@/components/ui/CarImagePlaceholder';
+import DonutChart from '@/components/ui/DonutChart';
+import Carousel3D from '@/components/sections/Carousel3D';
 import { HERO_IMAGES, CAR_IMAGES, SECTION_BG_IMAGES } from '@/lib/images';
 import { MEDIUM_BLUR } from '@/lib/blurPlaceholders';
 
 export function Hero() {
   const containerRef = useRef(null);
   const bgRef = useRef(null);
+  const contentRef = useRef(null);
+  const particlesRef = useRef(null);
 
   useParallax(bgRef, 0.4);
+  use3DParallax(contentRef, 8);
+
+  useEffect(() => {
+    if (particlesRef.current) {
+      createParticleField(particlesRef.current, 40);
+    }
+  }, []);
 
   useGSAPOnMount((ctx) => {
     if (!ctx.selector) return;
@@ -35,6 +46,13 @@ export function Hero() {
 
   return (
     <section ref={containerRef} className="relative overflow-hidden bg-metal-900">
+      {/* Particle Field Background */}
+      <div 
+        ref={particlesRef}
+        className="absolute inset-0 z-10 pointer-events-none opacity-40"
+        style={{ overflow: 'hidden' }}
+      />
+      
       <HeroImage
         src={HERO_IMAGES.homepage}
         videoSrc="/videos/blacksedan.mp4"
@@ -44,7 +62,7 @@ export function Hero() {
         overlay="dark-left"
         isAbsolute={false}
       >
-        <div className="container-custom relative z-20 w-full min-h-screen flex flex-col justify-center pt-20">
+        <div ref={contentRef} className="container-custom relative z-20 w-full min-h-screen flex flex-col justify-center pt-20">
           <div className="w-full sm:max-w-[80%] lg:max-w-[55%] pt-10 sm:pt-0">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -134,29 +152,32 @@ export function Hero() {
 
 export function BrandShowcase() {
   const brands = [
-    { name: 'Maruti Arena', count: '18 Models', desc: 'Entry to mid-segment' },
-    { name: 'NEXA', count: '8 Models', desc: 'Premium Maruti range' },
-    { name: 'Honda', count: '6 Models', desc: 'Sedans & SUVs' },
-    { name: 'Royal Enfield', count: '12 Models', desc: 'Heritage motorcycles' },
-    { name: 'Commercial', count: '4 Models', desc: 'Small commercial vehicles' },
+    { name: 'Maruti Arena', count: '18 Models', desc: 'Entry to mid-segment', color: 'from-red-500 to-orange-500' },
+    { name: 'NEXA', count: '8 Models', desc: 'Premium Maruti range', color: 'from-blue-600 to-blue-700' },
+    { name: 'Honda', count: '6 Models', desc: 'Sedans & SUVs', color: 'from-blue-500 to-purple-500' },
+    { name: 'Royal Enfield', count: '12 Models', desc: 'Heritage motorcycles', color: 'from-amber-700 to-orange-600' },
+    { name: 'Commercial', count: '4 Models', desc: 'Small commercial vehicles', color: 'from-gray-600 to-gray-700' },
   ];
 
   return (
-    <section className="py-24 bg-bg-section">
+    <section className="py-32 bg-bg-section relative">
       <div className="container-custom">
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.9, ease: EASING.expoOut }}
-            className="lg:w-2/5"
+            className="lg:w-2/5 sticky top-20"
           >
-            <h2 className="font-display font-bold text-display-lg text-metal-900 leading-tight">
-              5 Premium Brands.<br />One Address.
+            <h2 className="font-display font-bold text-display-lg text-metal-900 leading-tight mb-4">
+              5 Premium Brands.
             </h2>
-            <p className="font-body font-light text-metal-500 mt-6 text-lg leading-relaxed max-w-sm">
-              Every brand we carry is authorized, serviced, and supported exclusively at Thriveni — no third parties.
+            <h2 className="font-display font-bold text-display-lg text-amber-cta leading-tight mb-8">
+              One Address.
+            </h2>
+            <p className="font-body font-light text-metal-500 text-lg leading-relaxed max-w-sm">
+              Every brand we carry is authorized, serviced, and supported exclusively at Thriveni — no third parties, no compromises on quality.
             </p>
           </motion.div>
 
@@ -165,23 +186,33 @@ export function BrandShowcase() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.9, ease: EASING.expoOut }}
-            className="lg:w-3/5"
+            className="lg:w-3/5 w-full space-y-4"
           >
             {brands.map((brand, i) => (
-              <Link
+              <motion.div
                 key={i}
-                href={`/inventory?brand=${encodeURIComponent(brand.name)}`}
-                className="flex items-center justify-between py-5 border-b border-metal-100 group hover:bg-olive-50 hover:px-4 transition-all duration-300 -mx-4 px-4"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.08, ease: EASING.expoOut }}
               >
-                <div className="flex items-baseline gap-4">
-                  <span className="font-display font-semibold text-xl text-metal-900 group-hover:text-olive-700 transition-colors">{brand.name}</span>
-                  <span className="font-body font-light text-metal-400 text-sm hidden sm:block">{brand.desc}</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="font-mono text-sm text-metal-400 group-hover:text-olive-600 transition-colors">{brand.count}</span>
-                  <svg className="w-4 h-4 text-metal-300 group-hover:text-olive-600 group-hover:translate-x-1 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-                </div>
-              </Link>
+                <Link
+                  href={`/inventory?brand=${encodeURIComponent(brand.name)}`}
+                  className="group flex items-center justify-between p-6 border border-metal-200 hover:border-amber-cta rounded-lg bg-white transition-all duration-300 hover:shadow-lg hover:shadow-amber-cta/10"
+                >
+                  <div className="flex items-baseline gap-6 flex-1">
+                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${brand.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
+                    <div>
+                      <span className="font-display font-bold text-2xl text-metal-900 group-hover:text-amber-cta transition-colors">{brand.name}</span>
+                      <span className="font-body font-light text-metal-400 text-sm block mt-1 hidden sm:block">{brand.desc}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 shrink-0">
+                    <span className="font-mono text-sm font-semibold text-metal-600 group-hover:text-amber-cta transition-colors">{brand.count}</span>
+                    <svg className="w-5 h-5 text-metal-400 group-hover:text-amber-cta group-hover:translate-x-1 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </motion.div>
         </div>
@@ -215,90 +246,94 @@ export function FeaturedInventory({ initialCars = [] }: { initialCars?: Car[] })
     }
 
     return {
+      id: car.id,
       name: car.model,
       brand: car.brand,
       price: `₹${(car.price / 100000).toFixed(1)}L`,
-      image,
+      image: image || '',
       fuel: car.fuel,
-      trans: car.transmission,
+      transmission: car.transmission,
       year: car.year
     };
-  });
-
-  useGSAPOnMount((ctx) => {
-    if (!ctx.selector) return;
-    const cards = ctx.selector('.car-card');
-    cards.forEach((card: Element, i: number) => {
-      gsap.from(card, {
-        opacity: 0,
-        y: 60,
-        duration: 0.8,
-        delay: (i % 4) * 0.15,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 92%'
-        }
-      });
-    });
   });
 
   return (
     <section className="py-32 bg-bg-primary">
       <div className="container-custom">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: EASING.expoOut }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8"
+        >
           <div className="max-w-xl">
-            <h2 className="font-display font-bold text-display-xl text-metal-900">Our Inventory.</h2>
-            <p className="text-metal-500 mt-6">Hand-curated selection of the most sought-after models in Salem.</p>
+            <h2 className="font-display font-bold text-display-xl text-metal-900">Featured Models.</h2>
+            <p className="text-metal-500 mt-6">Explore our curated selection with 3D interactive carousel. Drag, swipe, or click to navigate.</p>
+          </div>
+        </motion.div>
+
+        {/* 3D Carousel for Featured Cars */}
+        {cars.length > 0 ? (
+          <div className="mb-16">
+            <Carousel3D items={cars} autoRotate={true} autoRotateDelay={5000} />
+          </div>
+        ) : (
+          <div className="text-center py-12 text-metal-400">No featured cars available</div>
+        )}
+
+        {/* Grid view for additional inventory */}
+        <div className="mt-20 pt-16 border-t border-metal-200">
+          <h3 className="font-display font-bold text-2xl text-metal-900 mb-8">More From Our Inventory</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {cars.slice(0, 4).map((car, i) => (
+              <motion.div
+                key={car.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1, ease: EASING.expoOut }}
+                className="group bg-white border border-metal-100 overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-l-[3px] hover:border-l-amber-cta"
+              >
+                <Link href={`/inventory/${car.name.toLowerCase().replace(' ', '-')}`}>
+                  <div className="aspect-[4/3] relative overflow-hidden bg-metal-900">
+                    {car.image ? (
+                      <Image
+                        src={car.image}
+                        alt={`${car.brand} ${car.name}`}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        placeholder="blur"
+                        blurDataURL={MEDIUM_BLUR}
+                        className="object-cover group-hover:scale-[1.08] transition-transform duration-700"
+                        style={{ filter: 'brightness(0.97) contrast(1.03)' }}
+                      />
+                    ) : (
+                      <CarImagePlaceholder />
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <div className="flex items-end justify-between gap-4">
+                      <div className="flex flex-col">
+                        <div className="font-body text-[10px] uppercase font-bold tracking-widest text-olive-600 mb-1 leading-none">{car.brand}</div>
+                        <h3 className="font-display font-semibold text-lg text-metal-900 leading-none mt-1">{car.name}</h3>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className="font-mono font-bold text-base text-metal-900 leading-none">{car.price}</div>
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-metal-50 flex gap-3 text-[10px] font-body text-metal-500">
+                      {car.fuel && <span>{car.fuel}</span>}
+                      {car.fuel && <span className="text-metal-300">·</span>}
+                      {car.transmission && <span>{car.transmission}</span>}
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {cars.map((car, i) => (
-            <motion.div
-              key={i}
-              variants={fadeUp}
-              className="group bg-white border border-metal-100 overflow-hidden cursor-pointer transition-all duration-300 hover:border-l-[3px] hover:border-l-amber-cta"
-            >
-              <Link href={`/inventory/${car.name.toLowerCase().replace(' ', '-')}`}>
-                <div className="aspect-[4/3] relative overflow-hidden bg-metal-900">
-                  {car.image ? (
-                    <Image
-                      src={car.image}
-                      alt={`${car.brand} ${car.name}`}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      placeholder="blur"
-                      blurDataURL={MEDIUM_BLUR}
-                      className="object-cover group-hover:scale-[1.04] transition-transform duration-700"
-                      style={{ filter: 'brightness(0.97) contrast(1.03)' }}
-                    />
-                  ) : (
-                    <CarImagePlaceholder />
-                  )}
-                </div>
-                <div className="p-6">
-                  <div className="flex items-end justify-between gap-4">
-                    <div className="flex flex-col">
-                      <div className="font-body text-[10px] uppercase font-bold tracking-widest text-olive-600 mb-1 leading-none">{car.brand}</div>
-                      <h3 className="font-display font-semibold text-xl text-metal-900 leading-none mt-1">{car.name}</h3>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <div className="font-mono font-bold text-lg text-metal-900 leading-none">{car.price}</div>
-                    </div>
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-metal-50 flex gap-4 text-[11px] font-body text-metal-400">
-                    <span>{car.fuel}</span>
-                    <span className="text-metal-200">·</span>
-                    <span>{car.trans}</span>
-                    <span className="text-metal-200">·</span>
-                    <span className="font-mono">{car.year}</span>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
         <Link href="/inventory" className="inline-flex items-center gap-3 text-sm font-body font-semibold text-metal-900 hover:text-olive-700 transition-colors mt-12 border-b border-metal-900 pb-1 hover:border-olive-700">View full inventory</Link>
       </div>
     </section>
@@ -499,27 +534,50 @@ export function EMICalculator() {
             transition={{ duration: 1, ease: EASING.expoOut }}
             className="lg:w-1/2 w-full"
           >
-            <div className="border-t-2 border-metal-900 pt-10">
+            {/* EMI Amount Display */}
+            <div className="bg-gradient-to-br from-white to-amber-50 border-2 border-amber-cta/30 rounded-lg p-8 mb-10">
               <div className="font-body font-light text-metal-500 text-sm uppercase tracking-[0.2em] mb-3">Monthly EMI</div>
-              <motion.div key={emi} initial={{ scale: 1.05 }} animate={{ scale: 1 }} transition={{ duration: 0.3 }} className="font-mono font-bold text-metal-900 leading-none mb-10" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)' }}>
+              <motion.div 
+                key={emi} 
+                initial={{ scale: 1.05, opacity: 0 }} 
+                animate={{ scale: 1, opacity: 1 }} 
+                transition={{ duration: 0.4, ease: 'backOut' }} 
+                className="font-mono font-bold text-metal-900 leading-none mb-6" 
+                style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)' }}
+              >
                 ₹{fmt(emi)}
               </motion.div>
-
-              <div className="space-y-0 border border-metal-100">
-                {[
-                  { label: 'Loan Amount', val: `₹${fmt(principal)}` },
-                  { label: 'Total Interest', val: `₹${fmt(totalInterest)}` },
-                  { label: 'Total Payable', val: `₹${fmt(totalAmount)}` },
-                ].map((row, i) => (
-                  <div key={i} className="flex justify-between items-center px-6 py-5 border-b border-metal-50 last:border-b-0">
-                    <span className="font-body font-light text-metal-500 text-sm">{row.label}</span>
-                    <span className="font-mono text-metal-900 font-bold text-sm">{row.val}</span>
-                  </div>
-                ))}
-              </div>
-
-              <Link href="/contact" className="btn-primary mt-10 w-full text-center block">Get Bank Quotes</Link>
+              <div className="h-1 bg-gradient-to-r from-amber-cta to-yellow-500 rounded-full mb-6" />
+              <p className="font-body text-sm text-metal-600">For {tenure} months at 9.5% per annum</p>
             </div>
+
+            {/* Donut Chart */}
+            <div className="mb-10">
+              <DonutChart principal={principal} interest={totalInterest} total={totalAmount} animated={true} />
+            </div>
+
+            {/* Breakdown Table */}
+            <div className="space-y-3 mb-8">
+              {[
+                { label: 'Loan Amount', val: `₹${fmt(principal)}`, icon: '💰' },
+                { label: 'Total Interest', val: `₹${fmt(totalInterest)}`, icon: '📊' },
+                { label: 'Total Payable', val: `₹${fmt(totalAmount)}`, icon: '✓' },
+              ].map((row, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="flex justify-between items-center px-6 py-4 border border-metal-100 bg-white hover:border-amber-cta/50 transition-colors rounded-lg"
+                >
+                  <span className="font-body font-light text-metal-600 text-sm">{row.label}</span>
+                  <span className="font-mono text-metal-900 font-bold text-sm">{row.val}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            <Link href="/contact" className="btn-primary mt-6 w-full text-center block hover:shadow-lg transition-shadow">Get Approved In Minutes</Link>
           </motion.div>
         </div>
       </div>

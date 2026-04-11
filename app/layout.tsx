@@ -3,6 +3,8 @@ import { Outfit, Jost, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import LoadingScreen from '@/components/ui/LoadingScreen';
+import ScrollProgressBar from '@/components/ui/ScrollProgressBar';
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import PageTransitionProvider from '@/components/providers/PageTransitionProvider';
 
@@ -49,6 +51,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`}>
       <body className="font-body antialiased selection:bg-amber-cta selection:text-white bg-metal-900 min-h-screen flex flex-col">
+        <LoadingScreen />
+        <ScrollProgressBar />
         <SmoothScrollProvider>
           <PageTransitionProvider>
             <Navbar />
